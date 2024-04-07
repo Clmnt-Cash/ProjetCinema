@@ -1,4 +1,6 @@
-import Vue.Window;
+import Vue.GUIprincipal;
+import Vue.GUIconnexion;
+
 
 public class Main {
     public static void main(String[] args) {
@@ -8,6 +10,6 @@ public class Main {
                 cinemaGUI.setVisible(true);
             }
         });*/
-        Window window = new Window();
+        GUIconnexion window = new GUIconnexion();
     }
 }

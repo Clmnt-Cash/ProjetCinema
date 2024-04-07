@@ -3,9 +3,9 @@ package Vue;
 import javax.swing.*;
 import java.awt.*;
 
-public class Window extends JFrame {
+public class GUIprincipal extends JFrame {
 
-    public Window() {
+    public GUIprincipal() {
         super("Cinéma");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
