@@ -37,8 +37,4 @@ public class Window extends JFrame {
 
         setVisible(true);
     }
-
-    public static void main(String[] args) {
-        Window window = new Window();
-    }
 }
