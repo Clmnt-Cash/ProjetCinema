@@ -1,12 +1,16 @@
 package Vue;
 
+import Modele.Client;
+
 import javax.swing.*;
 import java.awt.*;
 
-public class GUIprincipal extends JFrame {
+public class GUIaccueil extends JFrame {
 
-    public GUIprincipal() {
+    private Client client;
+    public GUIaccueil(Client client) {
         super("Cinéma");
+        this.client = client;
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         setSize(1500, 800);
@@ -33,8 +37,15 @@ public class GUIprincipal extends JFrame {
             }
         };
 
+        JLabel labelNom = new JLabel("Connecté en tant que " + client.getPrenom() + " " + client.getNom());
+        labelNom.setBounds(200, 300, 100, 30);
+        labelNom.setFont(new Font("Arial", Font.BOLD, 15));
+        labelNom.setForeground(Color.WHITE);
+        drawComponents.add(labelNom);
+
         add(drawComponents);
 
-        setVisible(true);
+        setVisible(false);
     }
+
 }

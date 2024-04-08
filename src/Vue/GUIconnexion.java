@@ -1,4 +1,6 @@
 package Vue;
+
+import Controleur.ControleurConnexion;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -124,7 +126,9 @@ public class GUIconnexion extends JFrame {
         timer.start();
     }
 
-
+    public void closeWindow(){
+        setVisible(false);
+    }
     //Getters
     public String getEmail() {
         return textEmail.getText();

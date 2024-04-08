@@ -1,45 +1,49 @@
 package Controleur;
 
 import Vue.GUIconnexion;
+import Vue.GUIaccueil;
+import Modele.Client;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.SQLException;
 import java.util.ArrayList;
-
-public class ControleurConnexion implements ControleurInterface{
-    //Attributs
-    private GUIconnexion vue;
+public class ControleurConnexion {
+    private Client client;
+    private GUIconnexion vueConnexion;
     private Connexion connexion;
+    private ControleurAccueil controleurAccueil;
+    private GUIaccueil vueAccueil;
 
-    //Constructeur
+
     public ControleurConnexion(GUIconnexion vue) {
-        this.vue = vue;
+        this.vueConnexion = vue;
         try {
             connexion = new Connexion("cinema", "root", "");
         } catch (SQLException | ClassNotFoundException e) {
             e.printStackTrace();
         }
-        //Si l utilisateur clique sur créer, obtneir l email et le mdp
-        this.vue.addConnexionListener(new ActionListener() {
+        this.vueConnexion.addConnexionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 String email = vue.getEmail();
                 String motDePasse = vue.getMotDePasse();
-                if(email.isEmpty() || motDePasse.isEmpty()) {
+                if (email.isEmpty() || motDePasse.isEmpty()) {
                     vue.displayError("Veuillez remplir tous les champs");
-                }
-                else if(!email.contains("@")){
+                } else if (!email.contains("@")) {
                     vue.displayError("E-mail invalide");
-                }else{
+                } else {
                     handleConnexion(email, motDePasse);
+                    vue.closeWindow();
+                    // Envoyer le client à ControleurAccueil
+                    vueAccueil = new GUIaccueil(client);
+                    controleurAccueil = new ControleurAccueil(vueAccueil);
+                    controleurAccueil.setClient(client);
+                    controleurAccueil.openWindow();
                 }
-
             }
         });
     }
-
-    @Override
     public void handleConnexion(String email, String motDePasse) {
         try {
             //Requete pour vérifier si lemail existe dans la bdd
@@ -48,14 +52,24 @@ public class ControleurConnexion implements ControleurInterface{
                 //Vérifier si le mot de passe correspond à l'email
                 ArrayList<String> resultatsMdp = connexion.remplirChampsRequete("SELECT * FROM membre WHERE Email = '" + email + "' AND Mot_de_passe = '" + motDePasse + "'");
                 if (!resultatsMdp.isEmpty()) {
-                    System.out.println("Connexion réussie !");
+                    ArrayList<String> resultatId = connexion.remplirChampsRequete("SELECT * FROM membre WHERE Email = '" + email + "' AND Mot_de_passe = '" + motDePasse + "'");
+
+                    String[] infosMembre = resultatId.get(0).split(","); // Séparer les informations par virgule
+                    int idMembre = Integer.parseInt(infosMembre[0].trim());
+                    int typeMembre = Integer.parseInt(infosMembre[1].trim());
+                    String nomMembre = infosMembre[2].trim();
+                    String prenomMembre = infosMembre[3].trim();
+                    String emailMembre = infosMembre[4].trim();
+                    String mdpMembre = infosMembre[5].trim();
+
+                    client = new Client(idMembre, typeMembre, nomMembre, prenomMembre, emailMembre, mdpMembre);
                 } else {
                     //Mot de passe incorrect
-                    vue.displayError("Mot de passe incorrect");
+                    vueConnexion.displayError("Mot de passe incorrect");
                 }
             } else {
                 //Email non trouvé dans la bdd
-                vue.displayError("Cet e-mail n'est associé à aucun compte");
+                vueConnexion.displayError("Cet e-mail n'est associé à aucun compte");
             }
         } catch (SQLException e) {
             e.printStackTrace();
