@@ -56,6 +56,21 @@ public class Connexion {
         stmt = conn.createStatement();
     }
 
+    // Méthode pour exécuter une requête SQL
+    public void executerRequete(String requete) throws SQLException {
+        Statement statement = null;
+        try {
+            // Création d'un objet Statement à partir de la connexion
+            statement = conn.createStatement();
+            // Exécution de la requête SQL
+            statement.executeUpdate(requete);
+        } finally {
+            // Fermeture du Statement
+            if (statement != null) {
+                statement.close();
+            }
+        }
+    }
 
     /**
      * Méthode qui ajoute la table en parametre dans son ArrayList
