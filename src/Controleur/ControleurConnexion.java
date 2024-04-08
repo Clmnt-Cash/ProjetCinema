@@ -33,13 +33,14 @@ public class ControleurConnexion {
                 } else if (!email.contains("@")) {
                     vue.displayError("E-mail invalide");
                 } else {
-                    handleConnexion(email, motDePasse);
-                    vue.closeWindow();
-                    // Envoyer le client à ControleurAccueil
-                    vueAccueil = new GUIaccueil(client);
-                    controleurAccueil = new ControleurAccueil(vueAccueil);
-                    controleurAccueil.setClient(client);
-                    controleurAccueil.openWindow();
+                    if(handleConnexion(email, motDePasse)){
+                        vue.closeWindow();
+                        // Envoyer le client à ControleurAccueil
+                        vueAccueil = new GUIaccueil(client);
+                        controleurAccueil = new ControleurAccueil(vueAccueil);
+                        controleurAccueil.setClient(client);
+                        controleurAccueil.openWindow();
+                    }
                 }
             }
         });
@@ -50,37 +51,42 @@ public class ControleurConnexion {
      * @param email
      * @param motDePasse
      */
-    public void handleConnexion(String email, String motDePasse) {
+    public boolean handleConnexion(String email, String motDePasse) {
         try {
             //Requete pour vérifier si lemail existe dans la bdd
             ArrayList<String> emails = connexion.remplirChampsRequete("SELECT * FROM membre WHERE Email = '" + email + "'");
             if (!emails.isEmpty()) {
                 //Vérifier si le mot de passe correspond à l'email
                 ArrayList<String> resultatsMdp = connexion.remplirChampsRequete("SELECT * FROM membre WHERE Email = '" + email + "' AND Mot_de_passe = '" + motDePasse + "'");
+                System.out.println(resultatsMdp);
+
                 if (!resultatsMdp.isEmpty()) {
-                    ArrayList<String> resultatId = connexion.remplirChampsRequete("SELECT * FROM membre WHERE Email = '" + email + "' AND Mot_de_passe = '" + motDePasse + "'");
 
                     //Création du client avec toutes les infos
-                    String[] infosMembre = resultatId.get(0).split(",");
+                    String[] infosMembre = resultatsMdp.get(0).split(",");
+
                     int idMembre = Integer.parseInt(infosMembre[0].trim());
                     int typeMembre = Integer.parseInt(infosMembre[1].trim());
                     String nomMembre = infosMembre[2].trim();
                     String prenomMembre = infosMembre[3].trim();
                     String emailMembre = infosMembre[4].trim();
                     String mdpMembre = infosMembre[5].trim();
-
                     client = new Client(idMembre, typeMembre, nomMembre, prenomMembre, emailMembre, mdpMembre);
+                    return true;
                 } else {
                     //Mot de passe incorrect
                     vueConnexion.displayError("Mot de passe incorrect");
+                    return false;
                 }
             } else {
                 //Email non trouvé dans la bdd
                 vueConnexion.displayError("Cet e-mail n'est associé à aucun compte");
+                return false;
             }
         } catch (SQLException e) {
             e.printStackTrace();
             System.out.println("Erreur lors de la connexion à la base de données : " + e);
+            return false;
         }
     }
 }

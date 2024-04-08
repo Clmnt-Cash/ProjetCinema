@@ -44,8 +44,24 @@ public class GUIaccueil extends JFrame {
         drawComponents.add(labelNom);
         drawComponents.setLayout(null);
 
+// Créer un JPanel pour contenir le contenu
+        JPanel contentPane = new JPanel();
+        contentPane.setLayout(new GridLayout(1, 30)); // Utilisation d'un layout pour ajouter du contenu
+
+        // Ajouter du contenu à votre JPanel (par exemple, des JLabels)
+        for (int i = 0; i < 30; i++) {
+            JLabel label = new JLabel("Élément " + (i + 1));
+            contentPane.add(label);
+        }
+
+        // Créer un JScrollPane et y ajouter le JPanel contenant le contenu
+        JScrollPane scrollPane = new JScrollPane(contentPane);
+        scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS); // Activer la barre de défilement verticale
+
+        // Ajouter le JScrollPane au JFrame
 
         add(drawComponents);
+        add(scrollPane);
 
         setVisible(false);
     }
