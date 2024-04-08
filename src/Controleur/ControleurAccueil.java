@@ -12,7 +12,6 @@ public class ControleurAccueil {
 
     public void setClient(Client client) {
         this.client = client;
-        System.out.println(client.getPrenom());
     }
 
     public void openWindow(){
