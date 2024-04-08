@@ -7,7 +7,7 @@ import java.awt.event.ActionListener;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
-public class ControleurConnexion implements ControleurInterface{
+public class ControleurConnexion{
     //Attributs
     private GUIconnexion vue;
     private Connexion connexion;
@@ -16,7 +16,7 @@ public class ControleurConnexion implements ControleurInterface{
     public ControleurConnexion(GUIconnexion vue) {
         this.vue = vue;
         try {
-            connexion = new Connexion("cinema", "root", "");
+            connexion = new Connexion("cinema", "root", "C.start08202003");
         } catch (SQLException | ClassNotFoundException e) {
             e.printStackTrace();
         }
@@ -39,7 +39,6 @@ public class ControleurConnexion implements ControleurInterface{
         });
     }
 
-    @Override
     public void handleConnexion(String email, String motDePasse) {
         try {
             //Requete pour vérifier si lemail existe dans la bdd

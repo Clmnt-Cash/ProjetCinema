@@ -1,6 +1,8 @@
 import Controleur.ControleurConnexion;
+import Controleur.ControleurCrea;
 import Vue.GUIprincipal;
 import Vue.GUIconnexion;
+import Vue.GUIcrea;
 
 
 public class Main {
@@ -11,8 +13,9 @@ public class Main {
                 cinemaGUI.setVisible(true);
             }
         });*/
-        GUIconnexion vue = new GUIconnexion();
-        ControleurConnexion controleur = new ControleurConnexion(vue);
+        //GUIconnexion vue = new GUIconnexion();
+        GUIcrea vue = new GUIcrea();
+        ControleurCrea controleur = new ControleurCrea(vue);
 
     }
 }
