@@ -44,6 +44,12 @@ public class ControleurConnexion {
             }
         });
     }
+
+    /**
+     *
+     * @param email
+     * @param motDePasse
+     */
     public void handleConnexion(String email, String motDePasse) {
         try {
             //Requete pour vérifier si lemail existe dans la bdd
@@ -54,7 +60,8 @@ public class ControleurConnexion {
                 if (!resultatsMdp.isEmpty()) {
                     ArrayList<String> resultatId = connexion.remplirChampsRequete("SELECT * FROM membre WHERE Email = '" + email + "' AND Mot_de_passe = '" + motDePasse + "'");
 
-                    String[] infosMembre = resultatId.get(0).split(","); // Séparer les informations par virgule
+                    //Création du client avec toutes les infos
+                    String[] infosMembre = resultatId.get(0).split(",");
                     int idMembre = Integer.parseInt(infosMembre[0].trim());
                     int typeMembre = Integer.parseInt(infosMembre[1].trim());
                     String nomMembre = infosMembre[2].trim();

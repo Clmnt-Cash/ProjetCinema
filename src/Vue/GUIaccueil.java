@@ -38,10 +38,11 @@ public class GUIaccueil extends JFrame {
         };
 
         JLabel labelNom = new JLabel("Connecté en tant que " + client.getPrenom() + " " + client.getNom());
-        labelNom.setBounds(200, 300, 100, 30);
+        labelNom.setBounds(1200, 500, 120, 30);
         labelNom.setFont(new Font("Arial", Font.BOLD, 15));
         labelNom.setForeground(Color.WHITE);
         drawComponents.add(labelNom);
+
 
         add(drawComponents);
 
