@@ -1,16 +1,25 @@
 package Vue;
 
+import Controleur.ControleurAccueil;
 import Modele.Client;
+import Modele.Film;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.util.ArrayList;
 
 public class GUIaccueil extends JFrame {
-
+    private ArrayList<Film> films;
     private Client client;
-    public GUIaccueil(Client client) {
+    private ControleurAccueil controleurAccueil;
+
+    public GUIaccueil(Client client, ControleurAccueil controleurAccueil) {
         super("Cinéma");
         this.client = client;
+        this.controleurAccueil = controleurAccueil;
+        this.films = controleurAccueil.getFilms();
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         setSize(1500, 800);
@@ -21,6 +30,7 @@ public class GUIaccueil extends JFrame {
         int y = (screenSize.height - getHeight()) / 2;
         setLocation(x, y);
 
+        // Création du JPanel pour drawComponents
         JPanel drawComponents = new JPanel() {
             @Override
             protected void paintComponent(Graphics g) {
@@ -37,6 +47,7 @@ public class GUIaccueil extends JFrame {
             }
         };
 
+        // Ajout du JLabel pour afficher le nom du client
         JLabel labelNom = new JLabel("Connecté en tant que " + client.getPrenom() + " " + client.getNom());
         labelNom.setBounds(1100, 30, 300, 30);
         labelNom.setForeground(Color.WHITE);
@@ -44,26 +55,58 @@ public class GUIaccueil extends JFrame {
         drawComponents.add(labelNom);
         drawComponents.setLayout(null);
 
-// Créer un JPanel pour contenir le contenu
-        JPanel contentPane = new JPanel();
-        contentPane.setLayout(new GridLayout(1, 30)); // Utilisation d'un layout pour ajouter du contenu
+        JPanel scrollablePanel = new JPanel();
+        scrollablePanel.setLayout(new GridLayout(0, films.size()));
 
-        // Ajouter du contenu à votre JPanel (par exemple, des JLabels)
-        for (int i = 0; i < 30; i++) {
-            JLabel label = new JLabel("Élément " + (i + 1));
-            contentPane.add(label);
+        for (Film f : films) {
+            JButton button = new JButton();
+
+            ImageIcon imageIcon = new ImageIcon("images/affiches/" + f.getCheminImage());
+
+            if (imageIcon.getImageLoadStatus() == MediaTracker.COMPLETE) {
+                Image image = imageIcon.getImage().getScaledInstance(500, 700, Image.SCALE_SMOOTH);
+                ImageIcon resizedIcon = new ImageIcon(image);
+                button.setIcon(resizedIcon);
+            } else {
+                button.setText("Image indisponible");
+            }
+            button.setPreferredSize(new Dimension(500, 400));
+
+            // Créer un JPanel transparent pour le voile opaque
+            JPanel overlayPanel = new JPanel();
+            overlayPanel.setBackground(new Color(0, 0, 0, 150)); // Couleur noire semi-transparente
+            overlayPanel.setVisible(false); // Le voile est initialement invisible
+            button.setLayout(new BorderLayout());
+            button.setBorderPainted(false);
+            overlayPanel.setBounds(0, 0, 500, 400);
+            button.add(overlayPanel, BorderLayout.CENTER);
+
+            // Ajouter des écouteurs d'événements pour détecter le survol de la souris
+            button.addMouseListener(new MouseAdapter() {
+                @Override
+                public void mouseEntered(MouseEvent e) {
+                    overlayPanel.setVisible(true); // Afficher le voile lors du survol
+                }
+
+                @Override
+                public void mouseExited(MouseEvent e) {
+                    overlayPanel.setVisible(false); // Cacher le voile lorsque la souris quitte
+                }
+            });
+
+            scrollablePanel.add(button);
         }
 
-        // Créer un JScrollPane et y ajouter le JPanel contenant le contenu
-        JScrollPane scrollPane = new JScrollPane(contentPane);
-        scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS); // Activer la barre de défilement verticale
 
-        // Ajouter le JScrollPane au JFrame
+        JScrollPane scrollPane = new JScrollPane(scrollablePanel);
+        scrollPane.setBounds(10, 110, 1463, 650);
+        scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
 
+
+        drawComponents.add(scrollPane);
         add(drawComponents);
-        add(scrollPane);
 
-        setVisible(false);
+        setVisible(true);
+
     }
-
 }

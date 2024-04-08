@@ -1,5 +1,6 @@
 package Controleur;
 
+import Modele.Film;
 import Vue.GUIconnexion;
 import Vue.GUIaccueil;
 import Modele.Client;
@@ -36,8 +37,9 @@ public class ControleurConnexion {
                     if(handleConnexion(email, motDePasse)){
                         vue.closeWindow();
                         // Envoyer le client à ControleurAccueil
-                        vueAccueil = new GUIaccueil(client);
-                        controleurAccueil = new ControleurAccueil(vueAccueil);
+                        controleurAccueil = new ControleurAccueil(null, connexion);
+                        vueAccueil = new GUIaccueil(client, controleurAccueil);
+                        controleurAccueil.setVueAccueil(vueAccueil);
                         controleurAccueil.setClient(client);
                         controleurAccueil.openWindow();
                     }
@@ -58,8 +60,6 @@ public class ControleurConnexion {
             if (!emails.isEmpty()) {
                 //Vérifier si le mot de passe correspond à l'email
                 ArrayList<String> resultatsMdp = connexion.remplirChampsRequete("SELECT * FROM membre WHERE Email = '" + email + "' AND Mot_de_passe = '" + motDePasse + "'");
-                System.out.println(resultatsMdp);
-
                 if (!resultatsMdp.isEmpty()) {
 
                     //Création du client avec toutes les infos
