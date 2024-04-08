@@ -30,7 +30,7 @@ public class GUIaccueil extends JFrame {
         int y = (screenSize.height - getHeight()) / 2;
         setLocation(x, y);
 
-        // Création du JPanel pour drawComponents
+        //Création du JPanel pour drawComponents
         JPanel drawComponents = new JPanel() {
             @Override
             protected void paintComponent(Graphics g) {
@@ -70,36 +70,47 @@ public class GUIaccueil extends JFrame {
             } else {
                 button.setText("Image indisponible");
             }
-            button.setPreferredSize(new Dimension(500, 400));
+            button.setPreferredSize(new Dimension(500, 200));
 
-            // Créer un JPanel transparent pour le voile opaque
             JPanel overlayPanel = new JPanel();
-            overlayPanel.setBackground(new Color(0, 0, 0, 150)); // Couleur noire semi-transparente
-            overlayPanel.setVisible(false); // Le voile est initialement invisible
-            button.setLayout(new BorderLayout());
             button.setBorderPainted(false);
-            overlayPanel.setBounds(0, 0, 500, 400);
+            overlayPanel.setBackground(new Color(0, 0, 0, 100));
+
+            overlayPanel.setVisible(false);
+            button.setLayout(new BorderLayout());
             button.add(overlayPanel, BorderLayout.CENTER);
 
-            // Ajouter des écouteurs d'événements pour détecter le survol de la souris
+            JLabel labelTitre = new JLabel();
+            labelTitre.setForeground(Color.WHITE);
+            labelTitre.setHorizontalAlignment(SwingConstants.LEADING);
+            labelTitre.setVerticalAlignment(SwingConstants.CENTER);
+            overlayPanel.add(labelTitre);
+
+            Font police = new Font("Arial", Font.BOLD, 25);
+
+            labelTitre.setFont(police);
+
+
             button.addMouseListener(new MouseAdapter() {
                 @Override
                 public void mouseEntered(MouseEvent e) {
-                    overlayPanel.setVisible(true); // Afficher le voile lors du survol
+                    overlayPanel.setVisible(true);
+                    labelTitre.setText(f.getTitre());
                 }
 
                 @Override
                 public void mouseExited(MouseEvent e) {
-                    overlayPanel.setVisible(false); // Cacher le voile lorsque la souris quitte
+                    overlayPanel.setVisible(false);
+                    labelTitre.setText("");
                 }
             });
-
             scrollablePanel.add(button);
         }
 
 
+
         JScrollPane scrollPane = new JScrollPane(scrollablePanel);
-        scrollPane.setBounds(10, 110, 1463, 650);
+        scrollPane.setBounds(10, 110, 1463, 670);
         scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
 
 
