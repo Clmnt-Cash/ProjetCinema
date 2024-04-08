@@ -7,6 +7,10 @@ import java.awt.event.ActionListener;
 public class GUIconnexion extends JFrame {
     private JTextField textEmail;
     private JTextField textMdp;
+    private JButton boutonCreer;
+    private JButton boutonInvite;
+    private JButton boutonConnexion;
+    private JLabel errorLabel;
     public GUIconnexion() {
         super("Connexion");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -56,7 +60,7 @@ public class GUIconnexion extends JFrame {
         drawComponents.add(textMdp);
 
         //Section bouton creer un nouveau compte
-        JButton boutonCreer = new JButton("Se créer un compte");
+        boutonCreer = new JButton("Se créer un compte");
         boutonCreer.setBounds(150, 380, 200, 30);
         boutonCreer.setForeground(Color.GRAY);
         boutonCreer.setOpaque(false);
@@ -65,29 +69,61 @@ public class GUIconnexion extends JFrame {
         drawComponents.add(boutonCreer);
 
         //Section bouton se connecter
-        JButton boutonConnexion = new JButton("Se connecter");
-        boutonConnexion.setBounds(190, 430, 125, 30);
+        boutonConnexion = new JButton("Se connecter");
+        boutonConnexion.setBounds(190, 450, 125, 30);
         boutonConnexion.setForeground(Color.WHITE);
         boutonConnexion.setBackground(new Color(100, 100, 100));
         drawComponents.add(boutonConnexion);
 
-        boutonConnexion.addActionListener(new ActionListener() {
+        //Section bouton se connecter en tant qu'invité
+        boutonCreer = new JButton("Se connecter en tant qu'invité");
+        boutonCreer.setBounds(135, 410, 230, 30);
+        boutonCreer.setForeground(Color.GRAY);
+        boutonCreer.setOpaque(false);
+        boutonCreer.setContentAreaFilled(false);
+        boutonCreer.setBorderPainted(false);
+        drawComponents.add(boutonCreer);
+
+        //Label erreur
+        errorLabel = new JLabel();
+        errorLabel.setForeground(Color.RED);
+        errorLabel.setFont(new Font("Arial", Font.PLAIN, 12));
+        errorLabel.setBounds(100, 500, 300, 30);
+        errorLabel.setHorizontalAlignment(SwingConstants.CENTER);
+        drawComponents.add(errorLabel);
+
+        //Ajoute un timer pour supprimer le label après 3 secondes
+        Timer timer = new Timer(3000, new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                String email = getEmail();
-                String motDePasse = getMotDePasse();
-
-                System.out.println("Email: " + email);
-                System.out.println("Mot de passe: " + motDePasse);
+                errorLabel.setText("");
             }
         });
-
+        timer.setRepeats(false);
 
         drawComponents.setLayout(null);
         add(drawComponents);
 
         setVisible(true);
     }
+
+    //Méthode pour ajouter un ActionListener au bouton de connexion
+    public void addConnexionListener(ActionListener listener) {
+        boutonConnexion.addActionListener(listener);
+    }
+    //Message d'erreur
+    public void displayError(String message){
+        errorLabel.setText(message); // Afficher le message d'erreur dans le label
+        Timer timer = new Timer(3000, new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                errorLabel.setText("");
+            }
+        });
+        timer.setRepeats(false);
+        timer.start();
+    }
+
 
     //Getters
     public String getEmail() {

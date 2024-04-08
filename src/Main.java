@@ -1,3 +1,4 @@
+import Controleur.ControleurConnexion;
 import Vue.GUIprincipal;
 import Vue.GUIconnexion;
 
@@ -10,6 +11,8 @@ public class Main {
                 cinemaGUI.setVisible(true);
             }
         });*/
-        GUIconnexion window = new GUIconnexion();
+        GUIconnexion vue = new GUIconnexion();
+        ControleurConnexion controleur = new ControleurConnexion(vue);
+
     }
 }
