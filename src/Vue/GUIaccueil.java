@@ -22,6 +22,7 @@ public class GUIaccueil extends JFrame {
     private ControleurAccueil controleurAccueil;
     private ArrayList<JButton> boutons;
     private JButton boutonRetour;
+    private JPanel scrollablePanel;
 
     //Constructeur
     public GUIaccueil(Client client, ControleurAccueil controleurAccueil) {
@@ -85,7 +86,7 @@ public class GUIaccueil extends JFrame {
             }
         };
 
-        // Ajout du JLabel pour afficher le nom du client
+        //Ajout du JLabel pour afficher le nom du client
         JLabel labelNom = new JLabel("Connecté en tant que " + client.getPrenom() + " " + client.getNom());
         labelNom.setBounds(1100, 30, 300, 30);
         labelNom.setForeground(Color.WHITE);
@@ -93,7 +94,7 @@ public class GUIaccueil extends JFrame {
         panel.add(labelNom);
         panel.setLayout(null);
 
-        JPanel scrollablePanel = new JPanel();
+        scrollablePanel = new JPanel();
         scrollablePanel.setLayout(new GridLayout(0, films.size()));
         boutonFilmMap = new HashMap<>();
 

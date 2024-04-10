@@ -57,7 +57,7 @@ public class ControleurAccueil {
 
             for (String resultat : resultatsFilms) {
                 String[] infosFilm = resultat.split(",");
-                // Extraire les informations sur le film
+                //Extraire les informations sur le film
                 String titre = infosFilm[0].trim();
                 String realisateur = infosFilm[1].trim();
 
