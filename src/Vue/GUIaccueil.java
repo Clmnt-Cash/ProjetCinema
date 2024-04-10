@@ -6,20 +6,26 @@ import Modele.Film;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 public class GUIaccueil extends JFrame {
+    private Map<JButton, Film> boutonFilmMap;
     private ArrayList<Film> films;
     private Client client;
     private ControleurAccueil controleurAccueil;
-
+    private ArrayList<JButton> boutons;
     public GUIaccueil(Client client, ControleurAccueil controleurAccueil) {
         super("Cinéma");
         this.client = client;
         this.controleurAccueil = controleurAccueil;
         this.films = controleurAccueil.getFilms();
+        this.boutons = new ArrayList<>();
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         setSize(1500, 800);
@@ -57,6 +63,7 @@ public class GUIaccueil extends JFrame {
 
         JPanel scrollablePanel = new JPanel();
         scrollablePanel.setLayout(new GridLayout(0, films.size()));
+        boutonFilmMap = new HashMap<>();
 
         for (Film f : films) {
             JButton button = new JButton();
@@ -89,7 +96,9 @@ public class GUIaccueil extends JFrame {
             Font police = new Font("Arial", Font.BOLD, 25);
 
             labelTitre.setFont(police);
+            boutons.add(button); // Ajout du bouton à la liste
 
+            boutonFilmMap.put(button, f);
 
             button.addMouseListener(new MouseAdapter() {
                 @Override
@@ -104,6 +113,8 @@ public class GUIaccueil extends JFrame {
                     labelTitre.setText("");
                 }
             });
+        }
+        for (JButton button : boutons) {
             scrollablePanel.add(button);
         }
 
@@ -119,5 +130,15 @@ public class GUIaccueil extends JFrame {
 
         setVisible(true);
 
+    }
+
+    public void addListener(ActionListener listener) {
+        for(JButton b : boutons) {
+            b.addActionListener(listener);
+        }
+    }
+
+    public Map<JButton, Film> getBoutonFilmMap() {
+        return boutonFilmMap;
     }
 }

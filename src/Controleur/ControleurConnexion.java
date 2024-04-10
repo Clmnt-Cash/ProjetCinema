@@ -37,9 +37,9 @@ public class ControleurConnexion {
                     if(handleConnexion(email, motDePasse)){
                         vue.closeWindow();
                         // Envoyer le client à ControleurAccueil
-                        controleurAccueil = new ControleurAccueil(null, connexion);
+                        controleurAccueil = new ControleurAccueil(connexion);
                         vueAccueil = new GUIaccueil(client, controleurAccueil);
-                        controleurAccueil.setVueAccueil(vueAccueil);
+                        controleurAccueil.setVue(vueAccueil);
                         controleurAccueil.setClient(client);
                         controleurAccueil.openWindow();
                     }

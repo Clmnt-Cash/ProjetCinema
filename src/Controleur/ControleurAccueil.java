@@ -4,6 +4,9 @@ import Modele.Client;
 import Modele.Film;
 import Vue.GUIaccueil;
 
+import javax.swing.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
@@ -11,11 +14,24 @@ public class ControleurAccueil {
     private Client client;
     private GUIaccueil vueAccueil;
     private Connexion connexion;
-    public ControleurAccueil(GUIaccueil vueAccueil, Connexion connexion){
-        this.connexion=connexion;
-        this.vueAccueil=vueAccueil;
+    private ArrayList<Film> films;
+
+    public ControleurAccueil(Connexion connexion) {
+        this.connexion = connexion;
     }
 
+    public void setVue(GUIaccueil vue){
+        this.vueAccueil = vue;
+        this.films = this.getFilms();
+        this.vueAccueil.addListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                JButton clickedButton = (JButton) e.getSource();
+                Film film = vueAccueil.getBoutonFilmMap().get(clickedButton);
+                JOptionPane.showMessageDialog(null, "Vous avez cliqué sur : " + film.getTitre(), "Film sélectionné", JOptionPane.INFORMATION_MESSAGE);
+            }
+        });
+    }
     public void setClient(Client client) {
         this.client = client;
     }
@@ -23,9 +39,7 @@ public class ControleurAccueil {
     public void openWindow(){
         this.vueAccueil.setVisible(true);
     }
-    public void setVueAccueil(GUIaccueil vueAccueil){
-        this.vueAccueil = vueAccueil;
-    }
+
     public ArrayList<Film> getFilms(){
         ArrayList<Film> films = new ArrayList<>();
 
