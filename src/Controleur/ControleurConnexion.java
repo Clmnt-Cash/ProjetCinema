@@ -4,6 +4,8 @@ import Modele.Film;
 import Vue.GUIconnexion;
 import Vue.GUIaccueil;
 import Modele.Client;
+import Vue.GUIcrea;
+
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -12,15 +14,17 @@ import java.util.ArrayList;
 public class ControleurConnexion {
     private Client client;
     private GUIconnexion vueConnexion;
+    private GUIcrea vueCrea;
     private Connexion connexion;
     private ControleurAccueil controleurAccueil;
+    private ControleurCrea controleurCrea;
     private GUIaccueil vueAccueil;
 
 
     public ControleurConnexion(GUIconnexion vue) {
         this.vueConnexion = vue;
         try {
-            connexion = new Connexion("cinema", "root", "");
+            connexion = new Connexion("cinema", "root", "C.start08202003");
         } catch (SQLException | ClassNotFoundException e) {
             e.printStackTrace();
         }
@@ -44,6 +48,16 @@ public class ControleurConnexion {
                         controleurAccueil.openWindow();
                     }
                 }
+            }
+        });
+        this.vueConnexion.addCreationListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                vue.closeWindow();
+                // Envoyer le client à ControleurCrea
+                vueCrea = new GUIcrea();
+                controleurCrea = new ControleurCrea(vueCrea);
+                controleurCrea.openWindow();
             }
         });
     }

@@ -78,13 +78,13 @@ public class GUIconnexion extends JFrame {
         drawComponents.add(boutonConnexion);
 
         //Section bouton se connecter en tant qu'invité
-        boutonCreer = new JButton("Se connecter en tant qu'invité");
-        boutonCreer.setBounds(135, 410, 230, 30);
-        boutonCreer.setForeground(Color.GRAY);
-        boutonCreer.setOpaque(false);
-        boutonCreer.setContentAreaFilled(false);
-        boutonCreer.setBorderPainted(false);
-        drawComponents.add(boutonCreer);
+        boutonInvite = new JButton("Se connecter en tant qu'invité");
+        boutonInvite.setBounds(135, 410, 230, 30);
+        boutonInvite.setForeground(Color.GRAY);
+        boutonInvite.setOpaque(false);
+        boutonInvite.setContentAreaFilled(false);
+        boutonInvite.setBorderPainted(false);
+        drawComponents.add(boutonInvite);
 
         //Label erreur
         errorLabel = new JLabel();
@@ -112,6 +112,10 @@ public class GUIconnexion extends JFrame {
     //Méthode pour ajouter un ActionListener au bouton de connexion
     public void addConnexionListener(ActionListener listener) {
         boutonConnexion.addActionListener(listener);
+    }
+    //Méthode pour ajouter un ActionListener au bouton de creation
+    public void addCreationListener(ActionListener listener) {
+        boutonCreer.addActionListener(listener);
     }
     //Message d'erreur
     public void displayError(String message){

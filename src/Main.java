@@ -1,6 +1,6 @@
 import Controleur.ControleurConnexion;
-import Vue.GUIaccueil;
 import Vue.GUIconnexion;
+//import Vue.GUIaccueil;
 
 
 public class Main {

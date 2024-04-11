@@ -1,6 +1,9 @@
 package Controleur;
 
+import Vue.GUIaccueil;
 import Vue.GUIcrea;
+
+import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -50,6 +53,10 @@ public class ControleurCrea{
 
             }
         });
+    }
+
+    public void openWindow(){
+        this.vue.setVisible(true);
     }
 
     public void handleCreation(Integer type, String Nom, String Prenom, String email, String motDePasse) {

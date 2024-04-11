@@ -13,6 +13,8 @@ public class GUIcrea extends JFrame {
     private JTextField textMdpConf;
     private JButton boutonCreer;
     private JLabel errorLabel;
+
+
     public GUIcrea() {
         super("Creation de compte");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -139,6 +141,7 @@ public class GUIcrea extends JFrame {
     public void addConnexionListener(ActionListener listener) {
         boutonCreer.addActionListener(listener);
     }
+
     //Message d'erreur
     public void displayError(String message){
         errorLabel.setText(message); // Afficher le message d'erreur dans le label
