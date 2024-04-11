@@ -62,6 +62,10 @@ public class ControleurConnexion {
         });
     }
 
+    public void openWindow(){
+        this.vueConnexion.setVisible(true);
+    }
+
     /**
      *
      * @param email

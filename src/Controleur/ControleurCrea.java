@@ -1,6 +1,7 @@
 package Controleur;
 
 import Vue.GUIaccueil;
+import Vue.GUIconnexion;
 import Vue.GUIcrea;
 
 import javax.swing.*;
@@ -13,6 +14,8 @@ import java.util.ArrayList;
 public class ControleurCrea{
     //Attributs
     private GUIcrea vue;
+    private GUIconnexion vueCo;
+    private ControleurConnexion coCo;
     private Connexion connexion;
 
     //Constructeur
@@ -70,6 +73,12 @@ public class ControleurCrea{
                 connexion.executerRequete(requeteInsertion); // Exécute la requête d'insertion
                 // Confirmation de la création du compte
                 vue.displayError("Compte créé avec succès !");
+                //retour page connexion :
+                vue.closeWindow();
+                //retour page connexion
+                vueCo = new GUIconnexion();
+                coCo = new ControleurConnexion(vueCo);
+                coCo.openWindow();
             } else {
                 //Email non trouvé dans la bdd
                 vue.displayError("Cet e-mail est déjà associé à aucun compte");

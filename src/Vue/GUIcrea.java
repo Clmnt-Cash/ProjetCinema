@@ -155,6 +155,9 @@ public class GUIcrea extends JFrame {
         timer.start();
     }
 
+    public void closeWindow(){
+        setVisible(false);
+    }
 
     //Getters
     public String getNom() {
