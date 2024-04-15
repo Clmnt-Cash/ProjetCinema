@@ -19,13 +19,9 @@ public class ControleurCrea{
     private Connexion connexion;
 
     //Constructeur
-    public ControleurCrea(GUIcrea vue) {
+    public ControleurCrea(GUIcrea vue, Connexion connexion) {
         this.vue = vue;
-        try {
-            connexion = new Connexion("cinema", "root", "C.start08202003");
-        } catch (SQLException | ClassNotFoundException e) {
-            e.printStackTrace();
-        }
+        this.connexion = connexion;
         //Si l utilisateur clique sur créer, obtneir l email et le mdp
         this.vue.addConnexionListener(new ActionListener() {
             @Override

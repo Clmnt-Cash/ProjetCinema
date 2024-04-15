@@ -56,7 +56,7 @@ public class ControleurConnexion {
                 vue.closeWindow();
                 // Envoyer le client à ControleurCrea
                 vueCrea = new GUIcrea();
-                controleurCrea = new ControleurCrea(vueCrea);
+                controleurCrea = new ControleurCrea(vueCrea, connexion);
                 controleurCrea.openWindow();
             }
         });

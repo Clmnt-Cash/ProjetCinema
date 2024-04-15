@@ -20,6 +20,7 @@ public class GUIfilm extends JFrame {
     private Film filmActuel;
     private ArrayList<JButton> boutonsSeance;
     private Reduction reduction;
+    private Seance seance;
 
     //Constructeur
     public GUIfilm(Client client, ControleurFilm controleurFilm, Film film) {
@@ -141,7 +142,7 @@ public class GUIfilm extends JFrame {
             else if(client.getType() == 3){prix = s.getPrix() * reduction.getReductionSenior()/100;}
             else {prix = s.getPrix();}
 
-            JLabel labelPrix = new JLabel(String.valueOf("    " + prix + "€"));
+            JLabel labelPrix = new JLabel("    " + prix + "€");
             labelPrix.setFont(labelPrix.getFont().deriveFont(Font.PLAIN, 10));
             GridBagConstraints gbcPrix = new GridBagConstraints();
             gbcPrix.gridx = 2;
@@ -176,5 +177,4 @@ public class GUIfilm extends JFrame {
             b.addActionListener(listener);
         }
     }
-
 }
