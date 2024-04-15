@@ -3,6 +3,7 @@ package Controleur;
 import Modele.Client;
 import Modele.Film;
 import Vue.GUIaccueil;
+import Vue.GUIfilm;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
@@ -17,6 +18,9 @@ public class ControleurAccueil {
     private ArrayList<Film> films;
     private Film filmActuel;
 
+    private ControleurFilm controleurFilm;
+    private GUIfilm vueFilm;
+
     public ControleurAccueil(Connexion connexion) {
         this.connexion = connexion;
     }
@@ -24,20 +28,16 @@ public class ControleurAccueil {
     public void setVue(GUIaccueil vue){
         this.vueAccueil = vue;
         this.films = this.getFilms();
+        //Aller sur la page du film
         this.vueAccueil.addListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 JButton clickedButton = (JButton) e.getSource();
                 filmActuel = vueAccueil.getBoutonFilmMap().get(clickedButton);
-                System.out.println(filmActuel.getTitre());
-                vueAccueil.afficherFilm(filmActuel);
-            }
-        });
-
-        this.vueAccueil.addListenerRetour(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                vueAccueil.afficherMenu();
+                vueAccueil.closeWindow();
+                controleurFilm = new ControleurFilm(connexion, filmActuel, client);
+                vueFilm = new GUIfilm(client, controleurFilm, filmActuel);
+                controleurFilm.setVue(vueFilm);
             }
         });
     }

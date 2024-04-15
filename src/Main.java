@@ -7,6 +7,5 @@ public class Main {
 
         GUIconnexion vue = new GUIconnexion();
         ControleurConnexion controleur = new ControleurConnexion(vue);
-
     }
 }

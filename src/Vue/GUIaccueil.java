@@ -21,7 +21,6 @@ public class GUIaccueil extends JFrame {
     private Client client;
     private ControleurAccueil controleurAccueil;
     private ArrayList<JButton> boutons;
-    private JButton boutonRetour;
     private JPanel scrollablePanel;
 
     //Constructeur
@@ -44,10 +43,6 @@ public class GUIaccueil extends JFrame {
         this.afficherMenu();
 
         setVisible(true);
-
-
-        boutonRetour = new JButton("Retour");
-
     }
 
 
@@ -157,75 +152,10 @@ public class GUIaccueil extends JFrame {
         scrollPane.setBounds(10, 110, 1463, 670);
         scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
         panel.add(scrollPane);
-        this.changerAffichage(panel);
-    }
-
-    public void afficherFilm(Film film) {
-        JPanel panel = new JPanel() {
-            @Override
-            protected void paintComponent(Graphics g) {
-                super.paintComponent(g);
-                Color c1 = new Color(0, 0, 0);
-                g.setColor(c1);
-                g.fillRect(0, 100, 1500, 700);
-                Color c2 = new Color(50, 50, 50, 200);
-                g.setColor(c2);
-                g.fillRect(0, 0, 1500, 100);
-                ImageIcon logo = new ImageIcon("images/logos/logo_black.png");
-                Image image = logo.getImage();
-                g.drawImage(image, 0, 0, 100, 100, this);
-            }
-        };
-
-        //Ajout du JLabel pour afficher le nom du client
-        JLabel labelNom = new JLabel("Connecté en tant que " + client.getPrenom() + " " + client.getNom());
-        labelNom.setBounds(1100, 30, 300, 30);
-        labelNom.setForeground(Color.WHITE);
-        labelNom.setHorizontalAlignment(SwingConstants.RIGHT);
-        panel.add(labelNom);
         panel.setLayout(null);
-
-        //Affichage du nom du film
-        JLabel labelTitre = new JLabel(film.getTitre());
-        labelTitre.setBounds(10, 150, 400, 30);
-        labelTitre.setForeground(Color.WHITE);
-        panel.add(labelTitre);
-
-        //Affichage de l'image du film
-        ImageIcon imageIcon = new ImageIcon("images/affiches/" + film.getCheminImage());
-        JLabel labelImage = new JLabel(imageIcon);
-        labelImage.setBounds(10, 200, 500, 700);
-        panel.add(labelImage);
-
-        //Affichage du synopsis
-        JTextArea areaSynopsis = new JTextArea(film.getSynopsis());
-        areaSynopsis.setBounds(450, 200, 600, 400);
-        areaSynopsis.setForeground(Color.WHITE);
-        areaSynopsis.setBackground(Color.BLACK);
-        areaSynopsis.setLineWrap(true);
-        areaSynopsis.setWrapStyleWord(true);
-        panel.add(areaSynopsis);
-
-        //Affichage du nom du réalisateur
-        JLabel labelRealisateur = new JLabel("Réalisé par " + film.getRealisateur());
-        labelRealisateur.setBounds(450, 150, 400, 30);
-        labelRealisateur.setForeground(Color.WHITE);
-        panel.add(labelRealisateur);
-
-        //Ajout du bouton Retour
-        boutonRetour.setBounds(10, 110, 100, 50);
-        boutonRetour.setForeground(Color.WHITE);
-        boutonRetour.setBackground(Color.BLACK);
-        panel.add(boutonRetour);
-
-        this.changerAffichage(panel);
+        add(panel);
     }
 
-    public void addListenerRetour(ActionListener listener){
-        boutonRetour.addActionListener(listener);
-    }
-
-
-
-
+    public void closeWindow(){setVisible(false);dispose();}
+    public void openWindow(){setVisible(true);}
 }
