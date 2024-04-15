@@ -9,8 +9,9 @@ import Modele.Seance;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.ArrayList;
+import java.util.*;
 
 public class GUIfilm extends JFrame {
     //Attributs
@@ -19,6 +20,9 @@ public class GUIfilm extends JFrame {
     private JButton boutonRetour;
     private Film filmActuel;
     private ArrayList<JButton> boutonsSeance;
+    private ArrayList<JButton> boutonsDate;
+    private ArrayList<Seance> seanceParDate;
+
     private Reduction reduction;
     private Seance seance;
 
@@ -29,6 +33,8 @@ public class GUIfilm extends JFrame {
         this.controleurFilm = controleurFilm;
         this.filmActuel = film;
         this.boutonsSeance = new ArrayList<JButton>();
+        this.boutonsDate = new ArrayList<JButton>();
+        this.seanceParDate = new ArrayList<Seance>();
         this.reduction = controleurFilm.getReduction();
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
@@ -90,11 +96,11 @@ public class GUIfilm extends JFrame {
 
         //Affichage du synopsis
         JLabel labelSynopsis = new JLabel("<html><u>Synopsis</u><br><br>" + filmActuel.getSynopsis() + "</html>");
-        labelSynopsis.setBounds(450, 280, 800, 100);
+        labelSynopsis.setBounds(450, 280, 400, 500);
         labelSynopsis.setForeground(Color.WHITE);
         labelSynopsis.setBackground(Color.BLACK);
         labelSynopsis.setVerticalAlignment(SwingConstants.TOP);
-        labelSynopsis.setPreferredSize(new Dimension(800, 100));
+        labelSynopsis.setPreferredSize(new Dimension(400, 500));
         labelSynopsis.setVerticalTextPosition(SwingConstants.TOP);
         labelSynopsis.setHorizontalTextPosition(SwingConstants.LEFT);
         labelSynopsis.setHorizontalAlignment(SwingConstants.LEFT);
@@ -111,55 +117,88 @@ public class GUIfilm extends JFrame {
 
         //Ajout des boutons pour chaque séance
         ArrayList<Seance> seances = film.getSeances();
-        int xBouton = 0;
-        for (Seance s : seances) {
-            JButton bouton = new JButton();
-            bouton.setLayout(new GridBagLayout());
 
-            //Date
-            JLabel labelDate = new JLabel(s.getDate());
-            labelDate.setFont(labelDate.getFont().deriveFont(Font.PLAIN, 10));
-            GridBagConstraints gbcDate = new GridBagConstraints();
-            gbcDate.gridx = 0;
-            gbcDate.gridy = 0;
-            gbcDate.anchor = GridBagConstraints.NORTHWEST;
-            bouton.add(labelDate, gbcDate);
-
-            //Heure
-            JLabel labelHeure = new JLabel(s.getHeure());
-            labelHeure.setFont(labelDate.getFont().deriveFont(Font.BOLD, 20));
-            GridBagConstraints gbcHeure = new GridBagConstraints();
-            gbcHeure.gridx = 1;
-            gbcHeure.gridy = 1;
-            gbcHeure.anchor = GridBagConstraints.CENTER;
-            bouton.add(labelHeure, gbcHeure);
-
-            //Prix
-            int prix;
-            //Calcul du prix selon les réductions
-            if(client.getType() == 1){prix = s.getPrix() * reduction.getReductionEnfant()/100;}
-            else if(client.getType() == 2){prix = s.getPrix() * reduction.getReductionRegulier()/100;}
-            else if(client.getType() == 3){prix = s.getPrix() * reduction.getReductionSenior()/100;}
-            else {prix = s.getPrix();}
-
-            JLabel labelPrix = new JLabel("    " + prix + "€");
-            labelPrix.setFont(labelPrix.getFont().deriveFont(Font.PLAIN, 10));
-            GridBagConstraints gbcPrix = new GridBagConstraints();
-            gbcPrix.gridx = 2;
-            gbcPrix.gridy = 2;
-            gbcPrix.anchor = GridBagConstraints.SOUTHEAST;
-            bouton.add(labelPrix, gbcPrix);
-
-            //Calcul de la position du bouton
-            bouton.setBounds(450 + xBouton * 130, 450, 120, 80);
-            bouton.setForeground(Color.BLACK);
-            bouton.setBackground(Color.WHITE);
-
-            bouton.putClientProperty("IDseance", s.getId());
-            panel.add(bouton);
-            boutonsSeance.add(bouton);
-            xBouton++;
+        ArrayList<String> datesUniques = new ArrayList<String>();
+        for(Seance s : seances){
+            if(!datesUniques.contains(s.getDate()))datesUniques.add(s.getDate());
         }
+        System.out.println(datesUniques);
+
+        int yBouton = 0;
+        for(String date : datesUniques){
+            String mois = date.substring(3, 5);
+            String jour = date.substring(0, 2);
+            if(mois.equals("01"))mois = "janvier";
+            else if(mois.equals("02"))mois = "février";
+            else if(mois.equals("03"))mois = "mars";
+            else if(mois.equals("04"))mois = "avril";
+            else if(mois.equals("05"))mois = "mai";
+            else if(mois.equals("06"))mois = "juin";
+            else if(mois.equals("07"))mois = "juillet";
+            else if(mois.equals("08"))mois = "août";
+            else if(mois.equals("09"))mois = "septembre";
+            else if(mois.equals("10"))mois = "octobre";
+            else if(mois.equals("11"))mois = "novembre";
+            else if(mois.equals("12"))mois = "décembre";
+
+            JLabel labelDate = new JLabel(jour + " " + mois);
+            labelDate.setBounds(860, 200 + yBouton * 80, 200, 20);
+            labelDate.setForeground(Color.WHITE);
+            panel.add(labelDate);
+            yBouton ++;
+            int xBouton = 0;
+            for (Seance s : seances) {
+                if(Objects.equals(s.getDate(), date)) {
+                    JButton bouton = new JButton();
+                    bouton.setLayout(new GridBagLayout());
+
+                    //Heure
+                    JLabel labelHeure = new JLabel(s.getHeure());
+                    labelHeure.setFont(labelDate.getFont().deriveFont(Font.BOLD, 20));
+                    GridBagConstraints gbcHeure = new GridBagConstraints();
+                    gbcHeure.gridx = 1;
+                    gbcHeure.gridy = 0;
+                    gbcHeure.anchor = GridBagConstraints.CENTER;
+                    bouton.add(labelHeure, gbcHeure);
+
+                    //Prix
+                    int prix;
+                    //Calcul du prix selon les réductions
+                    if (client.getType() == 1) {
+                        prix = s.getPrix() * reduction.getReductionEnfant() / 100;
+                    } else if (client.getType() == 2) {
+                        prix = s.getPrix() * reduction.getReductionRegulier() / 100;
+                    } else if (client.getType() == 3) {
+                        prix = s.getPrix() * reduction.getReductionSenior() / 100;
+                    } else {
+                        prix = s.getPrix();
+                    }
+
+                    JLabel labelPrix = new JLabel(prix + "€");
+                    labelPrix.setFont(labelPrix.getFont().deriveFont(Font.PLAIN, 10));
+                    GridBagConstraints gbcPrix = new GridBagConstraints();
+                    gbcPrix.gridx = 2;
+                    gbcPrix.gridy = 2;
+                    gbcPrix.anchor = GridBagConstraints.SOUTHEAST;
+                    bouton.add(labelPrix, gbcPrix);
+
+                    //Calcul de la position du bouton
+                    bouton.setBounds(860 + xBouton * 110, 150 + yBouton * 80, 100, 40);
+                    bouton.setForeground(Color.BLACK);
+                    bouton.setBackground(Color.WHITE);
+
+                    bouton.putClientProperty("seance", s.getId() + "," + date);
+
+                    panel.add(bouton);
+
+                    boutonsSeance.add(bouton);
+                    xBouton++;
+                }
+            }
+        }
+
+
+
 
 
         setVisible(true);

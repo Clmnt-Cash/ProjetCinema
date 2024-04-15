@@ -9,6 +9,7 @@ import Vue.GUIconnexion;
 import Vue.GUIfilm;
 
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.SQLException;
@@ -70,27 +71,36 @@ public class ControleurFilm {
                 JButton bouton = (JButton) e.getSource();
 
                 //Récupération du contenu des JLabels ajoutes au bouton
-                JLabel labelDate = (JLabel) bouton.getComponent(0);
-                JLabel labelHeure = (JLabel) bouton.getComponent(1);
-                JLabel labelPrix = (JLabel) bouton.getComponent(2);
-                int IDseance = (int) bouton.getClientProperty("IDseance");
+                JLabel labelHeure = (JLabel) bouton.getComponent(0);
+                JLabel labelPrix = (JLabel) bouton.getComponent(1);
+                String seanceChoisie = (String) bouton.getClientProperty("seance");
+                String[] infos = seanceChoisie.split(",");
+                //Extraire les informations sur le film
+                int id = Integer.parseInt(infos[0].trim());
+                String date = infos[1].trim();
 
                 //Récupération du texte des JLabels
-                String date = labelDate.getText();
                 String heure = labelHeure.getText();
                 String prix = labelPrix.getText().trim();
 
-                //Création de la boite de dialogue pour confirmer l'ajout au panier
-                int option = JOptionPane.showConfirmDialog(null, "Ajouter la séance de " + filmActuel.getTitre() + " le " + date + " au panier ?", "Confirmation", JOptionPane.YES_NO_OPTION);
+                //Customisation de la fenetre de dialogue
+                UIManager.put("OptionPane.background", Color.BLACK);
+                UIManager.put("Panel.background", Color.BLACK);
+                UIManager.put("OptionPane.messageForeground", Color.WHITE);
+                UIManager.put("Button.background", Color.WHITE);
+                UIManager.put("Button.foreground", Color.BLACK);
+                UIManager.put("Button.border", BorderFactory.createLineBorder(Color.WHITE));
+                UIManager.put("Button.focus", Color.WHITE);
+
+                int option = JOptionPane.showConfirmDialog(null,
+                        "Ajouter une séance pour " + filmActuel.getTitre() + " le " + date + " à " + heure + " au panier ?",
+                        "Confirmation",
+                        JOptionPane.YES_NO_OPTION);
 
                 if (option == JOptionPane.YES_OPTION) {
-                    ajouterPanier(IDseance);
-                } else {
-                    // Ajoutez ici le code pour ne pas ajouter la séance au panier
+                    ajouterPanier(id);
                 }
             }
-
-
         });
     }
 

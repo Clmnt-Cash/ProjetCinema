@@ -82,10 +82,6 @@ public class ControleurAccueil {
 
                 int id = Integer.parseInt(infosFilm[infosFilm.length - 2].trim());
                 String cheminImage = infosFilm[infosFilm.length - 1].trim();
-
-
-
-
                 Film film = new Film(id, titre, realisateur, synopsis, cheminImage);
                 ArrayList<Seance> seances = getSeancesForFilm(id); // Méthode à implémenter
                 film.setSeances(seances);
@@ -105,7 +101,6 @@ public class ControleurAccueil {
         try {
             //Récupérer les résultats de la requête SQL pour les séances du film donné
             ArrayList<String> resultatsSeances = connexion.remplirChampsRequete("SELECT * FROM seance WHERE ID_film = " + filmId + " ORDER BY Date_diffusion");
-
             for (String resultat : resultatsSeances) {
                 String[] infosSeance = resultat.split(",");
 
@@ -116,7 +111,10 @@ public class ControleurAccueil {
                 String[] parties = dateHeure.split(" ");
 
                 String date = parties[0];
-                date = date.substring(5, 10);
+                String mois = date.substring(5, 7);
+                String jour = date.substring(8, 10);
+                date = jour + "-" + mois;
+
                 String heure = parties[1];
                 heure = heure.substring(0, 5);
                 int prix = Integer.parseInt(infosSeance[2].trim());
