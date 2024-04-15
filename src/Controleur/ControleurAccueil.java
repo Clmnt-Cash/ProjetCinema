@@ -110,11 +110,17 @@ public class ControleurAccueil {
                 String[] infosSeance = resultat.split(",");
 
                 //Conversion de la date
-                Date date = convertStringToDate(infosSeance[1].trim());
+                String dateHeure = infosSeance[1].trim();
+                String[] parties = dateHeure.split(" ");
+
+                String date = parties[0];
+                date = date.substring(5, 10);
+                String heure = parties[1];
+                heure = heure.substring(0, 5);
                 int prix = Integer.parseInt(infosSeance[2].trim());
 
                 //Créer une séance avec les informations récupérées
-                Seance seance = new Seance(date, prix);
+                Seance seance = new Seance(date, heure, prix);
 
                 //Ajouter la séance à la liste
                 seances.add(seance);
@@ -124,16 +130,6 @@ public class ControleurAccueil {
         }
 
         return seances;
-    }
-    //Méthode pour convertir une chaîne de caractères en objet Date
-    private Date convertStringToDate(String dateString) {
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-        try {
-            return dateFormat.parse(dateString);
-        } catch (ParseException e) {
-            e.printStackTrace();
-            return null;
-        }
     }
 
 }

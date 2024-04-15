@@ -25,6 +25,7 @@ public class GUIfilm extends JFrame {
         this.client = client;
         this.controleurFilm = controleurFilm;
         this.filmActuel = film;
+        this.boutonsSeance = new ArrayList<JButton>();
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         setSize(1500, 800);
@@ -84,14 +85,17 @@ public class GUIfilm extends JFrame {
         panel.add(labelRealisateur);
 
         //Affichage du synopsis
-        JTextArea areaSynopsis = new JTextArea("Synopsis \n\n" + filmActuel.getSynopsis());
-        areaSynopsis.setBounds(450, 280, 600, 400);
-        areaSynopsis.setForeground(Color.WHITE);
-        areaSynopsis.setBackground(Color.BLACK);
-        areaSynopsis.setLineWrap(true);
-        areaSynopsis.setWrapStyleWord(true);
-        panel.add(areaSynopsis);
-
+        JLabel labelSynopsis = new JLabel("<html><u>Synopsis</u><br><br>" + filmActuel.getSynopsis() + "</html>");
+        labelSynopsis.setBounds(450, 280, 800, 100);
+        labelSynopsis.setForeground(Color.WHITE);
+        labelSynopsis.setBackground(Color.BLACK);
+        labelSynopsis.setVerticalAlignment(SwingConstants.TOP);
+        labelSynopsis.setPreferredSize(new Dimension(800, 100));
+        labelSynopsis.setVerticalTextPosition(SwingConstants.TOP);
+        labelSynopsis.setHorizontalTextPosition(SwingConstants.LEFT);
+        labelSynopsis.setHorizontalAlignment(SwingConstants.LEFT);
+        labelSynopsis.setOpaque(true);
+        panel.add(labelSynopsis);
 
 
         //Ajout du bouton Retour
@@ -103,15 +107,47 @@ public class GUIfilm extends JFrame {
 
         //Ajout des boutons pour chaque séance
         ArrayList<Seance> seances = film.getSeances();
-        for(Seance s : seances){
-            System.out.println(s.getDate() + " " + s.getPrix());
+        int xBouton = 0;
+        for (Seance s : seances) {
             JButton bouton = new JButton();
-            bouton.setBounds(450, 500, 100, 50);
-            bouton.setForeground(Color.WHITE);
-            bouton.setBackground(Color.BLACK);
-            panel.add(bouton);
+            bouton.setLayout(new GridBagLayout());
 
+            //Date
+            JLabel labelDate = new JLabel(s.getDate());
+            labelDate.setFont(labelDate.getFont().deriveFont(Font.PLAIN, 10));
+            GridBagConstraints gbcDate = new GridBagConstraints();
+            gbcDate.gridx = 0;
+            gbcDate.gridy = 0;
+            gbcDate.anchor = GridBagConstraints.NORTHWEST;
+            bouton.add(labelDate, gbcDate);
+
+            //Heure
+            JLabel labelHeure = new JLabel(s.getHeure());
+            labelHeure.setFont(labelDate.getFont().deriveFont(Font.BOLD, 20));
+            GridBagConstraints gbcHeure = new GridBagConstraints();
+            gbcHeure.gridx = 1;
+            gbcHeure.gridy = 1;
+            gbcHeure.anchor = GridBagConstraints.CENTER;
+            bouton.add(labelHeure, gbcHeure);
+
+            //Prix
+            JLabel labelPrix = new JLabel(String.valueOf("    " + s.getPrix() + "€"));
+            labelPrix.setFont(labelPrix.getFont().deriveFont(Font.PLAIN, 10));
+            GridBagConstraints gbcPrix = new GridBagConstraints();
+            gbcPrix.gridx = 2;
+            gbcPrix.gridy = 2;
+            gbcPrix.anchor = GridBagConstraints.SOUTHEAST;
+            bouton.add(labelPrix, gbcPrix);
+
+            //Calcul de la position du bouton
+            bouton.setBounds(450 + xBouton * 130, 450, 120, 80);
+            bouton.setForeground(Color.BLACK);
+            bouton.setBackground(Color.WHITE);
+            panel.add(bouton);
+            boutonsSeance.add(bouton);
+            xBouton++;
         }
+
 
         setVisible(true);
         panel.setLayout(null);
@@ -124,4 +160,11 @@ public class GUIfilm extends JFrame {
     }
 
     public void closeWindow(){setVisible(false);dispose();}
+
+    public void addListenerSeance(ActionListener listener){
+        for(JButton b : boutonsSeance){
+            b.addActionListener(listener);
+        }
+    }
+
 }

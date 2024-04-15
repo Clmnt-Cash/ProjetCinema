@@ -4,20 +4,26 @@ import java.util.Date;
 
 public class Seance {
     //Attributs
-    private Date date;
+    private String date;
     private int prix;
+    private String heure;
+
 
     //Constructeur
-    public Seance(Date date, int prix) {
+    public Seance(String date, String heure, int prix) {
         this.date = date;
+        this.heure = heure;
         this.prix = prix;
     }
 
     //Getters
-    public Date getDate(){
+    public String getDate(){
         return date;
     }
     public int getPrix(){
         return prix;
+    }
+    public String getHeure(){
+        return heure;
     }
 }

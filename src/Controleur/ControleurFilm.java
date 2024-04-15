@@ -23,10 +23,11 @@ public class ControleurFilm {
         this.filmActuel = filmActuel;
         this.client = client;
     }
-
+    //Methode pour initialiser la vue
     public void setVue(GUIfilm vue){
         this.vueFilm = vue;
         this.vueFilm.addListenerRetour(new ActionListener(){
+            //Ouverture de la page menu
             @Override
             public void actionPerformed(ActionEvent e) {
                 vueFilm.closeWindow();
@@ -39,10 +40,12 @@ public class ControleurFilm {
             }
         });
     }
+    //Méthode pour initialiser le client
     public void setClient(Client client) {
         this.client = client;
     }
 
+    //Méthode pour ouvrir la fenetre
     public void openWindow(){
         this.vueFilm.setVisible(true);
     }
