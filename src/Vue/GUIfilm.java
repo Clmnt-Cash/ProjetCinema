@@ -4,6 +4,7 @@ import Controleur.ControleurAccueil;
 import Controleur.ControleurFilm;
 import Modele.Client;
 import Modele.Film;
+import Modele.Reduction;
 import Modele.Seance;
 
 import javax.swing.*;
@@ -18,6 +19,7 @@ public class GUIfilm extends JFrame {
     private JButton boutonRetour;
     private Film filmActuel;
     private ArrayList<JButton> boutonsSeance;
+    private Reduction reduction;
 
     //Constructeur
     public GUIfilm(Client client, ControleurFilm controleurFilm, Film film) {
@@ -26,6 +28,7 @@ public class GUIfilm extends JFrame {
         this.controleurFilm = controleurFilm;
         this.filmActuel = film;
         this.boutonsSeance = new ArrayList<JButton>();
+        this.reduction = controleurFilm.getReduction();
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         setSize(1500, 800);
@@ -131,7 +134,14 @@ public class GUIfilm extends JFrame {
             bouton.add(labelHeure, gbcHeure);
 
             //Prix
-            JLabel labelPrix = new JLabel(String.valueOf("    " + s.getPrix() + "€"));
+            int prix;
+            //Calcul du prix selon les réductions
+            if(client.getType() == 1){prix = s.getPrix() * reduction.getReductionEnfant()/100;}
+            else if(client.getType() == 2){prix = s.getPrix() * reduction.getReductionRegulier()/100;}
+            else if(client.getType() == 3){prix = s.getPrix() * reduction.getReductionSenior()/100;}
+            else {prix = s.getPrix();}
+
+            JLabel labelPrix = new JLabel(String.valueOf("    " + prix + "€"));
             labelPrix.setFont(labelPrix.getFont().deriveFont(Font.PLAIN, 10));
             GridBagConstraints gbcPrix = new GridBagConstraints();
             gbcPrix.gridx = 2;
