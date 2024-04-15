@@ -1,5 +1,7 @@
 package Modele;
 
+import java.util.ArrayList;
+
 public class Film {
 
     //attributs
@@ -8,7 +10,7 @@ public class Film {
     private String real;
     private String synopsis;
     private String cheminImage;
-
+    private ArrayList<Seance> seances;
     // Constructeur
     public Film(int id, String titre, String real, String synopsis, String cheminImage) {
         this.id = id;
@@ -16,6 +18,7 @@ public class Film {
         this.real = real;
         this.synopsis = synopsis;
         this.cheminImage = cheminImage;
+        this.seances = new ArrayList<Seance>();
     }
 
     // Getters et setters
@@ -57,6 +60,13 @@ public class Film {
 
     public void setCheminImage(String cheminImage) {
         this.cheminImage = cheminImage;
+    }
+
+    public void setSeances(ArrayList<Seance> seances) {
+        this.seances = seances;
+    }
+    public ArrayList<Seance> getSeances(){
+        return seances;
     }
 }
 

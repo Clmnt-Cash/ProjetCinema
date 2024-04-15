@@ -4,10 +4,12 @@ import Controleur.ControleurAccueil;
 import Controleur.ControleurFilm;
 import Modele.Client;
 import Modele.Film;
+import Modele.Seance;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 
 public class GUIfilm extends JFrame {
     //Attributs
@@ -15,6 +17,7 @@ public class GUIfilm extends JFrame {
     private ControleurFilm controleurFilm;
     private JButton boutonRetour;
     private Film filmActuel;
+    private ArrayList<JButton> boutonsSeance;
 
     //Constructeur
     public GUIfilm(Client client, ControleurFilm controleurFilm, Film film) {
@@ -58,30 +61,38 @@ public class GUIfilm extends JFrame {
 
         //Affichage du nom du film
         JLabel labelTitre = new JLabel(filmActuel.getTitre());
-        labelTitre.setBounds(10, 150, 400, 30);
+        labelTitre.setBounds(450, 200, 400, 30);
         labelTitre.setForeground(Color.WHITE);
+        Font police = new Font("Arial", Font.BOLD, 20);
+        //Appliquer la police au JLabel
+        labelTitre.setFont(police);
         panel.add(labelTitre);
 
         //Affichage de l'image du film
         ImageIcon imageIcon = new ImageIcon("images/affiches/" + filmActuel.getCheminImage());
-        JLabel labelImage = new JLabel(imageIcon);
-        labelImage.setBounds(10, 200, 375, 580);
+        Image image = imageIcon.getImage();
+        Image newImage = image.getScaledInstance(412, 550, Image.SCALE_SMOOTH);
+        ImageIcon newImageIcon = new ImageIcon(newImage);
+        JLabel labelImage = new JLabel(newImageIcon);
+        labelImage.setBounds(10, 200, 412, 550);
         panel.add(labelImage);
 
+        //Affichage du nom du réalisateur
+        JLabel labelRealisateur = new JLabel("Réalisé par " + filmActuel.getRealisateur());
+        labelRealisateur.setBounds(450, 230, 400, 30);
+        labelRealisateur.setForeground(Color.WHITE);
+        panel.add(labelRealisateur);
+
         //Affichage du synopsis
-        JTextArea areaSynopsis = new JTextArea(filmActuel.getSynopsis());
-        areaSynopsis.setBounds(450, 200, 600, 400);
+        JTextArea areaSynopsis = new JTextArea("Synopsis \n\n" + filmActuel.getSynopsis());
+        areaSynopsis.setBounds(450, 280, 600, 400);
         areaSynopsis.setForeground(Color.WHITE);
         areaSynopsis.setBackground(Color.BLACK);
         areaSynopsis.setLineWrap(true);
         areaSynopsis.setWrapStyleWord(true);
         panel.add(areaSynopsis);
 
-        //Affichage du nom du réalisateur
-        JLabel labelRealisateur = new JLabel("Réalisé par " + filmActuel.getRealisateur());
-        labelRealisateur.setBounds(450, 150, 400, 30);
-        labelRealisateur.setForeground(Color.WHITE);
-        panel.add(labelRealisateur);
+
 
         //Ajout du bouton Retour
         boutonRetour = new JButton("Retour");
@@ -90,12 +101,23 @@ public class GUIfilm extends JFrame {
         boutonRetour.setBackground(Color.BLACK);
         panel.add(boutonRetour);
 
+        //Ajout des boutons pour chaque séance
+        ArrayList<Seance> seances = film.getSeances();
+        for(Seance s : seances){
+            System.out.println(s.getDate() + " " + s.getPrix());
+            JButton bouton = new JButton();
+            bouton.setBounds(450, 500, 100, 50);
+            bouton.setForeground(Color.WHITE);
+            bouton.setBackground(Color.BLACK);
+            panel.add(bouton);
+
+        }
+
         setVisible(true);
         panel.setLayout(null);
         add(panel);
+
     }
-
-
 
     public void addListenerRetour(ActionListener listener){
         boutonRetour.addActionListener(listener);

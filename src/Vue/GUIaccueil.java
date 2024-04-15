@@ -146,8 +146,6 @@ public class GUIaccueil extends JFrame {
             scrollablePanel.add(button);
         }
 
-
-
         JScrollPane scrollPane = new JScrollPane(scrollablePanel);
         scrollPane.setBounds(10, 110, 1463, 670);
         scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);

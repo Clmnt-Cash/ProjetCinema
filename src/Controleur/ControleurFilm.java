@@ -3,14 +3,13 @@ package Controleur;
 import Modele.Client;
 import Modele.Film;
 import Vue.GUIaccueil;
-import Vue.GUIcrea;
 import Vue.GUIfilm;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.ArrayList;
 
 public class ControleurFilm {
+    //Attributs
     private Client client;
     private GUIfilm vueFilm;
     private Connexion connexion;
@@ -18,6 +17,7 @@ public class ControleurFilm {
     private GUIaccueil vueAccueil;
     private ControleurAccueil controleurAccueil;
 
+    //Constructeur
     public ControleurFilm(Connexion connexion, Film film, Client client) {
         this.connexion = connexion;
         this.filmActuel = filmActuel;

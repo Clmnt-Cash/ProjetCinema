@@ -2,6 +2,7 @@ package Controleur;
 
 import Modele.Client;
 import Modele.Film;
+import Modele.Seance;
 import Vue.GUIaccueil;
 import Vue.GUIfilm;
 
@@ -9,7 +10,10 @@ import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.SQLException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
 public class ControleurAccueil {
     private Client client;
@@ -63,11 +67,14 @@ public class ControleurAccueil {
 
                 StringBuilder synopsisBuilder = new StringBuilder();
                 boolean reachedID = false;
+                //Pour le synopsis, prendre tout jusqu'à ce qu'il y ait ',numero'
                 for (int i = 2; i < infosFilm.length; i++) {
                     if (!reachedID) {
-                        synopsisBuilder.append(infosFilm[i]);
                         if (i + 1 < infosFilm.length && Character.isUpperCase(infosFilm[i + 1].charAt(0))) {
                             reachedID = true;
+                        }
+                        else{
+                            synopsisBuilder.append(infosFilm[i]);
                         }
                     }
                 }
@@ -76,7 +83,12 @@ public class ControleurAccueil {
                 int id = Integer.parseInt(infosFilm[infosFilm.length - 2].trim());
                 String cheminImage = infosFilm[infosFilm.length - 1].trim();
 
+
+
+
                 Film film = new Film(id, titre, realisateur, synopsis, cheminImage);
+                ArrayList<Seance> seances = getSeancesForFilm(id); // Méthode à implémenter
+                film.setSeances(seances);
                 films.add(film);
             }
 
@@ -86,6 +98,42 @@ public class ControleurAccueil {
         }
 
         return films;
+    }
+    private ArrayList<Seance> getSeancesForFilm(int filmId) {
+        ArrayList<Seance> seances = new ArrayList<>();
+
+        try {
+            //Récupérer les résultats de la requête SQL pour les séances du film donné
+            ArrayList<String> resultatsSeances = connexion.remplirChampsRequete("SELECT * FROM seance WHERE ID_film = " + filmId + " ORDER BY Date_diffusion");
+
+            for (String resultat : resultatsSeances) {
+                String[] infosSeance = resultat.split(",");
+
+                //Conversion de la date
+                Date date = convertStringToDate(infosSeance[1].trim());
+                int prix = Integer.parseInt(infosSeance[2].trim());
+
+                //Créer une séance avec les informations récupérées
+                Seance seance = new Seance(date, prix);
+
+                //Ajouter la séance à la liste
+                seances.add(seance);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return seances;
+    }
+    //Méthode pour convertir une chaîne de caractères en objet Date
+    private Date convertStringToDate(String dateString) {
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        try {
+            return dateFormat.parse(dateString);
+        } catch (ParseException e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 
 }
