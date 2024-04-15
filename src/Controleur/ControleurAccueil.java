@@ -110,6 +110,8 @@ public class ControleurAccueil {
                 String[] infosSeance = resultat.split(",");
 
                 //Conversion de la date
+                int id = Integer.parseInt(infosSeance[0].trim());
+
                 String dateHeure = infosSeance[1].trim();
                 String[] parties = dateHeure.split(" ");
 
@@ -120,7 +122,7 @@ public class ControleurAccueil {
                 int prix = Integer.parseInt(infosSeance[2].trim());
 
                 //Créer une séance avec les informations récupérées
-                Seance seance = new Seance(date, heure, prix);
+                Seance seance = new Seance(date, heure, prix, id);
 
                 //Ajouter la séance à la liste
                 seances.add(seance);

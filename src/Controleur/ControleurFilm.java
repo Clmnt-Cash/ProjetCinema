@@ -5,6 +5,7 @@ import Modele.Film;
 import Modele.Reduction;
 import Modele.Seance;
 import Vue.GUIaccueil;
+import Vue.GUIconnexion;
 import Vue.GUIfilm;
 
 import javax.swing.*;
@@ -66,12 +67,13 @@ public class ControleurFilm {
 
             @Override
             public void actionPerformed(ActionEvent e) {
-                JButton buttonClicked = (JButton) e.getSource();
+                JButton bouton = (JButton) e.getSource();
 
                 //Récupération du contenu des JLabels ajoutes au bouton
-                JLabel labelDate = (JLabel) buttonClicked.getComponent(0);
-                JLabel labelHeure = (JLabel) buttonClicked.getComponent(1);
-                JLabel labelPrix = (JLabel) buttonClicked.getComponent(2);
+                JLabel labelDate = (JLabel) bouton.getComponent(0);
+                JLabel labelHeure = (JLabel) bouton.getComponent(1);
+                JLabel labelPrix = (JLabel) bouton.getComponent(2);
+                int IDseance = (int) bouton.getClientProperty("IDseance");
 
                 //Récupération du texte des JLabels
                 String date = labelDate.getText();
@@ -82,7 +84,7 @@ public class ControleurFilm {
                 int option = JOptionPane.showConfirmDialog(null, "Ajouter la séance de " + filmActuel.getTitre() + " le " + date + " au panier ?", "Confirmation", JOptionPane.YES_NO_OPTION);
 
                 if (option == JOptionPane.YES_OPTION) {
-
+                    ajouterPanier(IDseance);
                 } else {
                     // Ajoutez ici le code pour ne pas ajouter la séance au panier
                 }
@@ -92,8 +94,13 @@ public class ControleurFilm {
         });
     }
 
-    public void ajouterPanier(){
-
+    public void ajouterPanier(int IDseance){
+        try {
+            String requeteInsertion = "INSERT INTO panier (ID_seance, ID_client) VALUES ('" + IDseance + "','"+ client.getId() + "')";
+            connexion.executerRequete(requeteInsertion);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
     public Reduction getReduction(){

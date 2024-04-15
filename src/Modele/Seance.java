@@ -7,13 +7,15 @@ public class Seance {
     private String date;
     private int prix;
     private String heure;
+    private int id;
 
 
     //Constructeur
-    public Seance(String date, String heure, int prix) {
+    public Seance(String date, String heure, int prix, int id) {
         this.date = date;
         this.heure = heure;
         this.prix = prix;
+        this.id = id;
     }
 
     //Getters
@@ -26,4 +28,5 @@ public class Seance {
     public String getHeure(){
         return heure;
     }
+    public int getId(){return id;}
 }

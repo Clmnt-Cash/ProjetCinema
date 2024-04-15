@@ -154,6 +154,8 @@ public class GUIfilm extends JFrame {
             bouton.setBounds(450 + xBouton * 130, 450, 120, 80);
             bouton.setForeground(Color.BLACK);
             bouton.setBackground(Color.WHITE);
+
+            bouton.putClientProperty("IDseance", s.getId());
             panel.add(bouton);
             boutonsSeance.add(bouton);
             xBouton++;
