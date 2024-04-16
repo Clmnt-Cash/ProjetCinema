@@ -60,9 +60,17 @@ public class GUIpaiement extends JFrame {
             @Override
             public void mouseClicked(MouseEvent e) {
                 dispose();
-                ControleurPanier controleurPanier = new ControleurPanier(conn, client);
-                GUIpanier vuePanier = new GUIpanier(client, controleurPanier);
-                controleurPanier.setVue(vuePanier);
+                if(client.getType() != -1) {
+                    ControleurPanier controleurPanier = new ControleurPanier(conn, client);
+                    GUIpanier vuePanier = new GUIpanier(client, controleurPanier);
+                    controleurPanier.setVue(vuePanier);
+                } else {
+                    ControleurAccueil controleurAccueil = new ControleurAccueil(conn);
+                    GUIaccueil vueAccueil = new GUIaccueil(client, controleurAccueil);
+                    controleurAccueil.setVue(vueAccueil);
+                    controleurAccueil.setClient(client);
+                    controleurAccueil.openWindow();
+                }
             }
         };
         addMouseListenerBoutonRetour(mouseListener);

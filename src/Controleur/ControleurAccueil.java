@@ -55,6 +55,8 @@ public class ControleurAccueil {
                 controleurPanier.setVue(vuePanier);
             }
         });
+
+
         MouseListener mouseListener = new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
@@ -152,7 +154,6 @@ public class ControleurAccueil {
                 float prix = Float.parseFloat(infosSeance[2].trim());
                 String titre = infosSeance[3].trim();
 
-
                 //Créer une séance avec les informations récupérées
                 Seance seance = new Seance(date, heure, prix, id, titre);
 
@@ -164,5 +165,4 @@ public class ControleurAccueil {
         }
         return seances;
     }
-
 }

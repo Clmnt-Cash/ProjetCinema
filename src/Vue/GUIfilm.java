@@ -62,14 +62,25 @@ public class GUIfilm extends JFrame {
             }
         };
 
-        //Ajout du JLabel pour afficher le nom du client
-        JLabel labelNom = new JLabel("Connecté en tant que " + client.getPrenom() + " " + client.getNom());
-        labelNom.setFont(labelNom.getFont().deriveFont(Font.BOLD, 15));
-        Dimension size = labelNom.getPreferredSize();
-        labelNom.setBounds(1470 - size.width, 20, size.width, size.height);
-        labelNom.setForeground(Color.WHITE);
-        panel.add(labelNom);
-        panel.setLayout(null);
+        if(this.client.getType() != -1) {
+            //Ajout du JLabel pour afficher le nom du client
+            JLabel labelNom = new JLabel("Connecté en tant que " + client.getPrenom() + " " + client.getNom());
+            labelNom.setFont(labelNom.getFont().deriveFont(Font.BOLD, 15));
+            Dimension size = labelNom.getPreferredSize();
+            labelNom.setBounds(1470 - size.width, 10, size.width, size.height);
+            labelNom.setForeground(Color.WHITE);
+            panel.add(labelNom);
+            panel.setLayout(null);
+        } else {
+            //Ajout du JLabel pour afficher invité
+            JLabel labelNom = new JLabel("Connecté en tant qu'invité ");
+            labelNom.setFont(labelNom.getFont().deriveFont(Font.BOLD, 15));
+            Dimension size = labelNom.getPreferredSize();
+            labelNom.setBounds(1470 - size.width, 10, size.width, size.height);
+            labelNom.setForeground(Color.WHITE);
+            panel.add(labelNom);
+            panel.setLayout(null);
+        }
 
         //Affichage du nom du film
         JLabel labelTitre = new JLabel(filmActuel.getTitre());

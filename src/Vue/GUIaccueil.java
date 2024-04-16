@@ -94,29 +94,39 @@ public class GUIaccueil extends JFrame {
         boutonDeconnexion.setBounds(1400, 50, 100, 20);
         boutonDeconnexion.setForeground(Color.WHITE);
         panel.add(boutonDeconnexion);
-
-        //Création d'un bouton avec une image
         boutonPanier = new JButton();
-        ImageIcon iconLogoPanier = new ImageIcon("images/logos/logopanier.png");
-        Image imagePanier = iconLogoPanier.getImage().getScaledInstance(40, 40, Image.SCALE_SMOOTH);
-        ImageIcon resizedimagePanier = new ImageIcon(imagePanier);
-        boutonPanier.setIcon(resizedimagePanier);
-        boutonPanier.setBounds(1330, 40, 40, 40);
-        boutonPanier.setBorderPainted(false);
-        boutonPanier.setFocusPainted(false);
-        boutonPanier.setContentAreaFilled(false);
-        panel.add(boutonPanier);
 
 
+        if(this.client.getType() != -1) {
+            //Ajout du JLabel pour afficher le nom du client
+            JLabel labelNom = new JLabel("Connecté en tant que " + client.getPrenom() + " " + client.getNom());
+            labelNom.setFont(labelNom.getFont().deriveFont(Font.BOLD, 15));
+            Dimension size = labelNom.getPreferredSize();
+            labelNom.setBounds(1470 - size.width, 10, size.width, size.height);
+            labelNom.setForeground(Color.WHITE);
+            panel.add(labelNom);
+            panel.setLayout(null);
 
-        //Ajout du JLabel pour afficher le nom du client
-        JLabel labelNom = new JLabel("Connecté en tant que " + client.getPrenom() + " " + client.getNom());
-        labelNom.setFont(labelNom.getFont().deriveFont(Font.BOLD, 15));
-        Dimension size = labelNom.getPreferredSize();
-        labelNom.setBounds(1470 - size.width, 10, size.width, size.height);
-        labelNom.setForeground(Color.WHITE);
-        panel.add(labelNom);
-        panel.setLayout(null);
+            //Création d'un bouton avec une image
+            ImageIcon iconLogoPanier = new ImageIcon("images/logos/logopanier.png");
+            Image imagePanier = iconLogoPanier.getImage().getScaledInstance(40, 40, Image.SCALE_SMOOTH);
+            ImageIcon resizedimagePanier = new ImageIcon(imagePanier);
+            boutonPanier.setIcon(resizedimagePanier);
+            boutonPanier.setBounds(1330, 40, 40, 40);
+            boutonPanier.setBorderPainted(false);
+            boutonPanier.setFocusPainted(false);
+            boutonPanier.setContentAreaFilled(false);
+            panel.add(boutonPanier);
+        } else {
+            //Ajout du JLabel pour afficher invité
+            JLabel labelNom = new JLabel("Connecté en tant qu'invité ");
+            labelNom.setFont(labelNom.getFont().deriveFont(Font.BOLD, 15));
+            Dimension size = labelNom.getPreferredSize();
+            labelNom.setBounds(1470 - size.width, 10, size.width, size.height);
+            labelNom.setForeground(Color.WHITE);
+            panel.add(labelNom);
+            panel.setLayout(null);
+        }
 
 
         scrollablePanel = new JPanel();
@@ -190,6 +200,6 @@ public class GUIaccueil extends JFrame {
         boutonDeconnexion.addMouseListener(listener);
     }
 
-    public void addListenerPanier(ActionListener listener){boutonPanier.addActionListener(listener);}
+    public void addListenerPanier(ActionListener listener){if(this.client.getId() != -1)boutonPanier.addActionListener(listener);}
 
 }

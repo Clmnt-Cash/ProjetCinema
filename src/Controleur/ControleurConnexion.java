@@ -50,6 +50,20 @@ public class ControleurConnexion {
                 }
             }
         });
+
+        this.vueConnexion.addListenerInvite(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                    Client invite = new Client(0, -1, "", "", "", "");
+                    vue.closeWindow();
+                    // Envoyer l'invité à ControleurAccueil
+                    controleurAccueil = new ControleurAccueil(connexion);
+                    vueAccueil = new GUIaccueil(invite, controleurAccueil);
+                    controleurAccueil.setVue(vueAccueil);
+                    controleurAccueil.setClient(invite);
+                    controleurAccueil.openWindow();
+            }
+        });
         this.vueConnexion.addCreationListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {

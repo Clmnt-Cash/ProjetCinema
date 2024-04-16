@@ -130,6 +130,10 @@ public class GUIconnexion extends JFrame {
         timer.start();
     }
 
+    public void addListenerInvite(ActionListener listener) {
+        boutonInvite.addActionListener(listener);
+    }
+
     public void closeWindow(){
         setVisible(false);
     }

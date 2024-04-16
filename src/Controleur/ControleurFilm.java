@@ -7,6 +7,7 @@ import Modele.Seance;
 import Vue.GUIaccueil;
 import Vue.GUIconnexion;
 import Vue.GUIfilm;
+import Vue.GUIpaiement;
 
 import javax.swing.*;
 import java.awt.*;
@@ -61,7 +62,6 @@ public class ControleurFilm {
                 controleurAccueil.setVue(vueAccueil);
                 controleurAccueil.setClient(client);
                 controleurAccueil.openWindow();
-
             }
         });
 
@@ -98,6 +98,8 @@ public class ControleurFilm {
                 //Création du spinner
                 JSpinner spinner = new JSpinner(nombres);
 
+
+
                 //Création de la fenêtre de dialogue
                 JPanel panel = new JPanel();
                 panel.add(new JLabel("Choisissez le nombre de places pour la séance du " + date + " à " + heure + " :"));
@@ -107,7 +109,16 @@ public class ControleurFilm {
 
                 if (resultat == JOptionPane.OK_OPTION) {
                     int nbPlaces = (int) spinner.getValue();
-                    ajouterPanier(id, nbPlaces);
+                    if(client.getType() != -1)ajouterPanier(id, nbPlaces);
+                    else{
+                        vueFilm.closeWindow();
+                        //Supprimer le symbole "€"
+                        String prixSansEuro = prix.substring(0, prix.length() - 1);
+                        //Convertir la chaîne en float
+                        float prixTot = Float.parseFloat(prixSansEuro) * nbPlaces;
+
+                        GUIpaiement vuePaiement = new GUIpaiement(prixTot, connexion, client);
+                    }
                 }
             }
         });
