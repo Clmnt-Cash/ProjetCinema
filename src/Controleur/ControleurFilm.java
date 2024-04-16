@@ -83,19 +83,31 @@ public class ControleurFilm {
                 String heure = labelHeure.getText();
                 String prix = labelPrix.getText().trim();
 
-                vueFilm.afficherFenetreConfirmation();
+                //Customisation de la fenetre de dialogue
+                UIManager.put("OptionPane.background", Color.WHITE);
+                UIManager.put("Panel.background", Color.WHITE);
+                UIManager.put("OptionPane.messageForeground", Color.WHITE);
+                UIManager.put("Button.background", Color.WHITE);
+                UIManager.put("Button.foreground", Color.BLACK);
+                UIManager.put("Button.border", BorderFactory.createLineBorder(Color.WHITE));
+                UIManager.put("Button.focus", Color.WHITE);
 
+                SpinnerNumberModel nombres = new SpinnerNumberModel(1, 1, 10, 1);
 
+                //Création du spinner
+                JSpinner spinner = new JSpinner(nombres);
 
+                //Création de la fenêtre de dialogue
+                JPanel panel = new JPanel();
+                panel.add(new JLabel("Choisissez le nombre de places pour la séance du " + date + " à " + heure + " :"));
+                panel.add(spinner);
 
-                /*int option = JOptionPane.showConfirmDialog(null,
-                        "Ajouter une séance pour " + filmActuel.getTitre() + " le " + date + " à " + heure + " au panier ?",
-                        "Confirmation",
-                        JOptionPane.YES_NO_OPTION);
+                int resultat = JOptionPane.showConfirmDialog(null, panel, "Places pour " + filmActuel.getTitre(), JOptionPane.OK_CANCEL_OPTION);
 
-                if (option == JOptionPane.YES_OPTION) {
-                    ajouterPanier(id);
-                }*/
+                if (resultat == JOptionPane.OK_OPTION) {
+                    int nbPlaces = (int) spinner.getValue();
+                    ajouterPanier(id, nbPlaces);
+                }
             }
         });
     }
