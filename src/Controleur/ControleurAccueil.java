@@ -51,6 +51,7 @@ public class ControleurAccueil {
             public void actionPerformed(ActionEvent e) {
                 vueAccueil.closeWindow();
                 GUIpanier vuePanier = new GUIpanier(client);
+                ControleurPanier controleurPanier = new ControleurPanier(connexion, client, vuePanier);
             }
         });
         MouseListener mouseListener = new MouseAdapter() {
@@ -137,7 +138,7 @@ public class ControleurAccueil {
                 String date = parties[0];
                 String mois = date.substring(5, 7);
                 String jour = date.substring(8, 10);
-                date = jour + "-" + mois;
+                date = jour + "/" + mois;
 
                 String heure = parties[1];
                 heure = heure.substring(0, 5);
