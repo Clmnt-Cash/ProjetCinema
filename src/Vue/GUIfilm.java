@@ -25,6 +25,7 @@ public class GUIfilm extends JFrame {
 
     private Reduction reduction;
     private Seance seance;
+    private int nbPlaces;
 
     //Constructeur
     public GUIfilm(Client client, ControleurFilm controleurFilm, Film film) {
@@ -141,6 +142,7 @@ public class GUIfilm extends JFrame {
             else if(mois.equals("11"))mois = "novembre";
             else if(mois.equals("12"))mois = "décembre";
 
+            //Afficher toutes les séances disponibles
             JLabel labelDate = new JLabel(jour + " " + mois);
             labelDate.setBounds(860, 200 + yBouton * 80, 200, 20);
             labelDate.setForeground(Color.WHITE);
@@ -188,7 +190,6 @@ public class GUIfilm extends JFrame {
                     bouton.setBackground(Color.WHITE);
 
                     bouton.putClientProperty("seance", s.getId() + "," + date);
-
                     panel.add(bouton);
 
                     boutonsSeance.add(bouton);
@@ -196,11 +197,6 @@ public class GUIfilm extends JFrame {
                 }
             }
         }
-
-
-
-
-
         setVisible(true);
         panel.setLayout(null);
         add(panel);
@@ -217,5 +213,39 @@ public class GUIfilm extends JFrame {
         for(JButton b : boutonsSeance){
             b.addActionListener(listener);
         }
+    }
+
+
+    public void afficherFenetreConfirmation(){
+        //Customisation de la fenetre de dialogue
+        UIManager.put("OptionPane.background", Color.WHITE);
+        UIManager.put("Panel.background", Color.WHITE);
+        UIManager.put("OptionPane.messageForeground", Color.WHITE);
+        UIManager.put("Button.background", Color.WHITE);
+        UIManager.put("Button.foreground", Color.BLACK);
+        UIManager.put("Button.border", BorderFactory.createLineBorder(Color.WHITE));
+        UIManager.put("Button.focus", Color.WHITE);
+
+        SpinnerNumberModel nombres = new SpinnerNumberModel(1, 1, 10, 1);
+
+        //Création du spinner
+        JSpinner spinner = new JSpinner(nombres);
+
+        //Création de la fenêtre de dialogue
+        JPanel panel = new JPanel();
+        panel.add(new JLabel("Choisissez le nombre de places :"));
+        panel.add(spinner);
+
+        int resultat = JOptionPane.showConfirmDialog(null, panel, "Places", JOptionPane.OK_CANCEL_OPTION);
+
+        if (resultat == JOptionPane.OK_OPTION) {
+            this.nbPlaces = (int) spinner.getValue();
+        }
+    }
+
+    public void addListenerPlaces(ActionListener listener){}
+
+    public int getNbPlaces(){
+        return nbPlaces;
     }
 }

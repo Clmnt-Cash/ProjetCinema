@@ -83,30 +83,26 @@ public class ControleurFilm {
                 String heure = labelHeure.getText();
                 String prix = labelPrix.getText().trim();
 
-                //Customisation de la fenetre de dialogue
-                UIManager.put("OptionPane.background", Color.BLACK);
-                UIManager.put("Panel.background", Color.BLACK);
-                UIManager.put("OptionPane.messageForeground", Color.WHITE);
-                UIManager.put("Button.background", Color.WHITE);
-                UIManager.put("Button.foreground", Color.BLACK);
-                UIManager.put("Button.border", BorderFactory.createLineBorder(Color.WHITE));
-                UIManager.put("Button.focus", Color.WHITE);
+                vueFilm.afficherFenetreConfirmation();
 
-                int option = JOptionPane.showConfirmDialog(null,
+
+
+
+                /*int option = JOptionPane.showConfirmDialog(null,
                         "Ajouter une séance pour " + filmActuel.getTitre() + " le " + date + " à " + heure + " au panier ?",
                         "Confirmation",
                         JOptionPane.YES_NO_OPTION);
 
                 if (option == JOptionPane.YES_OPTION) {
                     ajouterPanier(id);
-                }
+                }*/
             }
         });
     }
 
-    public void ajouterPanier(int IDseance){
+    public void ajouterPanier(int IDseance, int nbPlaces){
         try {
-            String requeteInsertion = "INSERT INTO panier (ID_seance, ID_client) VALUES ('" + IDseance + "','"+ client.getId() + "')";
+            String requeteInsertion = "INSERT INTO commande (ID_seance, ID_client, Nb_places) VALUES ('" + IDseance + "','"+ client.getId() + "','" + nbPlaces + "')";
             connexion.executerRequete(requeteInsertion);
         } catch (SQLException e) {
             e.printStackTrace();
