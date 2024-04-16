@@ -64,9 +64,10 @@ public class GUIfilm extends JFrame {
 
         //Ajout du JLabel pour afficher le nom du client
         JLabel labelNom = new JLabel("Connecté en tant que " + client.getPrenom() + " " + client.getNom());
-        labelNom.setBounds(1100, 30, 300, 30);
+        labelNom.setFont(labelNom.getFont().deriveFont(Font.BOLD, 15));
+        Dimension size = labelNom.getPreferredSize();
+        labelNom.setBounds(1470 - size.width, 20, size.width, size.height);
         labelNom.setForeground(Color.WHITE);
-        labelNom.setHorizontalAlignment(SwingConstants.RIGHT);
         panel.add(labelNom);
         panel.setLayout(null);
 
@@ -122,7 +123,6 @@ public class GUIfilm extends JFrame {
         for(Seance s : seances){
             if(!datesUniques.contains(s.getDate()))datesUniques.add(s.getDate());
         }
-        System.out.println(datesUniques);
 
         int yBouton = 0;
         for(String date : datesUniques){
@@ -143,7 +143,7 @@ public class GUIfilm extends JFrame {
 
             //Afficher toutes les séances disponibles
             JLabel labelDate = new JLabel(jour + " " + mois);
-            labelDate.setBounds(860, 200 + yBouton * 80, 200, 20);
+            labelDate.setBounds(900, 200 + yBouton * 80, 200, 20);
             labelDate.setForeground(Color.WHITE);
             panel.add(labelDate);
             yBouton ++;
@@ -184,7 +184,7 @@ public class GUIfilm extends JFrame {
                     bouton.add(labelPrix, gbcPrix);
 
                     //Calcul de la position du bouton
-                    bouton.setBounds(860 + xBouton * 110, 150 + yBouton * 80, 100, 40);
+                    bouton.setBounds(900 + xBouton * 110, 150 + yBouton * 80, 100, 40);
                     bouton.setForeground(Color.BLACK);
                     bouton.setBackground(Color.WHITE);
 

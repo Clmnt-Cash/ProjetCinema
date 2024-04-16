@@ -6,10 +6,7 @@ import Modele.Film;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
+import java.awt.event.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -22,6 +19,7 @@ public class GUIaccueil extends JFrame {
     private ControleurAccueil controleurAccueil;
     private ArrayList<JButton> boutons;
     private JPanel scrollablePanel;
+    private JLabel boutonDeconnexion;
 
     //Constructeur
     public GUIaccueil(Client client, ControleurAccueil controleurAccueil) {
@@ -81,13 +79,21 @@ public class GUIaccueil extends JFrame {
             }
         };
 
+        boutonDeconnexion = new JLabel("Déconnexion");
+        boutonDeconnexion.setFont(boutonDeconnexion.getFont().deriveFont(Font.BOLD, 12)); // Définition de la police et de la taille du texte
+        boutonDeconnexion.setBounds(1400, 50, 100, 20);
+        boutonDeconnexion.setForeground(Color.WHITE);
+        panel.add(boutonDeconnexion);
+
         //Ajout du JLabel pour afficher le nom du client
         JLabel labelNom = new JLabel("Connecté en tant que " + client.getPrenom() + " " + client.getNom());
-        labelNom.setBounds(1100, 30, 300, 30);
+        labelNom.setFont(labelNom.getFont().deriveFont(Font.BOLD, 15));
+        Dimension size = labelNom.getPreferredSize();
+        labelNom.setBounds(1470 - size.width, 20, size.width, size.height);
         labelNom.setForeground(Color.WHITE);
-        labelNom.setHorizontalAlignment(SwingConstants.RIGHT);
         panel.add(labelNom);
         panel.setLayout(null);
+
 
         scrollablePanel = new JPanel();
         scrollablePanel.setLayout(new GridLayout(0, films.size()));
@@ -156,4 +162,8 @@ public class GUIaccueil extends JFrame {
 
     public void closeWindow(){setVisible(false);dispose();}
     public void openWindow(){setVisible(true);}
+    public void addMouseListenerBoutonDeconnexion(MouseListener listener) {
+        boutonDeconnexion.addMouseListener(listener);
+    }
+
 }

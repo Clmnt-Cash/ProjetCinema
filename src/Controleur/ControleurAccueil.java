@@ -4,11 +4,12 @@ import Modele.Client;
 import Modele.Film;
 import Modele.Seance;
 import Vue.GUIaccueil;
+import Vue.GUIconnexion;
 import Vue.GUIfilm;
 
 import javax.swing.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.awt.*;
+import java.awt.event.*;
 import java.sql.SQLException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -44,6 +45,20 @@ public class ControleurAccueil {
                 controleurFilm.setVue(vueFilm);
             }
         });
+        MouseListener mouseListener = new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                //Création de la boîte de dialogue
+                int option = JOptionPane.showConfirmDialog(null, "Voulez-vous vous déconnecter ?", "Déconnexion", JOptionPane.OK_CANCEL_OPTION);
+
+                if (option == JOptionPane.OK_OPTION) {
+                    vueAccueil.closeWindow();
+                    GUIconnexion vueConnexion = new GUIconnexion();
+                    ControleurConnexion controleurConnexion = new ControleurConnexion(vueConnexion);
+                }
+            }
+        };
+        this.vueAccueil.addMouseListenerBoutonDeconnexion(mouseListener);
     }
     public void setClient(Client client) {
         this.client = client;
@@ -87,7 +102,6 @@ public class ControleurAccueil {
                 film.setSeances(seances);
                 films.add(film);
             }
-
 
         } catch (SQLException e) {
             e.printStackTrace();
