@@ -102,6 +102,42 @@ public class ControleurPanier {
                 }
             }
         });
+        this.vuePanier.addListenerSupprimer(new ActionListener() {
+
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                JButton bouton = (JButton) e.getSource();
+
+                String seanceChoisie = (String) bouton.getClientProperty("infos");
+                String[] infos = seanceChoisie.split(",");
+                //Extraire les informations sur le film
+                int idCommande = Integer.parseInt(infos[0].trim());
+                String film = infos[1].trim();
+
+                //Customisation de la fenetre de dialogue
+                UIManager.put("OptionPane.background", Color.WHITE);
+                UIManager.put("Panel.background", Color.WHITE);
+                UIManager.put("OptionPane.messageForeground", Color.WHITE);
+                UIManager.put("Button.background", Color.WHITE);
+                UIManager.put("Button.foreground", Color.BLACK);
+                UIManager.put("Button.border", BorderFactory.createLineBorder(Color.WHITE));
+                UIManager.put("Button.focus", Color.WHITE);
+
+
+                //Création de la fenêtre de dialogue
+                JPanel panel = new JPanel();
+                panel.add(new JLabel("Voulez-vous vraiment annuler la commande de la séance pour " + film + " ?"));
+                int resultat = JOptionPane.showConfirmDialog(null, panel, "Annuler une commande", JOptionPane.OK_CANCEL_OPTION);
+
+                if (resultat == JOptionPane.OK_OPTION) {
+                    supprimerCommande(idCommande);
+                    vuePanier.closeWindow();
+                    ControleurPanier controleurPanier = new ControleurPanier(connexion, client);
+                    GUIpanier vuePanier = new GUIpanier(client, controleurPanier);
+                    controleurPanier.setVue(vuePanier);
+                }
+            }
+        });
         MouseListener mouseListener = new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
@@ -129,6 +165,16 @@ public class ControleurPanier {
             connexion.executerRequete(requeteInsertion);
 
 
+        } catch (SQLException e) {
+            e.printStackTrace();
+            System.out.println("Erreur lors de la connexion à la base de données : " + e);
+        }
+    }
+
+    public void supprimerCommande(int idCommande){
+        try {
+            String requeteInsertion = "DELETE FROM commande WHERE ID = " + idCommande;
+            connexion.executerRequete(requeteInsertion);
         } catch (SQLException e) {
             e.printStackTrace();
             System.out.println("Erreur lors de la connexion à la base de données : " + e);

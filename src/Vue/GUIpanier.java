@@ -18,6 +18,8 @@ public class GUIpanier extends JFrame {
     private JButton boutonRetour;
     private ArrayList<Commande> commandes;
     private ArrayList<JButton> boutonsModifier;
+    private ArrayList<JButton> boutonsSupprimer;
+
     private ControleurPanier controleurPanier;
     private JLabel boutonDeconnexion;
     private JButton boutonPanier;
@@ -30,6 +32,7 @@ public class GUIpanier extends JFrame {
         this.client = client;
         this.commandes = controleurPanier.getCommandes();
         this.boutonsModifier = new ArrayList<JButton>();
+        this.boutonsSupprimer = new ArrayList<JButton>();
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         setSize(1500, 800);
@@ -116,6 +119,7 @@ public class GUIpanier extends JFrame {
             boutonSupprimer.setBounds(870, 135 + 70 * xLabel, 100, 25);
             boutonSupprimer.setForeground(Color.WHITE);
             boutonSupprimer.setBackground(new Color(174, 27, 27));
+            boutonSupprimer.putClientProperty("infos", c.getId() + "," + c.getSeance().getFilm());
 
 
             panel.add(labelInfos);
@@ -124,6 +128,7 @@ public class GUIpanier extends JFrame {
             panel.add(boutonSupprimer);
 
             this.boutonsModifier.add(boutonModifier);
+            this.boutonsSupprimer.add(boutonSupprimer);
 
             xLabel ++;
 
@@ -157,6 +162,12 @@ public class GUIpanier extends JFrame {
 
     public void addListenerModifier(ActionListener listener){
         for(JButton b : this.boutonsModifier){
+            b.addActionListener(listener);
+        }
+    }
+
+    public void addListenerSupprimer(ActionListener listener){
+        for(JButton b : this.boutonsSupprimer){
             b.addActionListener(listener);
         }
     }
