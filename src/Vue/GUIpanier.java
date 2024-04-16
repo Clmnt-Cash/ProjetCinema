@@ -24,6 +24,7 @@ public class GUIpanier extends JFrame {
     private JLabel boutonDeconnexion;
     private JButton boutonPanier;
     private JButton boutonPayer;
+    private float prix;
 
 
     //Constructeur
@@ -126,7 +127,6 @@ public class GUIpanier extends JFrame {
             panel.add(labelPrix);
             panel.add(boutonModifier);
             panel.add(boutonSupprimer);
-
             this.boutonsModifier.add(boutonModifier);
             this.boutonsSupprimer.add(boutonSupprimer);
 
@@ -135,7 +135,7 @@ public class GUIpanier extends JFrame {
             prixTotSansReduction += c.getPrixSansReduc();
             prixTotAvecReduction += c.getPrixAvecReduc();
         }
-
+        this.prix = prixTotAvecReduction;
         boutonPayer = new JButton("<html>Payer : " + "<strike>" + prixTotSansReduction + "€</strike> "+ prixTotAvecReduction + "€</html>");
         boutonPayer.setFont(labelNom.getFont().deriveFont(Font.BOLD, 15));
         boutonPayer.setBounds(1200, 640, 200, 30);
@@ -173,4 +173,5 @@ public class GUIpanier extends JFrame {
     }
 
     public void addListenerPayer(ActionListener listener){boutonPayer.addActionListener(listener);}
+    public float getPrix(){return prix;}
 }
