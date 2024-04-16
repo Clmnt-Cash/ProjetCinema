@@ -18,6 +18,7 @@ public class ControleurPanier {
     private ArrayList<Commande> commandes;
     private float prixTotal;
 
+
     //Constructeur
     public ControleurPanier(Connexion connexion, Client client) {
         this.connexion = connexion;
@@ -59,7 +60,8 @@ public class ControleurPanier {
             //Ouverture de la page menu
             @Override
             public void actionPerformed(ActionEvent e) {
-                GUIpaiement vuePaiement = new GUIpaiement(20);
+                float prix = vuePanier.getPrix();
+                GUIpaiement vuePaiement = new GUIpaiement(prix, connexion, client);
             }
         });
         this.vuePanier.addListenerModifier(new ActionListener() {
@@ -248,4 +250,7 @@ public class ControleurPanier {
     public ArrayList<Commande> getCommandes(){
         return commandes;
     }
+
+    public void setPrixTotal(float prix){this.prixTotal = prix;}
+
 }

@@ -1,4 +1,8 @@
 package Vue;
+import Controleur.ControleurAccueil;
+import Controleur.Connexion;
+import Modele.Client;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -10,10 +14,16 @@ public class GUIpaiement extends JFrame {
     private JTextField textCVV;
     private JButton boutonPayer;
     private JLabel errorLabel;
+    private JPanel drawComponents;
+    private Connexion conn;
+    private Client client;
 
 
-    public GUIpaiement(float prix) {
+
+    public GUIpaiement(float prix, Connexion conn, Client client) {
         super("Paiement");
+        this.conn = conn;
+        this.client = client;
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         setSize(500, 600);
@@ -24,7 +34,7 @@ public class GUIpaiement extends JFrame {
         int y = (screenSize.height - getHeight()) / 2;
         setLocation(x, y);
 
-        JPanel drawComponents = new JPanel() {
+        drawComponents = new JPanel() {
             @Override
             protected void paintComponent(Graphics g) {
                 super.paintComponent(g);
@@ -76,12 +86,47 @@ public class GUIpaiement extends JFrame {
         comboAnnee.setBounds(300, 330, 50, 30);
         drawComponents.add(comboAnnee);
 
-        //Section bouton pour
+        //Section bouton pour payer
         boutonPayer = new JButton("Payer " + prix + "€");
         boutonPayer.setBounds(190, 400, 125, 30);
         boutonPayer.setForeground(Color.WHITE);
         boutonPayer.setBackground(new Color(100, 100, 100));
         drawComponents.add(boutonPayer);
+
+        //Ajout d'un ActionListener
+        boutonPayer.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                //Vérifie si tous les champs sont remplis
+                if (textCode.getText().isEmpty() || textCVV.getText().isEmpty()) {
+                    displayError("Veuillez remplir tous les champs.");
+                    return;
+                }
+
+
+                //Vérifie si le numéro de carte est un nombre de 16 chiffres
+                String code = textCode.getText();
+                if (!code.matches("\\d{16}")) {
+                    displayError("Numéro de carte non-valide.");
+                    return;
+                }
+
+                //Vérifie si le CVV est un nombre en dessous de 100
+                if(textCVV.getText().length()!=3){
+                    displayError("CVV non-valide.");
+                    return;
+                }
+                String cvvText = textCVV.getText();
+
+                int cvv = Integer.parseInt(cvvText);
+                if (cvv >= 1000) {
+                    displayError("CVV non-valide.");
+                }
+                paiement();
+            }
+        });
+
+
 
         //Label erreur
         errorLabel = new JLabel();
@@ -106,14 +151,10 @@ public class GUIpaiement extends JFrame {
         setVisible(true);
     }
 
-    //Méthode pour ajouter un ActionListener au bouton de creation
-    public void addListenerPayer(ActionListener listener) {
-        boutonPayer.addActionListener(listener);
-    }
 
     //Message d'erreur
     public void displayError(String message){
-        errorLabel.setText(message); // Afficher le message d'erreur dans le label
+        errorLabel.setText(message); //Afficher le message d'erreur dans le label
         Timer timer = new Timer(3000, new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -124,16 +165,75 @@ public class GUIpaiement extends JFrame {
         timer.start();
     }
 
+    public void paiement() {
+        drawComponents.removeAll();
+        drawComponents.repaint();
+
+        // Création de la barre de progression
+        JProgressBar progressBar = new JProgressBar(0, 100);
+        progressBar.setValue(0);
+        progressBar.setStringPainted(true);
+        progressBar.setBounds(50, 250, 400, 20);
+
+        JLabel labelTraitement = new JLabel("Traitement en cours, veuillez patienter...");
+        labelTraitement.setForeground(Color.WHITE);
+        labelTraitement.setFont(new Font("Arial", Font.PLAIN, 16));
+        labelTraitement.setBounds(40, 170, 400, 30);
+        labelTraitement.setHorizontalAlignment(SwingConstants.CENTER);
+        drawComponents.add(labelTraitement);
+
+        //Ajout de la barre de progression à drawComponents
+        drawComponents.add(progressBar);
+
+        drawComponents.setLayout(null);
+        drawComponents.setPreferredSize(new Dimension(1500, 800));
+
+        //Ajout de drawComponents à la fenêtre principale
+        add(drawComponents);
+
+        setVisible(true);
+        //Progression de la barre
+        Thread updateThread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                for (int i = 0; i <= 100; i++) {
+                    progressBar.setValue(i);
+                    try {
+                        Thread.sleep(50); //Pause de 50 millisecondes entre chaque mise à jour
+                    } catch (InterruptedException ex) {
+                        ex.printStackTrace();
+                    }
+                }
+
+                //Une fois la barre de progression terminée, on supprime les labels et on rebascule sur le menu
+                SwingUtilities.invokeLater(new Runnable() {
+                    @Override
+                    public void run() {
+                        progressBar.setVisible(false);
+                        labelTraitement.setText("Traitement effectué ! Redirection vers la page d'accueil");
+
+
+                        // Fermer la fenêtre après 3 secondes
+                        Timer timer = new Timer(3000, e -> {
+                            dispose();
+                            ControleurAccueil controleurAccueil = new ControleurAccueil(conn);
+                            GUIaccueil vueAccueil = new GUIaccueil(client, controleurAccueil);
+                            controleurAccueil.setVue(vueAccueil);
+                            controleurAccueil.setClient(client);
+                            controleurAccueil.openWindow();
+                        });
+                        timer.setRepeats(false);
+                        timer.start();
+                    }
+                });
+            }
+        });
+        updateThread.start();
+    }
+
+
+
     public void closeWindow(){
         setVisible(false);
     }
-
-    //Getters
-    public String getCode() {
-        return textCode.getText();
-    }
-    public String getCVV() {
-        return textCVV.getText();
-    }
-
 }
