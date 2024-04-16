@@ -1,7 +1,8 @@
-/*package Vue;
+package Vue;
 
 import Modele.Client;
 import Modele.Film;
+import Controleur.ControleurMembre;
 
 import javax.swing.*;
 import java.awt.*;
@@ -156,4 +157,3 @@ public class GUImembre extends JFrame {
     public void closeWindow(){setVisible(false);dispose();}
     public void openWindow(){setVisible(true);}
 }
-*/

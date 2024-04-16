@@ -1,4 +1,4 @@
-/*package Controleur;
+package Controleur;
 
 import Modele.Client;
 import Modele.Film;
@@ -21,7 +21,6 @@ public class ControleurMembre {
     private Connexion connexion;
     private ArrayList<Film> films;
     private Film filmActuel;
-
     private ControleurFilm controleurFilm;
     private GUIfilm vueFilm;
 
@@ -108,7 +107,7 @@ public class ControleurMembre {
                 int id = Integer.parseInt(infosSeance[0].trim());
 
                 String dateHeure = infosSeance[1].trim();
-                String[] parties = dateHeure.split(" ");
+                String[] parties = dateHeure.split("");
 
                 String date = parties[0];
                 String mois = date.substring(5, 7);
@@ -118,9 +117,10 @@ public class ControleurMembre {
                 String heure = parties[1];
                 heure = heure.substring(0, 5);
                 int prix = Integer.parseInt(infosSeance[2].trim());
+                String titre = infosSeance[3].trim();
 
                 //Créer une séance avec les informations récupérées
-                Seance seance = new Seance(date, heure, prix, id);
+                Seance seance = new Seance(date, heure, prix, id, titre);
 
                 //Ajouter la séance à la liste
                 seances.add(seance);
@@ -132,4 +132,4 @@ public class ControleurMembre {
         return seances;
     }
 
-}*/
+}
