@@ -8,8 +8,7 @@ import Vue.GUIpanier;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.awt.event.*;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
@@ -46,6 +45,94 @@ public class ControleurPanier {
     //Methode pour initialiser la vue
     public void setVue(GUIpanier vue){
         this.vuePanier = vue;
+        this.vuePanier.addListenerRetour(new ActionListener(){
+            //Ouverture de la page menu
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                vuePanier.closeWindow();
+                ControleurAccueil controleurAccueil = new ControleurAccueil(connexion);
+                GUIaccueil vueAccueil = new GUIaccueil(client, controleurAccueil);
+                controleurAccueil.setVue(vueAccueil);
+                controleurAccueil.setClient(client);
+                controleurAccueil.openWindow();
+
+            }
+        });
+        this.vuePanier.addListenerModifier(new ActionListener() {
+
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                JButton bouton = (JButton) e.getSource();
+
+                String seanceChoisie = (String) bouton.getClientProperty("infos");
+                String[] infos = seanceChoisie.split(",");
+                //Extraire les informations sur le film
+                int idCommande = Integer.parseInt(infos[0].trim());
+                String film = infos[1].trim();
+                int places = Integer.parseInt(infos[2].trim());
+
+                //Customisation de la fenetre de dialogue
+                UIManager.put("OptionPane.background", Color.WHITE);
+                UIManager.put("Panel.background", Color.WHITE);
+                UIManager.put("OptionPane.messageForeground", Color.WHITE);
+                UIManager.put("Button.background", Color.WHITE);
+                UIManager.put("Button.foreground", Color.BLACK);
+                UIManager.put("Button.border", BorderFactory.createLineBorder(Color.WHITE));
+                UIManager.put("Button.focus", Color.WHITE);
+
+                SpinnerNumberModel nombres = new SpinnerNumberModel(places, 1, 10, 1);
+
+                //Création du spinner
+                JSpinner spinner = new JSpinner(nombres);
+
+                //Création de la fenêtre de dialogue
+                JPanel panel = new JPanel();
+                panel.add(new JLabel("Modifier le nombre de places pour " + film + " :"));
+                panel.add(spinner);
+
+                int resultat = JOptionPane.showConfirmDialog(null, panel, "Places pour " + film, JOptionPane.OK_CANCEL_OPTION);
+
+                if (resultat == JOptionPane.OK_OPTION) {
+                    int nbPlaces = (int) spinner.getValue();
+                    modifierCommande(idCommande, nbPlaces, client.getId());
+                    vuePanier.closeWindow();
+                    ControleurPanier controleurPanier = new ControleurPanier(connexion, client);
+                    GUIpanier vuePanier = new GUIpanier(client, controleurPanier);
+                    controleurPanier.setVue(vuePanier);
+                }
+            }
+        });
+        MouseListener mouseListener = new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                JPanel panel = new JPanel();
+                panel.add(new JLabel("Etes-vous sûr de vouloir vous déconnecter ?"));
+
+                int resultat = JOptionPane.showConfirmDialog(null, panel, "Déconnexion", JOptionPane.OK_CANCEL_OPTION);
+
+                if (resultat == JOptionPane.OK_OPTION) {
+                    vuePanier.closeWindow();
+                    GUIconnexion vueConnexion = new GUIconnexion();
+                    ControleurConnexion controleurConnexion = new ControleurConnexion(vueConnexion);
+                }
+            }
+        };
+        this.vuePanier.addMouseListenerBoutonDeconnexion(mouseListener);
+    }
+
+    //Methode pour modifier le nombre de places pour une seance
+    public void modifierCommande(int idCommande, int places, int idClient){
+        try {
+            String requeteInsertion = "UPDATE commande" +
+                    " SET Nb_places = " + places +
+                    " WHERE ID = " + idCommande;
+            connexion.executerRequete(requeteInsertion);
+
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            System.out.println("Erreur lors de la connexion à la base de données : " + e);
+        }
     }
 
     public ArrayList<Commande> getCommandes(int clientID, Reduction reduction){
@@ -54,7 +141,7 @@ public class ControleurPanier {
         try {
             //Récupérer les résultats de la requête SQL pour les séances du film donné
             ArrayList<String> resultatsCommande = connexion.remplirChampsRequete(
-                    "SELECT s.*, c.NB_places, f.Titre " +
+                    "SELECT s.*, c.NB_places, f.Titre, c.ID " +
                             "FROM seance s " +
                             "JOIN commande c ON s.ID = c.ID_seance " +
                             "JOIN films f ON s.ID_film = f.ID " +
@@ -76,6 +163,7 @@ public class ControleurPanier {
                 float prix = Float.parseFloat(infosSeance[2].trim());
                 int nbPlaces = Integer.parseInt(infosSeance[4].trim());
                 String titre = infosSeance[5].trim();
+                int idCommande = Integer.parseInt(infosSeance[6].trim());
 
                 prix *= nbPlaces;
 
@@ -88,7 +176,7 @@ public class ControleurPanier {
                 Seance seance = new Seance(date, heure, prix, id, titre);
 
                 //Créer une commande avec les informations récupérées
-                Commande commande = new Commande(nbPlaces, seance, prixAvecReduction, prix);
+                Commande commande = new Commande(nbPlaces, seance, prixAvecReduction, prix, idCommande);
                 //Ajouter la séance à la liste
                 commandes.add(commande);
             }
