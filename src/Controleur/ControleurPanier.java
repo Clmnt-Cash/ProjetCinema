@@ -23,10 +23,9 @@ public class ControleurPanier {
     private float prixTotal;
 
     //Constructeur
-    public ControleurPanier(Connexion connexion, Client client, GUIpanier vuePanier) {
+    public ControleurPanier(Connexion connexion, Client client) {
         this.connexion = connexion;
         this.client = client;
-        this.vuePanier = vuePanier;
         try {
             //Recuperer les réductions
             ArrayList<String> resultatReduction = connexion.remplirChampsRequete("SELECT * FROM reduction");
@@ -43,16 +42,6 @@ public class ControleurPanier {
             e.printStackTrace();
         }
         this.commandes = getCommandes(client.getId(), reduction);
-        this.vuePanier.setCommandes(this.commandes);
-
-        for (Commande commande : commandes) {
-            System.out.print("Nombre de places : " + commande.getNbPlaces());
-            System.out.print("Prix avec réduction : " + commande.getPrixAvecReduc());
-            System.out.print("Prix sans réduction : " + commande.getPrixSansReduc());
-            System.out.print("Date de diffusion : " + commande.getSeance().getDate());
-            System.out.println("Heure de diffusion : " + commande.getSeance().getHeure());
-            System.out.println("-------------------------------------------");
-        }
     }
     //Methode pour initialiser la vue
     public void setVue(GUIpanier vue){
@@ -65,7 +54,13 @@ public class ControleurPanier {
         try {
             //Récupérer les résultats de la requête SQL pour les séances du film donné
             ArrayList<String> resultatsCommande = connexion.remplirChampsRequete(
-                    "SELECT s.*, c.NB_places FROM seance s JOIN commande c ON s.ID = c.ID_seance WHERE c.ID_client = " + clientID + " ORDER BY s.Date_diffusion;");
+                    "SELECT s.*, c.NB_places, f.Titre " +
+                            "FROM seance s " +
+                            "JOIN commande c ON s.ID = c.ID_seance " +
+                            "JOIN films f ON s.ID_film = f.ID " +
+                            "WHERE c.ID_client = " + clientID + " " +
+                            "ORDER BY s.Date_diffusion"
+            );
             for (String resultat : resultatsCommande) {
                 String[] infosSeance = resultat.split(",");
                 int id = Integer.parseInt(infosSeance[0].trim());
@@ -80,14 +75,17 @@ public class ControleurPanier {
 
                 float prix = Float.parseFloat(infosSeance[2].trim());
                 int nbPlaces = Integer.parseInt(infosSeance[4].trim());
+                String titre = infosSeance[5].trim();
+
+                prix *= nbPlaces;
 
                 float prixAvecReduction = prix;
-                if(this.client.getType() == 1){prixAvecReduction = (float)prix*reduction.getReductionEnfant()/100;}
-                else if(this.client.getType() == 2){prixAvecReduction = (float)prix*reduction.getReductionEnfant()/100;}
-                else if(this.client.getType() == 3){prixAvecReduction = (float)prix*reduction.getReductionSenior()/100;}
+                if(this.client.getType() == 1){prixAvecReduction = (float)prixAvecReduction*reduction.getReductionEnfant()/100;}
+                else if(this.client.getType() == 2){prixAvecReduction = (float)prixAvecReduction*reduction.getReductionEnfant()/100;}
+                else if(this.client.getType() == 3){prixAvecReduction = (float)prixAvecReduction*reduction.getReductionSenior()/100;}
 
                 //Créer une séance avec les informations récupérées
-                Seance seance = new Seance(date, heure, prix, id);
+                Seance seance = new Seance(date, heure, prix, id, titre);
 
                 //Créer une commande avec les informations récupérées
                 Commande commande = new Commande(nbPlaces, seance, prixAvecReduction, prix);
@@ -108,5 +106,8 @@ public class ControleurPanier {
     //Méthode pour initialiser le client
     public void setClient(Client client) {
         this.client = client;
+    }
+    public ArrayList<Commande> getCommandes(){
+        return commandes;
     }
 }

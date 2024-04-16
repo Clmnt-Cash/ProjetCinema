@@ -1,4 +1,4 @@
-package Controleur;
+/*package Controleur;
 
 import Modele.Client;
 import Modele.Film;
@@ -132,4 +132,4 @@ public class ControleurMembre {
         return seances;
     }
 
-}
+}*/

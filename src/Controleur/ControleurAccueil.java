@@ -50,8 +50,9 @@ public class ControleurAccueil {
             @Override
             public void actionPerformed(ActionEvent e) {
                 vueAccueil.closeWindow();
-                GUIpanier vuePanier = new GUIpanier(client);
-                ControleurPanier controleurPanier = new ControleurPanier(connexion, client, vuePanier);
+                ControleurPanier controleurPanier = new ControleurPanier(connexion, client);
+                GUIpanier vuePanier = new GUIpanier(client, films, controleurPanier);
+                controleurPanier.setVue(vuePanier);
             }
         });
         MouseListener mouseListener = new MouseAdapter() {
@@ -125,7 +126,13 @@ public class ControleurAccueil {
 
         try {
             //Récupérer les résultats de la requête SQL pour les séances du film donné
-            ArrayList<String> resultatsSeances = connexion.remplirChampsRequete("SELECT * FROM seance WHERE ID_film = " + filmId + " ORDER BY Date_diffusion");
+            ArrayList<String> resultatsSeances = connexion.remplirChampsRequete(
+                    "SELECT seance.*, films.Titre " +
+                            "FROM seance " +
+                            "INNER JOIN films ON seance.ID_film = films.ID " +
+                            "WHERE seance.ID_film = " + filmId + " " +
+                            "ORDER BY seance.Date_diffusion"
+            );
             for (String resultat : resultatsSeances) {
                 String[] infosSeance = resultat.split(",");
 
@@ -143,9 +150,11 @@ public class ControleurAccueil {
                 String heure = parties[1];
                 heure = heure.substring(0, 5);
                 float prix = Float.parseFloat(infosSeance[2].trim());
+                String titre = infosSeance[3].trim();
+
 
                 //Créer une séance avec les informations récupérées
-                Seance seance = new Seance(date, heure, prix, id);
+                Seance seance = new Seance(date, heure, prix, id, titre);
 
                 //Ajouter la séance à la liste
                 seances.add(seance);

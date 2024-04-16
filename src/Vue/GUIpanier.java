@@ -2,6 +2,7 @@ package Vue;
 
 import Controleur.ControleurAccueil;
 import Controleur.ControleurFilm;
+import Controleur.ControleurPanier;
 import Modele.*;
 
 import javax.swing.*;
@@ -15,12 +16,18 @@ public class GUIpanier extends JFrame {
     private Client client;
     private JButton boutonRetour;
     private ArrayList<Commande> commandes;
+    private ArrayList<Film> films;
+    private ControleurPanier controleurPanier;
+    private JLabel boutonDeconnexion;
+    private JButton boutonPanier;
 
 
     //Constructeur
-    public GUIpanier(Client client) {
+    public GUIpanier(Client client, ArrayList<Film> films, ControleurPanier controleurPanier) {
         super("Cinéma");
         this.client = client;
+        this.films = films;
+        this.commandes = controleurPanier.getCommandes();
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         setSize(1500, 800);
@@ -47,15 +54,41 @@ public class GUIpanier extends JFrame {
             }
         };
 
+        UIManager.put("OptionPane.background", Color.WHITE);
+        UIManager.put("Panel.background", Color.WHITE);
+        UIManager.put("OptionPane.messageForeground", Color.WHITE);
+        UIManager.put("Button.background", Color.WHITE);
+        UIManager.put("Button.foreground", Color.BLACK);
+        UIManager.put("Button.border", BorderFactory.createLineBorder(Color.WHITE));
+        UIManager.put("Button.focus", Color.WHITE);
+
+        //Bouton déconnexion
+        boutonDeconnexion = new JLabel("Déconnexion");
+        boutonDeconnexion.setFont(boutonDeconnexion.getFont().deriveFont(Font.BOLD, 12));
+        boutonDeconnexion.setBounds(1400, 50, 100, 20);
+        boutonDeconnexion.setForeground(Color.WHITE);
+        panel.add(boutonDeconnexion);
+
+        //Création d'un bouton avec une image
+        boutonPanier = new JButton();
+        ImageIcon iconLogoPanier = new ImageIcon("images/logos/logopanier.png");
+        Image imagePanier = iconLogoPanier.getImage().getScaledInstance(40, 40, Image.SCALE_SMOOTH);
+        ImageIcon resizedimagePanier = new ImageIcon(imagePanier);
+        boutonPanier.setIcon(resizedimagePanier);
+        boutonPanier.setBounds(1330, 40, 40, 40);
+        boutonPanier.setBorderPainted(false);
+        boutonPanier.setFocusPainted(false);
+        boutonPanier.setContentAreaFilled(false);
+        panel.add(boutonPanier);
+
         //Ajout du JLabel pour afficher le nom du client
         JLabel labelNom = new JLabel("Connecté en tant que " + client.getPrenom() + " " + client.getNom());
         labelNom.setFont(labelNom.getFont().deriveFont(Font.BOLD, 15));
         Dimension size = labelNom.getPreferredSize();
-        labelNom.setBounds(1470 - size.width, 20, size.width, size.height);
+        labelNom.setBounds(1470 - size.width, 10, size.width, size.height);
         labelNom.setForeground(Color.WHITE);
         panel.add(labelNom);
         panel.setLayout(null);
-
         //Ajout du bouton Retour
         boutonRetour = new JButton("Retour");
         boutonRetour.setBounds(10, 110, 100, 50);
@@ -63,35 +96,40 @@ public class GUIpanier extends JFrame {
         boutonRetour.setBackground(Color.BLACK);
         panel.add(boutonRetour);
 
+        int xLabel = 0;
+        for(Commande c : commandes){
+            JLabel labelInfos = new JLabel("Séance pour "+c.getSeance().getFilm() + " le " + c.getSeance().getDate() + " à " + c.getSeance().getHeure() + " pour " + c.getNbPlaces() +" personnes");
+            JLabel labelPrix;
+            if(client.getType() == -1){labelPrix = new JLabel("Prix : " + c.getPrixSansReduc() + "€");}
+            else{labelPrix = new JLabel("<html>Prix : " + "<strike>" + c.getPrixSansReduc() + "€</strike> "+ c.getPrixAvecReduc() + "€</html>");}
 
-        JPanel scrollPanel = new JPanel();
-        scrollPanel.setLayout(new GridLayout(0, 3)); // 3 colonnes, le nombre de lignes sera ajusté automatiquement
-        JScrollPane scrollPane = new JScrollPane(scrollPanel);
-        scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+            labelPrix.setFont(labelNom.getFont().deriveFont(Font.BOLD, 15));
+            labelPrix.setBounds(20, 220 + 70 * xLabel, 300, 50);
+            labelPrix.setForeground(Color.WHITE);
 
-        // Ajout des composants dans les colonnes
-        for (int i = 0; i < 10; i++) {
-            JLabel label1 = new JLabel("Label 1 - Row " + i);
-            JLabel label2 = new JLabel("Label 2 - Row " + i);
-            JButton button1 = new JButton("Button 1 - Row " + i);
-            JButton button2 = new JButton("Button 2 - Row " + i);
+            labelInfos.setFont(labelNom.getFont().deriveFont(Font.BOLD, 15));
+            labelInfos.setBounds(20, 200 + 70 * xLabel, 550, 50);
+            labelInfos.setForeground(Color.WHITE);
 
-            JPanel column1 = new JPanel(new GridLayout(2, 1)); // 2 lignes pour les labels
-            column1.add(label1);
-            column1.add(label2);
+            JButton boutonModifier = new JButton("Modifier");
+            boutonModifier.setFont(labelNom.getFont().deriveFont(Font.BOLD, 13));
+            boutonModifier.setBounds(580, 215 + 70 * xLabel, 100, 25);
+            boutonModifier.setForeground(new Color(163, 163, 163));
 
-            JPanel column2 = new JPanel(new GridLayout(1, 1)); // 1 ligne pour le premier bouton
-            column2.add(button1);
+            JButton boutonSupprimer = new JButton("Supprimer");
+            boutonSupprimer.setFont(labelNom.getFont().deriveFont(Font.BOLD, 13));
+            boutonSupprimer.setBounds(690, 215 + 70 * xLabel, 100, 25);
+            boutonSupprimer.setForeground(Color.WHITE);
+            boutonSupprimer.setBackground(new Color(174, 27, 27));
 
-            JPanel column3 = new JPanel(new GridLayout(1, 1)); // 1 ligne pour le deuxième bouton
-            column3.add(button2);
 
-            scrollPanel.add(column1);
-            scrollPanel.add(column2);
-            scrollPanel.add(column3);
+            panel.add(labelInfos);
+            panel.add(labelPrix);
+            panel.add(boutonModifier);
+            panel.add(boutonSupprimer);
+
+            xLabel ++;
         }
-        panel.add(scrollPanel);
-
 
         setVisible(true);
         panel.setLayout(null);

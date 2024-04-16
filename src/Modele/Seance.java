@@ -8,14 +8,16 @@ public class Seance {
     private float prix;
     private String heure;
     private int id;
+    private String film;
 
 
     //Constructeur
-    public Seance(String date, String heure, float prix, int id) {
+    public Seance(String date, String heure, float prix, int id, String film) {
         this.date = date;
         this.heure = heure;
         this.prix = prix;
         this.id = id;
+        this.film = film;
     }
 
     //Getters
@@ -29,6 +31,7 @@ public class Seance {
         return heure;
     }
     public int getId(){return id;}
+    public String getFilm(){return film;}
 
     //Setters
     public void setDate(String date){
