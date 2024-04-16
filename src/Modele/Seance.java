@@ -29,4 +29,17 @@ public class Seance {
         return heure;
     }
     public int getId(){return id;}
+
+    //Setters
+    public void setDate(String date){
+        this.date = date;
+    }
+
+    public void setPrix(int prix){
+        this.prix = prix;
+    }
+
+    public void setHeure(String heure){
+        this.heure = heure;
+    }
 }
