@@ -1,12 +1,14 @@
 package Vue;
 import Controleur.ControleurAccueil;
 import Controleur.Connexion;
+import Controleur.ControleurConnexion;
+import Controleur.ControleurPanier;
 import Modele.Client;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.awt.event.*;
+import java.sql.SQLException;
 
 public class GUIpaiement extends JFrame {
     private JTextField textCode;
@@ -17,6 +19,7 @@ public class GUIpaiement extends JFrame {
     private JPanel drawComponents;
     private Connexion conn;
     private Client client;
+    private JLabel boutonRetour;
 
 
 
@@ -47,6 +50,22 @@ public class GUIpaiement extends JFrame {
                 g.drawImage(image, 200, 0, 100, 100, this);
             }
         };
+
+        boutonRetour = new JLabel("Retour");
+        boutonRetour.setFont(boutonRetour.getFont().deriveFont(Font.BOLD, 12));
+        boutonRetour.setBounds(20, 110, 100, 20);
+        boutonRetour.setForeground(Color.WHITE);
+        drawComponents.add(boutonRetour);
+        MouseListener mouseListener = new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                dispose();
+                ControleurPanier controleurPanier = new ControleurPanier(conn, client);
+                GUIpanier vuePanier = new GUIpanier(client, controleurPanier);
+                controleurPanier.setVue(vuePanier);
+            }
+        };
+        addMouseListenerBoutonRetour(mouseListener);
 
         //Section Code
         JLabel labelCode = new JLabel("Numéro de carte");
@@ -221,6 +240,7 @@ public class GUIpaiement extends JFrame {
                             controleurAccueil.setVue(vueAccueil);
                             controleurAccueil.setClient(client);
                             controleurAccueil.openWindow();
+                            supprimerCommande(client.getId());
                         });
                         timer.setRepeats(false);
                         timer.start();
@@ -231,7 +251,18 @@ public class GUIpaiement extends JFrame {
         updateThread.start();
     }
 
-
+    public void supprimerCommande(int idClient){
+        try {
+            String requeteInsertion = "DELETE FROM commande WHERE ID_client = " + idClient;
+            conn.executerRequete(requeteInsertion);
+        } catch (SQLException e) {
+            e.printStackTrace();
+            System.out.println("Erreur lors de la connexion à la base de données : " + e);
+        }
+    }
+    public void addMouseListenerBoutonRetour(MouseListener listener) {
+        boutonRetour.addMouseListener(listener);
+    }
 
     public void closeWindow(){
         setVisible(false);

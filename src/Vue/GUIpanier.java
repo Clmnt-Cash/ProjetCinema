@@ -82,7 +82,7 @@ public class GUIpanier extends JFrame {
         labelNom.setBounds(1470 - size.width, 10, size.width, size.height);
         labelNom.setForeground(Color.WHITE);
         panel.add(labelNom);
-        panel.setLayout(null);
+
         //Ajout du bouton Retour
         boutonRetour = new JButton("Retour");
         boutonRetour.setBounds(10, 110, 100, 50);
@@ -135,14 +135,23 @@ public class GUIpanier extends JFrame {
             prixTotSansReduction += c.getPrixSansReduc();
             prixTotAvecReduction += c.getPrixAvecReduc();
         }
-        this.prix = prixTotAvecReduction;
-        boutonPayer = new JButton("<html>Payer : " + "<strike>" + prixTotSansReduction + "€</strike> "+ prixTotAvecReduction + "€</html>");
-        boutonPayer.setFont(labelNom.getFont().deriveFont(Font.BOLD, 15));
-        boutonPayer.setBounds(1200, 640, 200, 30);
-        boutonPayer.setForeground(Color.WHITE);
-        boutonPayer.setBackground(new Color(100, 100, 100));
+        //Si il y a des commandes, afficher le bouton pour payer
+        if(!this.commandes.isEmpty()) {
+            this.prix = prixTotAvecReduction;
+            boutonPayer = new JButton("<html>Payer : " + "<strike>" + prixTotSansReduction + "€</strike> " + prixTotAvecReduction + "€</html>");
+            boutonPayer.setFont(labelNom.getFont().deriveFont(Font.BOLD, 15));
+            boutonPayer.setBounds(1200, 640, 200, 30);
+            boutonPayer.setForeground(Color.WHITE);
+            boutonPayer.setBackground(new Color(100, 100, 100));
 
-        panel.add(boutonPayer);
+            panel.add(boutonPayer);
+        } else { // afficher un label si il n y a aucune commande
+            JLabel labelRien = new JLabel("Aucune commande actuellement.");
+            labelRien.setFont(labelNom.getFont().deriveFont(Font.BOLD, 15));
+            labelRien.setBounds(630, 300, 300, 30);
+            labelRien.setForeground(Color.WHITE);
+            panel.add(labelRien);
+        }
         setVisible(true);
         panel.setLayout(null);
         add(panel);
@@ -172,6 +181,6 @@ public class GUIpanier extends JFrame {
         }
     }
 
-    public void addListenerPayer(ActionListener listener){boutonPayer.addActionListener(listener);}
+    public void addListenerPayer(ActionListener listener){if(!this.commandes.isEmpty())boutonPayer.addActionListener(listener);}
     public float getPrix(){return prix;}
 }

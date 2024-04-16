@@ -162,7 +162,6 @@ public class ControleurAccueil {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-
         return seances;
     }
 

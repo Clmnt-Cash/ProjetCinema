@@ -53,13 +53,13 @@ public class ControleurPanier {
                 controleurAccueil.setVue(vueAccueil);
                 controleurAccueil.setClient(client);
                 controleurAccueil.openWindow();
-
             }
         });
         this.vuePanier.addListenerPayer(new ActionListener(){
             //Ouverture de la page menu
             @Override
             public void actionPerformed(ActionEvent e) {
+                vuePanier.closeWindow();
                 float prix = vuePanier.getPrix();
                 GUIpaiement vuePaiement = new GUIpaiement(prix, connexion, client);
             }
@@ -250,7 +250,5 @@ public class ControleurPanier {
     public ArrayList<Commande> getCommandes(){
         return commandes;
     }
-
-    public void setPrixTotal(float prix){this.prixTotal = prix;}
 
 }
