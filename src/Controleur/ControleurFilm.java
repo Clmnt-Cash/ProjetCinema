@@ -64,6 +64,7 @@ public class ControleurFilm {
 
             }
         });
+
         this.vueFilm.addListenerSeance(new ActionListener() {
 
             @Override

@@ -1,10 +1,7 @@
 package Controleur;
 
 import Modele.*;
-import Vue.GUIaccueil;
-import Vue.GUIconnexion;
-import Vue.GUIfilm;
-import Vue.GUIpanier;
+import Vue.*;
 
 import javax.swing.*;
 import java.awt.*;
@@ -56,6 +53,13 @@ public class ControleurPanier {
                 controleurAccueil.setClient(client);
                 controleurAccueil.openWindow();
 
+            }
+        });
+        this.vuePanier.addListenerPayer(new ActionListener(){
+            //Ouverture de la page menu
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                GUIpaiement vuePaiement = new GUIpaiement(20);
             }
         });
         this.vuePanier.addListenerModifier(new ActionListener() {

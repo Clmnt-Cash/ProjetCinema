@@ -171,4 +171,6 @@ public class GUIpanier extends JFrame {
             b.addActionListener(listener);
         }
     }
+
+    public void addListenerPayer(ActionListener listener){boutonPayer.addActionListener(listener);}
 }
