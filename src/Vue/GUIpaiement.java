@@ -11,6 +11,7 @@ import java.awt.event.*;
 import java.sql.SQLException;
 
 public class GUIpaiement extends JFrame {
+    //Attributs
     private JTextField textCode;
     private JTextField textDate;
     private JTextField textCVV;
@@ -22,7 +23,7 @@ public class GUIpaiement extends JFrame {
     private JLabel boutonRetour;
 
 
-
+    //Constructeur
     public GUIpaiement(float prix, Connexion conn, Client client) {
         super("Paiement");
         this.conn = conn;
@@ -51,6 +52,7 @@ public class GUIpaiement extends JFrame {
             }
         };
 
+        //Bouton retour
         boutonRetour = new JLabel("Retour");
         boutonRetour.setFont(boutonRetour.getFont().deriveFont(Font.BOLD, 12));
         boutonRetour.setBounds(20, 110, 100, 20);
@@ -58,6 +60,7 @@ public class GUIpaiement extends JFrame {
         drawComponents.add(boutonRetour);
         MouseListener mouseListener = new MouseAdapter() {
             @Override
+            //Si c'est un membre retour au panier, sinon retour à l'accueil
             public void mouseClicked(MouseEvent e) {
                 dispose();
                 if(client.getType() != -1) {
@@ -75,7 +78,7 @@ public class GUIpaiement extends JFrame {
         };
         addMouseListenerBoutonRetour(mouseListener);
 
-        //Section Code
+        //Section Numéro de carte
         JLabel labelCode = new JLabel("Numéro de carte");
         labelCode.setBounds(180, 200, 120, 30);
         labelCode.setFont(new Font("Arial", Font.BOLD, 15));
@@ -86,7 +89,7 @@ public class GUIpaiement extends JFrame {
         textCode.setBounds(150, 230, 200, 30);
         drawComponents.add(textCode);
 
-        //Section Age
+        //Section CVV
         JLabel labelCVV = new JLabel("CVV");
         labelCVV.setBounds(150, 300, 50, 30);
         labelCVV.setFont(new Font("Arial", Font.BOLD, 15));
@@ -97,6 +100,7 @@ public class GUIpaiement extends JFrame {
         textCVV.setBounds(150, 330, 30, 30);
         drawComponents.add(textCVV);
 
+        //Section Date d'expiration
         JLabel labelDate = new JLabel("Date d'expiration");
         labelDate.setBounds(220, 300, 150, 30);
         labelDate.setFont(new Font("Arial", Font.BOLD, 15));
@@ -202,6 +206,7 @@ public class GUIpaiement extends JFrame {
         progressBar.setStringPainted(true);
         progressBar.setBounds(50, 250, 400, 20);
 
+        //Label pour montrer le traitement
         JLabel labelTraitement = new JLabel("Traitement en cours, veuillez patienter...");
         labelTraitement.setForeground(Color.WHITE);
         labelTraitement.setFont(new Font("Arial", Font.PLAIN, 16));
@@ -225,8 +230,8 @@ public class GUIpaiement extends JFrame {
             public void run() {
                 for (int i = 0; i <= 100; i++) {
                     progressBar.setValue(i);
-                    try {
-                        Thread.sleep(50); //Pause de 50 millisecondes entre chaque mise à jour
+                    try {//Pause de 50 millisecondes entre chaque mise à jour
+                        Thread.sleep(50);
                     } catch (InterruptedException ex) {
                         ex.printStackTrace();
                     }
@@ -238,9 +243,7 @@ public class GUIpaiement extends JFrame {
                     public void run() {
                         progressBar.setVisible(false);
                         labelTraitement.setText("Traitement effectué ! Redirection vers la page d'accueil");
-
-
-                        // Fermer la fenêtre après 3 secondes
+                        //Fermer la fenetre après 3 secondes
                         Timer timer = new Timer(3000, e -> {
                             dispose();
                             ControleurAccueil controleurAccueil = new ControleurAccueil(conn);
@@ -259,6 +262,7 @@ public class GUIpaiement extends JFrame {
         updateThread.start();
     }
 
+    //Méthode pour supprimer une commande dans la bdd
     public void supprimerCommande(int idClient){
         try {
             String requeteInsertion = "DELETE FROM commande WHERE ID_client = " + idClient;

@@ -33,7 +33,7 @@ public class ControleurCrea{
                 String email = vue.getEmail();
                 String motDePasse = vue.getMotDePasse();
                 String motDePasseConf = vue.getMotDePasseConf();
-
+                //Vérification des champs
                 if(nom.isEmpty() || prenom.isEmpty() || email.isEmpty() || motDePasse.isEmpty() || motDePasseConf.isEmpty()) {
                     vue.displayError("Veuillez remplir tous les champs");
                 } else if(age == 0){
@@ -44,6 +44,7 @@ public class ControleurCrea{
                 }else if(!motDePasse.equals(motDePasseConf)) {
                     vue.displayError("les mots de passes ne sont pas identiques");
                 }else{
+                    //Calcul du type en fonction de l'âge
                     if(age < 18){
                         type = 1;
                     }else if(age > 60){
@@ -53,7 +54,6 @@ public class ControleurCrea{
                     }
                     handleCreation(type, nom, prenom, email, motDePasse);
                 }
-
             }
         });
     }
@@ -61,7 +61,7 @@ public class ControleurCrea{
     public void openWindow(){
         this.vue.setVisible(true);
     }
-
+    //Méthode pour insérer un nouveau client/membre
     public void handleCreation(Integer type, String Nom, String Prenom, String email, String motDePasse) {
         try {
             //Requete pour vérifier si lemail existe dans la bdd

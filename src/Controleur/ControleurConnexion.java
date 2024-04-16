@@ -12,6 +12,7 @@ import java.awt.event.ActionListener;
 import java.sql.SQLException;
 import java.util.ArrayList;
 public class ControleurConnexion {
+    //Attributs
     private Client client;
     private GUIconnexion vueConnexion;
     private GUIcrea vueCrea;
@@ -20,7 +21,7 @@ public class ControleurConnexion {
     private ControleurCrea controleurCrea;
     private GUIaccueil vueAccueil;
 
-
+    //Constructeur
     public ControleurConnexion(GUIconnexion vue) {
         this.vueConnexion = vue;
         try {
