@@ -78,7 +78,13 @@ public class GUIaccueil extends JFrame {
                 g.drawImage(image, 0, 0, 100, 100, this);
             }
         };
-
+        UIManager.put("OptionPane.background", Color.WHITE);
+        UIManager.put("Panel.background", Color.WHITE);
+        UIManager.put("OptionPane.messageForeground", Color.WHITE);
+        UIManager.put("Button.background", Color.WHITE);
+        UIManager.put("Button.foreground", Color.BLACK);
+        UIManager.put("Button.border", BorderFactory.createLineBorder(Color.WHITE));
+        UIManager.put("Button.focus", Color.WHITE);
         boutonDeconnexion = new JLabel("Déconnexion");
         boutonDeconnexion.setFont(boutonDeconnexion.getFont().deriveFont(Font.BOLD, 12)); // Définition de la police et de la taille du texte
         boutonDeconnexion.setBounds(1400, 50, 100, 20);

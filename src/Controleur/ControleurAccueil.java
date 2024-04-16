@@ -48,10 +48,12 @@ public class ControleurAccueil {
         MouseListener mouseListener = new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                //Création de la boîte de dialogue
-                int option = JOptionPane.showConfirmDialog(null, "Voulez-vous vous déconnecter ?", "Déconnexion", JOptionPane.OK_CANCEL_OPTION);
+                JPanel panel = new JPanel();
+                panel.add(new JLabel("Etes-vous sûr de vouloir vous déconnecter ?"));
 
-                if (option == JOptionPane.OK_OPTION) {
+                int resultat = JOptionPane.showConfirmDialog(null, panel, "Déconnexion", JOptionPane.OK_CANCEL_OPTION);
+
+                if (resultat == JOptionPane.OK_OPTION) {
                     vueAccueil.closeWindow();
                     GUIconnexion vueConnexion = new GUIconnexion();
                     ControleurConnexion controleurConnexion = new ControleurConnexion(vueConnexion);
