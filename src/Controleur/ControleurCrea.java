@@ -29,24 +29,28 @@ public class ControleurCrea{
                 String nom = vue.getNom();
                 String prenom = vue.getPrenom();
                 Integer type = 0;
-                String age = vue.getAge();
+                int age = vue.getAge();
                 String email = vue.getEmail();
                 String motDePasse = vue.getMotDePasse();
                 String motDePasseConf = vue.getMotDePasseConf();
-                if(Integer.parseInt(age) < 18){
-                    type = 1;
-                }else if(Integer.parseInt(age) > 60){
-                    type = 3;
-                }else{
-                    type = 2;
-                }
+
                 if(nom.isEmpty() || prenom.isEmpty() || email.isEmpty() || motDePasse.isEmpty() || motDePasseConf.isEmpty()) {
                     vue.displayError("Veuillez remplir tous les champs");
-                }else if(!email.contains("@")){
+                } else if(age == 0){
+                    vue.displayError("Veuillez spécifier votre âge");
+                }
+                else if(!email.contains("@")){
                     vue.displayError("E-mail invalide");
                 }else if(!motDePasse.equals(motDePasseConf)) {
                     vue.displayError("les mots de passes ne sont pas identiques");
                 }else{
+                    if(age < 18){
+                        type = 1;
+                    }else if(age > 60){
+                        type = 3;
+                    }else{
+                        type = 2;
+                    }
                     handleCreation(type, nom, prenom, email, motDePasse);
                 }
 
