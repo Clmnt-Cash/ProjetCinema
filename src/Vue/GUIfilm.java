@@ -141,6 +141,7 @@ public class GUIfilm extends JFrame {
             else if(mois.equals("11"))mois = "novembre";
             else if(mois.equals("12"))mois = "décembre";
 
+            //Afficher toutes les séances disponibles
             JLabel labelDate = new JLabel(jour + " " + mois);
             labelDate.setBounds(860, 200 + yBouton * 80, 200, 20);
             labelDate.setForeground(Color.WHITE);
@@ -188,7 +189,6 @@ public class GUIfilm extends JFrame {
                     bouton.setBackground(Color.WHITE);
 
                     bouton.putClientProperty("seance", s.getId() + "," + date);
-
                     panel.add(bouton);
 
                     boutonsSeance.add(bouton);
@@ -196,11 +196,6 @@ public class GUIfilm extends JFrame {
                 }
             }
         }
-
-
-
-
-
         setVisible(true);
         panel.setLayout(null);
         add(panel);
