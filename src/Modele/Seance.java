@@ -5,13 +5,13 @@ import java.util.Date;
 public class Seance {
     //Attributs
     private String date;
-    private int prix;
+    private float prix;
     private String heure;
     private int id;
 
 
     //Constructeur
-    public Seance(String date, String heure, int prix, int id) {
+    public Seance(String date, String heure, float prix, int id) {
         this.date = date;
         this.heure = heure;
         this.prix = prix;
@@ -22,7 +22,7 @@ public class Seance {
     public String getDate(){
         return date;
     }
-    public int getPrix(){
+    public float getPrix(){
         return prix;
     }
     public String getHeure(){

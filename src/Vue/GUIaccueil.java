@@ -20,6 +20,7 @@ public class GUIaccueil extends JFrame {
     private ArrayList<JButton> boutons;
     private JPanel scrollablePanel;
     private JLabel boutonDeconnexion;
+    private JButton boutonPanier;
 
     //Constructeur
     public GUIaccueil(Client client, ControleurAccueil controleurAccueil) {
@@ -78,6 +79,7 @@ public class GUIaccueil extends JFrame {
                 g.drawImage(image, 0, 0, 100, 100, this);
             }
         };
+
         UIManager.put("OptionPane.background", Color.WHITE);
         UIManager.put("Panel.background", Color.WHITE);
         UIManager.put("OptionPane.messageForeground", Color.WHITE);
@@ -85,17 +87,33 @@ public class GUIaccueil extends JFrame {
         UIManager.put("Button.foreground", Color.BLACK);
         UIManager.put("Button.border", BorderFactory.createLineBorder(Color.WHITE));
         UIManager.put("Button.focus", Color.WHITE);
+
+        //Bouton déconnexion
         boutonDeconnexion = new JLabel("Déconnexion");
-        boutonDeconnexion.setFont(boutonDeconnexion.getFont().deriveFont(Font.BOLD, 12)); // Définition de la police et de la taille du texte
+        boutonDeconnexion.setFont(boutonDeconnexion.getFont().deriveFont(Font.BOLD, 12));
         boutonDeconnexion.setBounds(1400, 50, 100, 20);
         boutonDeconnexion.setForeground(Color.WHITE);
         panel.add(boutonDeconnexion);
+
+        //Création d'un bouton avec une image
+        boutonPanier = new JButton();
+        ImageIcon iconLogoPanier = new ImageIcon("images/logos/logopanier.png");
+        Image imagePanier = iconLogoPanier.getImage().getScaledInstance(40, 40, Image.SCALE_SMOOTH);
+        ImageIcon resizedimagePanier = new ImageIcon(imagePanier);
+        boutonPanier.setIcon(resizedimagePanier);
+        boutonPanier.setBounds(1330, 40, 40, 40);
+        boutonPanier.setBorderPainted(false);
+        boutonPanier.setFocusPainted(false);
+        boutonPanier.setContentAreaFilled(false);
+        panel.add(boutonPanier);
+
+
 
         //Ajout du JLabel pour afficher le nom du client
         JLabel labelNom = new JLabel("Connecté en tant que " + client.getPrenom() + " " + client.getNom());
         labelNom.setFont(labelNom.getFont().deriveFont(Font.BOLD, 15));
         Dimension size = labelNom.getPreferredSize();
-        labelNom.setBounds(1470 - size.width, 20, size.width, size.height);
+        labelNom.setBounds(1470 - size.width, 10, size.width, size.height);
         labelNom.setForeground(Color.WHITE);
         panel.add(labelNom);
         panel.setLayout(null);
@@ -171,5 +189,7 @@ public class GUIaccueil extends JFrame {
     public void addMouseListenerBoutonDeconnexion(MouseListener listener) {
         boutonDeconnexion.addMouseListener(listener);
     }
+
+    public void addListenerPanier(ActionListener listener){boutonPanier.addActionListener(listener);}
 
 }

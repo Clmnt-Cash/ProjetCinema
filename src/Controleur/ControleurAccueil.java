@@ -6,6 +6,7 @@ import Modele.Seance;
 import Vue.GUIaccueil;
 import Vue.GUIconnexion;
 import Vue.GUIfilm;
+import Vue.GUIpanier;
 
 import javax.swing.*;
 import java.awt.*;
@@ -43,6 +44,13 @@ public class ControleurAccueil {
                 controleurFilm = new ControleurFilm(connexion, filmActuel, client);
                 vueFilm = new GUIfilm(client, controleurFilm, filmActuel);
                 controleurFilm.setVue(vueFilm);
+            }
+        });
+        this.vueAccueil.addListenerPanier(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                vueAccueil.closeWindow();
+                GUIpanier vuePanier = new GUIpanier(client);
             }
         });
         MouseListener mouseListener = new MouseAdapter() {
@@ -133,7 +141,7 @@ public class ControleurAccueil {
 
                 String heure = parties[1];
                 heure = heure.substring(0, 5);
-                int prix = Integer.parseInt(infosSeance[2].trim());
+                float prix = Float.parseFloat(infosSeance[2].trim());
 
                 //Créer une séance avec les informations récupérées
                 Seance seance = new Seance(date, heure, prix, id);
