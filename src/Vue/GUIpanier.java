@@ -68,6 +68,12 @@ public class GUIpanier extends JFrame {
         UIManager.put("Button.border", BorderFactory.createLineBorder(Color.WHITE));
         UIManager.put("Button.focus", Color.WHITE);
 
+        JLabel labelAccueil = new JLabel("Panier");
+        labelAccueil.setFont(labelAccueil.getFont().deriveFont(Font.BOLD, 30));
+        labelAccueil.setBounds(720, 20, 150, 40);
+        labelAccueil.setForeground(Color.WHITE);
+        panel.add(labelAccueil);
+
         //Bouton déconnexion
         boutonDeconnexion = new JLabel("Déconnexion");
         boutonDeconnexion.setFont(boutonDeconnexion.getFont().deriveFont(Font.BOLD, 12));
@@ -161,7 +167,7 @@ public class GUIpanier extends JFrame {
             }
         }
         //Si il y a des commandes, afficher le bouton pour payer
-        if(!this.commandes.isEmpty()) {
+        if(!this.commandes.isEmpty() && prixTotSansReduction != 0) {
             this.prix = prixTotAvecReduction;
             boutonPayer = new JButton("<html>Payer : " + "<strike>" + prixTotSansReduction + "€</strike> " + prixTotAvecReduction + "€</html>");
             boutonPayer.setFont(labelNom.getFont().deriveFont(Font.BOLD, 15));
@@ -173,8 +179,8 @@ public class GUIpanier extends JFrame {
         } else { // afficher un label si il n y a aucune commande
             JLabel labelRien = new JLabel("Aucune commande actuellement.");
             labelRien.setFont(labelNom.getFont().deriveFont(Font.BOLD, 15));
-            labelRien.setBounds(630, 300, 300, 30);
-            labelRien.setForeground(Color.WHITE);
+            labelRien.setBounds(300, 200, 300, 30);
+            labelRien.setForeground(Color.GRAY);
             panel.add(labelRien);
         }
         setVisible(true);
@@ -206,6 +212,6 @@ public class GUIpanier extends JFrame {
         }
     }
 
-    public void addListenerPayer(ActionListener listener){if(!this.commandes.isEmpty())boutonPayer.addActionListener(listener);}
+    public void addListenerPayer(ActionListener listener){if(!this.commandes.isEmpty() && this.prix != 0)boutonPayer.addActionListener(listener);}
     public float getPrix(){return prix;}
 }

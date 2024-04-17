@@ -62,12 +62,19 @@ public class GUIfilm extends JFrame {
             }
         };
 
+        JLabel labelFilm = new JLabel(filmActuel.getTitre());
+        labelFilm.setFont(labelFilm.getFont().deriveFont(Font.BOLD, 30));
+        Dimension size1 = labelFilm.getPreferredSize();
+        labelFilm.setBounds(750 - size1.width/2, 30, size1.width, size1.height);
+        labelFilm.setForeground(Color.WHITE);
+        panel.add(labelFilm);
+
         if(this.client.getType() != -1) {
             //Ajout du JLabel pour afficher le nom du client
             JLabel labelNom = new JLabel("Connecté en tant que " + client.getPrenom() + " " + client.getNom());
             labelNom.setFont(labelNom.getFont().deriveFont(Font.BOLD, 15));
-            Dimension size = labelNom.getPreferredSize();
-            labelNom.setBounds(1470 - size.width, 10, size.width, size.height);
+            Dimension size2 = labelNom.getPreferredSize();
+            labelNom.setBounds(1470 - size2.width, 10, size2.width, size2.height);
             labelNom.setForeground(Color.WHITE);
             panel.add(labelNom);
             panel.setLayout(null);
@@ -87,7 +94,6 @@ public class GUIfilm extends JFrame {
         labelTitre.setBounds(450, 200, 400, 30);
         labelTitre.setForeground(Color.WHITE);
         Font police = new Font("Arial", Font.BOLD, 20);
-        //Appliquer la police au JLabel
         labelTitre.setFont(police);
         panel.add(labelTitre);
 
@@ -127,6 +133,12 @@ public class GUIfilm extends JFrame {
         boutonRetour.setBackground(Color.BLACK);
         panel.add(boutonRetour);
 
+        JLabel labelSeances = new JLabel("Séances");
+        labelSeances.setBounds(900, 120, 200, 30);
+        labelSeances.setForeground(Color.WHITE);
+        labelSeances.setFont(new Font("Arial", Font.BOLD, 20));
+        panel.add(labelSeances);
+
         //Ajout des boutons pour chaque séance
         ArrayList<Seance> seances = film.getSeances();
 
@@ -154,7 +166,7 @@ public class GUIfilm extends JFrame {
 
             //Afficher toutes les séances disponibles
             JLabel labelDate = new JLabel(jour + " " + mois);
-            labelDate.setBounds(900, 200 + yBouton * 80, 200, 20);
+            labelDate.setBounds(900, 160 + yBouton * 80, 200, 20);
             labelDate.setForeground(Color.WHITE);
             panel.add(labelDate);
             yBouton ++;
@@ -195,7 +207,7 @@ public class GUIfilm extends JFrame {
                     bouton.add(labelPrix, gbcPrix);
 
                     //Calcul de la position du bouton
-                    bouton.setBounds(900 + xBouton * 110, 150 + yBouton * 80, 100, 40);
+                    bouton.setBounds(900 + xBouton * 110, 110 + yBouton * 80, 100, 40);
                     bouton.setForeground(Color.BLACK);
                     bouton.setBackground(Color.WHITE);
 

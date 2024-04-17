@@ -96,6 +96,11 @@ public class GUIaccueil extends JFrame {
         panel.add(boutonDeconnexion);
         boutonPanier = new JButton();
 
+        JLabel labelAccueil = new JLabel("Accueil");
+        labelAccueil.setFont(labelAccueil.getFont().deriveFont(Font.BOLD, 30));
+        labelAccueil.setBounds(720, 20, 150, 40);
+        labelAccueil.setForeground(Color.WHITE);
+        panel.add(labelAccueil);
 
         if(this.client.getType() != -1) {
             //Ajout du JLabel pour afficher le nom du client
@@ -155,15 +160,6 @@ public class GUIaccueil extends JFrame {
             button.setLayout(new BorderLayout());
             button.add(overlayPanel, BorderLayout.CENTER);
 
-            JLabel labelTitre = new JLabel();
-            labelTitre.setForeground(Color.WHITE);
-            labelTitre.setHorizontalAlignment(SwingConstants.LEADING);
-            labelTitre.setVerticalAlignment(SwingConstants.CENTER);
-            overlayPanel.add(labelTitre);
-
-            Font police = new Font("Arial", Font.BOLD, 25);
-
-            labelTitre.setFont(police);
             boutons.add(button);
 
             boutonFilmMap.put(button, f);
@@ -172,13 +168,11 @@ public class GUIaccueil extends JFrame {
                 @Override
                 public void mouseEntered(MouseEvent e) {
                     overlayPanel.setVisible(true);
-                    labelTitre.setText(f.getTitre());
                 }
 
                 @Override
                 public void mouseExited(MouseEvent e) {
                     overlayPanel.setVisible(false);
-                    labelTitre.setText("");
                 }
             });
         }
