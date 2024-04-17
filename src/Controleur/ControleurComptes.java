@@ -3,7 +3,7 @@ package Controleur;
 import Modele.Client;
 import Modele.Film;
 import Modele.Seance;
-import Vue.GUIaccueil;
+import Vue.GUIcomptes;
 import Vue.GUIfilm;
 
 import javax.swing.*;
@@ -17,9 +17,9 @@ import java.util.Date;
 
 public class ControleurComptes {
     private Client membre;
-    private GUIaccueil vueAccueil;
+    private GUIcomptes vueComptes;
     private Connexion connexion;
-    private ArrayList<Film> films;
+    private ArrayList<Client> comptes;
     private Film filmActuel;
     private ControleurFilm controleurFilm;
     private GUIfilm vueFilm;
@@ -28,19 +28,14 @@ public class ControleurComptes {
         this.connexion = connexion;
     }
 
-    public void setVue(GUIaccueil vue){
-        this.vueAccueil = vue;
-        this.films = this.getFilms();
+    public void setVue(GUIcomptes vue){
+        this.vueComptes = vue;
+        this.comptes = this.getComptes();
         //Aller sur la page du film
-        this.vueAccueil.addListener(new ActionListener() {
+        this.vueComptes.addListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                JButton clickedButton = (JButton) e.getSource();
-                filmActuel = vueAccueil.getBoutonFilmMap().get(clickedButton);
-                vueAccueil.closeWindow();
-                controleurFilm = new ControleurFilm(connexion, filmActuel, membre);
-                vueFilm = new GUIfilm(membre, controleurFilm, filmActuel);
-                controleurFilm.setVue(vueFilm);
+                vueComptes.closeWindow();
             }
         });
     }
@@ -49,42 +44,27 @@ public class ControleurComptes {
     }
 
     public void openWindow(){
-        this.vueAccueil.setVisible(true);
+        this.vueComptes.setVisible(true);
     }
 
-    public ArrayList<Film> getFilms(){
-        ArrayList<Film> films = new ArrayList<>();
+    public ArrayList<Client> getComptes(){
+        ArrayList<Client> comptes = new ArrayList<>();
 
         try {
-            ArrayList<String> resultatsFilms = connexion.remplirChampsRequete("SELECT * FROM films");
+            ArrayList<String> resultatsComptes = connexion.remplirChampsRequete("SELECT * FROM membre");
 
-            for (String resultat : resultatsFilms) {
-                String[] infosFilm = resultat.split(",");
-                //Extraire les informations sur le film
-                String titre = infosFilm[0].trim();
-                String realisateur = infosFilm[1].trim();
+            for (String resultat : resultatsComptes) {
+                String[] infosCompte = resultat.split(",");
+                //Extraire les informations sur le compte
+                int id = Integer.parseInt(infosCompte[0].trim());
+                int type = Integer.parseInt(infosCompte[1].trim());
+                String nom = infosCompte[2].trim();
+                String prenom = infosCompte[3].trim();
+                String mail = infosCompte[4].trim();
+                String mdp = infosCompte[5].trim();
 
-                StringBuilder synopsisBuilder = new StringBuilder();
-                boolean reachedID = false;
-                //Pour le synopsis, prendre tout jusqu'à ce qu'il y ait ',numero'
-                for (int i = 2; i < infosFilm.length; i++) {
-                    if (!reachedID) {
-                        if (i + 1 < infosFilm.length && Character.isUpperCase(infosFilm[i + 1].charAt(0))) {
-                            reachedID = true;
-                        }
-                        else{
-                            synopsisBuilder.append(infosFilm[i]);
-                        }
-                    }
-                }
-                String synopsis = synopsisBuilder.toString().trim();
-
-                int id = Integer.parseInt(infosFilm[infosFilm.length - 2].trim());
-                String cheminImage = infosFilm[infosFilm.length - 1].trim();
-                Film film = new Film(id, titre, realisateur, synopsis, cheminImage);
-                ArrayList<Seance> seances = getSeancesForFilm(id); // Méthode à implémenter
-                film.setSeances(seances);
-                films.add(film);
+                Client compte = new Client(id, type, nom, prenom, mail, mdp);
+                comptes.add(compte);
             }
 
 
@@ -92,44 +72,6 @@ public class ControleurComptes {
             e.printStackTrace();
         }
 
-        return films;
+        return comptes;
     }
-    private ArrayList<Seance> getSeancesForFilm(int filmId) {
-        ArrayList<Seance> seances = new ArrayList<>();
-
-        try {
-            //Récupérer les résultats de la requête SQL pour les séances du film donné
-            ArrayList<String> resultatsSeances = connexion.remplirChampsRequete("SELECT * FROM seance WHERE ID_film = " + filmId + " ORDER BY Date_diffusion");
-            for (String resultat : resultatsSeances) {
-                String[] infosSeance = resultat.split(",");
-
-                //Conversion de la date
-                int id = Integer.parseInt(infosSeance[0].trim());
-
-                String dateHeure = infosSeance[1].trim();
-                String[] parties = dateHeure.split("");
-
-                String date = parties[0];
-                String mois = date.substring(5, 7);
-                String jour = date.substring(8, 10);
-                date = jour + "-" + mois;
-
-                String heure = parties[1];
-                heure = heure.substring(0, 5);
-                int prix = Integer.parseInt(infosSeance[2].trim());
-                String titre = infosSeance[3].trim();
-
-                //Créer une séance avec les informations récupérées
-                Seance seance = new Seance(date, heure, prix, id, titre);
-
-                //Ajouter la séance à la liste
-                seances.add(seance);
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-
-        return seances;
-    }
-
 }

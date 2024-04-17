@@ -2,7 +2,7 @@ package Vue;
 
 import Modele.Client;
 import Modele.Film;
-import Controleur.ControleurMembre;
+import Controleur.ControleurComptes;
 
 import javax.swing.*;
 import java.awt.*;
@@ -16,21 +16,21 @@ import java.util.Map;
 
 public class GUIcomptes extends JFrame {
     //Attributs
-    private Map<JButton, Film> boutonFilmMap;
-    private ArrayList<Film> films;
+    private Map<JButton, Client> boutonClientMap;
+    private ArrayList<Client> comptes;
     private Client membre;
-    private ControleurMembre controleurMembre;
+    private ControleurComptes controleurComptes;
     private ArrayList<JButton> boutons;
     private JButton btnFilms;
     private JButton btnComptes;
     private JPanel scrollablePanel;
 
     //Constructeur
-    public GUIcomptes(Client membre, ControleurMembre controleurMembre) {
+    public GUIcomptes(Client membre, ControleurComptes controleurComptes) {
         super("Cinéma");
         this.membre = membre;
-        this.controleurMembre = controleurMembre;
-        this.films = controleurMembre.getFilms();
+        this.controleurComptes = controleurComptes;
+        this.comptes = controleurComptes.getComptes();
         this.boutons = new ArrayList<>();
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
@@ -69,8 +69,8 @@ public class GUIcomptes extends JFrame {
         }
     }
 
-    public Map<JButton, Film> getBoutonFilmMap() {
-        return boutonFilmMap;
+    public Map<JButton, Client> getBoutonFilmMap() {
+        return boutonClientMap;
     }
 
     public void changerAffichage(Component nouveauContenu) {
@@ -122,21 +122,12 @@ public class GUIcomptes extends JFrame {
         panel.setLayout(null);
 
         scrollablePanel = new JPanel();
-        scrollablePanel.setLayout(new GridLayout(0, films.size()));
-        boutonFilmMap = new HashMap<>();
+        scrollablePanel.setLayout(new GridLayout(0, comptes.size()));
+        boutonClientMap = new HashMap<>();
 
-        for (Film f : films) {
+        for (Client c : comptes) {
             JButton button = new JButton();
 
-            ImageIcon imageIcon = new ImageIcon("images/affiches/" + f.getCheminImage());
-
-            if (imageIcon.getImageLoadStatus() == MediaTracker.COMPLETE) {
-                Image image = imageIcon.getImage().getScaledInstance(500, 700, Image.SCALE_SMOOTH);
-                ImageIcon resizedIcon = new ImageIcon(image);
-                button.setIcon(resizedIcon);
-            } else {
-                button.setText("Image indisponible");
-            }
             button.setPreferredSize(new Dimension(500, 200));
 
             JPanel overlayPanel = new JPanel();
@@ -158,13 +149,13 @@ public class GUIcomptes extends JFrame {
             labelTitre.setFont(police);
             boutons.add(button);
 
-            boutonFilmMap.put(button, f);
+            boutonClientMap.put(button, c);
 
             button.addMouseListener(new MouseAdapter() {
                 @Override
                 public void mouseEntered(MouseEvent e) {
                     overlayPanel.setVisible(true);
-                    labelTitre.setText(f.getTitre());
+                    labelTitre.setText(c.getEmail());
                 }
 
                 @Override

@@ -3,7 +3,7 @@ package Controleur;
 import Modele.Client;
 import Modele.Film;
 import Modele.Seance;
-import Vue.GUIaccueil;
+import Vue.GUImembre;
 import Vue.GUIfilm;
 
 import javax.swing.*;
@@ -17,7 +17,7 @@ import java.util.Date;
 
 public class ControleurMembre {
     private Client membre;
-    private GUIaccueil vueAccueil;
+    private GUImembre vueMembre;
     private Connexion connexion;
     private ArrayList<Film> films;
     private Film filmActuel;
@@ -28,16 +28,16 @@ public class ControleurMembre {
         this.connexion = connexion;
     }
 
-    public void setVue(GUIaccueil vue){
-        this.vueAccueil = vue;
+    public void setVue(GUImembre vue){
+        this.vueMembre = vue;
         this.films = this.getFilms();
         //Aller sur la page du film
-        this.vueAccueil.addListener(new ActionListener() {
+        this.vueMembre.addListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 JButton clickedButton = (JButton) e.getSource();
-                filmActuel = vueAccueil.getBoutonFilmMap().get(clickedButton);
-                vueAccueil.closeWindow();
+                filmActuel = vueMembre.getBoutonFilmMap().get(clickedButton);
+                vueMembre.closeWindow();
                 controleurFilm = new ControleurFilm(connexion, filmActuel, membre);
                 vueFilm = new GUIfilm(membre, controleurFilm, filmActuel);
                 controleurFilm.setVue(vueFilm);
@@ -49,7 +49,7 @@ public class ControleurMembre {
     }
 
     public void openWindow(){
-        this.vueAccueil.setVisible(true);
+        this.vueMembre.setVisible(true);
     }
 
     public ArrayList<Film> getFilms(){
