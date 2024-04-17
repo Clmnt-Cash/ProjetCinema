@@ -90,50 +90,75 @@ public class GUIpanier extends JFrame {
         boutonRetour.setBackground(Color.BLACK);
         panel.add(boutonRetour);
 
+        JLabel labelCommandes = new JLabel("Commandes dans le panier");
+        labelCommandes.setFont(labelNom.getFont().deriveFont(Font.BOLD, 20));
+        labelCommandes.setBounds(300, 120, 300, 40);
+        labelCommandes.setForeground(Color.WHITE);
+        panel.add(labelCommandes);
+
+        JLabel labelCommandesPassees = new JLabel("Commandes passées");
+        labelCommandesPassees.setFont(labelNom.getFont().deriveFont(Font.BOLD, 20));
+        labelCommandesPassees.setBounds(1050, 120, 250, 40);
+        labelCommandesPassees.setForeground(Color.WHITE);
+        panel.add(labelCommandesPassees);
+
         float prixTotAvecReduction = 0;
         float prixTotSansReduction = 0;
 
-        int xLabel = 0;
+        int xLabelNonPaye = 0;
+        int xLabelPaye = 0;
         for(Commande c : commandes){
-            JLabel labelInfos = new JLabel("Séance pour "+c.getSeance().getFilm() + " le " + c.getSeance().getDate() + " à " + c.getSeance().getHeure() + " pour " + c.getNbPlaces() +" personnes");
-            JLabel labelPrix;
-            if(client.getType() == -1){labelPrix = new JLabel("Prix : " + c.getPrixSansReduc() + "€");}
-            else{labelPrix = new JLabel("<html>Prix : " + "<strike>" + c.getPrixSansReduc() + "€</strike> "+ c.getPrixAvecReduc() + "€</html>");}
+            if(!c.getPaye()) {
+                JLabel labelInfos = new JLabel("Séance pour " + c.getSeance().getFilm() + " le " + c.getSeance().getDate() + " à " + c.getSeance().getHeure() + " pour " + c.getNbPlaces() + " personnes");
+                JLabel labelPrix;
+                if (client.getType() == -1) {
+                    labelPrix = new JLabel("Prix : " + c.getPrixSansReduc() + "€");
+                } else {
+                    labelPrix = new JLabel("<html>Prix : " + "<strike>" + c.getPrixSansReduc() + "€</strike> " + c.getPrixAvecReduc() + "€</html>");
+                }
 
-            labelPrix.setFont(labelNom.getFont().deriveFont(Font.BOLD, 15));
-            labelPrix.setBounds(200, 140 + 70 * xLabel, 300, 50);
-            labelPrix.setForeground(Color.WHITE);
+                labelPrix.setFont(labelNom.getFont().deriveFont(Font.BOLD, 15));
+                labelPrix.setBounds(50, 180 + 70 * xLabelNonPaye, 300, 50);
+                labelPrix.setForeground(Color.WHITE);
 
-            labelInfos.setFont(labelNom.getFont().deriveFont(Font.BOLD, 15));
-            labelInfos.setBounds(200, 120 + 70 * xLabel, 550, 50);
-            labelInfos.setForeground(Color.WHITE);
+                labelInfos.setFont(labelNom.getFont().deriveFont(Font.BOLD, 15));
+                labelInfos.setBounds(50, 160 + 70 * xLabelNonPaye, 550, 50);
+                labelInfos.setForeground(Color.WHITE);
 
-            JButton boutonModifier = new JButton("Modifier");
-            boutonModifier.setFont(labelNom.getFont().deriveFont(Font.BOLD, 13));
-            boutonModifier.setBounds(760, 135 + 70 * xLabel, 100, 25);
-            boutonModifier.setForeground(new Color(163, 163, 163));
-            boutonModifier.putClientProperty("infos", c.getId() + "," + c.getSeance().getFilm() + "," + c.getNbPlaces());
-
-
-            JButton boutonSupprimer = new JButton("Supprimer");
-            boutonSupprimer.setFont(labelNom.getFont().deriveFont(Font.BOLD, 13));
-            boutonSupprimer.setBounds(870, 135 + 70 * xLabel, 100, 25);
-            boutonSupprimer.setForeground(Color.WHITE);
-            boutonSupprimer.setBackground(new Color(174, 27, 27));
-            boutonSupprimer.putClientProperty("infos", c.getId() + "," + c.getSeance().getFilm());
+                JButton boutonModifier = new JButton("Modifier");
+                boutonModifier.setFont(labelNom.getFont().deriveFont(Font.BOLD, 13));
+                boutonModifier.setBounds(610, 175 + 70 * xLabelNonPaye, 100, 25);
+                boutonModifier.setForeground(new Color(163, 163, 163));
+                boutonModifier.putClientProperty("infos", c.getId() + "," + c.getSeance().getFilm() + "," + c.getNbPlaces());
 
 
-            panel.add(labelInfos);
-            panel.add(labelPrix);
-            panel.add(boutonModifier);
-            panel.add(boutonSupprimer);
-            this.boutonsModifier.add(boutonModifier);
-            this.boutonsSupprimer.add(boutonSupprimer);
+                JButton boutonSupprimer = new JButton("Supprimer");
+                boutonSupprimer.setFont(labelNom.getFont().deriveFont(Font.BOLD, 13));
+                boutonSupprimer.setBounds(720, 175 + 70 * xLabelNonPaye, 100, 25);
+                boutonSupprimer.setForeground(Color.WHITE);
+                boutonSupprimer.setBackground(new Color(174, 27, 27));
+                boutonSupprimer.putClientProperty("infos", c.getId() + "," + c.getSeance().getFilm());
 
-            xLabel ++;
 
-            prixTotSansReduction += c.getPrixSansReduc();
-            prixTotAvecReduction += c.getPrixAvecReduc();
+                panel.add(labelInfos);
+                panel.add(labelPrix);
+                panel.add(boutonModifier);
+                panel.add(boutonSupprimer);
+                this.boutonsModifier.add(boutonModifier);
+                this.boutonsSupprimer.add(boutonSupprimer);
+
+                xLabelNonPaye++;
+
+                prixTotSansReduction += c.getPrixSansReduc();
+                prixTotAvecReduction += c.getPrixAvecReduc();
+            } else {
+                JLabel labelInfos = new JLabel("Séance pour " + c.getSeance().getFilm() + " le " + c.getSeance().getDate() + " à " + c.getSeance().getHeure() + " pour " + c.getNbPlaces() + " personnes");
+                labelInfos.setFont(labelNom.getFont().deriveFont(Font.BOLD, 15));
+                labelInfos.setBounds(900, 180 + 40 * xLabelPaye, 550, 30);
+                labelInfos.setForeground(Color.GRAY);
+                panel.add(labelInfos);
+                xLabelPaye ++;
+            }
         }
         //Si il y a des commandes, afficher le bouton pour payer
         if(!this.commandes.isEmpty()) {

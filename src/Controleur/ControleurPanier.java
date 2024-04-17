@@ -193,7 +193,7 @@ public class ControleurPanier {
         try {
             //Récupérer les résultats de la requête SQL pour les séances du film donné
             ArrayList<String> resultatsCommande = connexion.remplirChampsRequete(
-                    "SELECT s.*, c.NB_places, f.Titre, c.ID " +
+                    "SELECT s.*, c.NB_places, f.Titre, c.ID, C.Paye " +
                             "FROM seance s " +
                             "JOIN commande c ON s.ID = c.ID_seance " +
                             "JOIN films f ON s.ID_film = f.ID " +
@@ -216,6 +216,7 @@ public class ControleurPanier {
                 int nbPlaces = Integer.parseInt(infosSeance[4].trim());
                 String titre = infosSeance[5].trim();
                 int idCommande = Integer.parseInt(infosSeance[6].trim());
+                boolean paye = Integer.parseInt(infosSeance[7].trim()) == 1;
 
                 prix *= nbPlaces;
 
@@ -228,7 +229,7 @@ public class ControleurPanier {
                 Seance seance = new Seance(date, heure, prix, id, titre);
 
                 //Créer une commande avec les informations récupérées
-                Commande commande = new Commande(nbPlaces, seance, prixAvecReduction, prix, idCommande);
+                Commande commande = new Commande(nbPlaces, seance, prixAvecReduction, prix, idCommande, paye);
                 //Ajouter la séance à la liste
                 commandes.add(commande);
             }

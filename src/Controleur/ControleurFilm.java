@@ -126,7 +126,7 @@ public class ControleurFilm {
 
     public void ajouterPanier(int IDseance, int nbPlaces){
         try {
-            String requeteInsertion = "INSERT INTO commande (ID_seance, ID_client, Nb_places) VALUES ('" + IDseance + "','"+ client.getId() + "','" + nbPlaces + "')";
+            String requeteInsertion = "INSERT INTO commande (ID_seance, ID_client, Nb_places, Paye) VALUES ('" + IDseance + "','"+ client.getId() + "','" + nbPlaces + "', 0)";
             connexion.executerRequete(requeteInsertion);
         } catch (SQLException e) {
             e.printStackTrace();

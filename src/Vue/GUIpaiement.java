@@ -251,7 +251,7 @@ public class GUIpaiement extends JFrame {
                             controleurAccueil.setVue(vueAccueil);
                             controleurAccueil.setClient(client);
                             controleurAccueil.openWindow();
-                            supprimerCommande(client.getId());
+                            payerCommande(client.getId());
                         });
                         timer.setRepeats(false);
                         timer.start();
@@ -263,9 +263,9 @@ public class GUIpaiement extends JFrame {
     }
 
     //Méthode pour supprimer une commande dans la bdd
-    public void supprimerCommande(int idClient){
+    public void payerCommande(int idClient){
         try {
-            String requeteInsertion = "DELETE FROM commande WHERE ID_client = " + idClient;
+            String requeteInsertion = "UPDATE commande SET Paye = 1 WHERE ID_client = " + idClient;
             conn.executerRequete(requeteInsertion);
         } catch (SQLException e) {
             e.printStackTrace();
