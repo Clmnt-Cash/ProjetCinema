@@ -24,6 +24,7 @@ public class GUIcomptes extends JFrame {
     private JButton btnFilms;
     private JButton btnComptes;
     private JPanel scrollablePanel;
+    private JPanel panel;
 
     //Constructeur
     public GUIcomptes(Client membre, ControleurComptes controleurComptes) {
@@ -81,7 +82,7 @@ public class GUIcomptes extends JFrame {
     }
 
     public void afficherMenu(){
-        JPanel panel = new JPanel() {
+        panel = new JPanel() {
             @Override
             protected void paintComponent(Graphics g) {
                 super.paintComponent(g);
@@ -102,7 +103,10 @@ public class GUIcomptes extends JFrame {
         btnFilms.setBounds(500, 30, 100, 30);
         btnFilms.setForeground(Color.WHITE);
         btnFilms.setBackground(new Color(100, 100, 100));
-        drawComponents.add(btnFilms);
+        btnFilms.setOpaque(false);
+        btnFilms.setContentAreaFilled(false);
+        btnFilms.setBorderPainted(false);
+        panel.add(btnFilms);
 
         //Onglet bouton comptes
         btnComptes = new JButton("Comptes");
@@ -111,7 +115,7 @@ public class GUIcomptes extends JFrame {
         btnComptes.setOpaque(false);
         btnComptes.setContentAreaFilled(false);
         btnComptes.setBorderPainted(false);
-        drawComponents.add(btnComptes);
+        panel.add(btnComptes);
 
         //Ajout du JLabel pour afficher le nom du client
         JLabel labelNom = new JLabel("Connecté en tant que " + membre.getPrenom() + " " + membre.getNom());

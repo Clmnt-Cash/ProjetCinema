@@ -92,7 +92,7 @@ public class GUIEmployeAccueil extends JFrame {
 
         //Onglet bouton films
         btnFilms = new JButton("Films");
-        btnFilms.setBounds(300, 40, 100, 30);
+        btnFilms.setBounds(500, 30, 100, 30);
         btnFilms.setForeground(Color.WHITE);
         btnFilms.setBackground(new Color(100, 100, 100));
         btnFilms.setOpaque(false);
@@ -102,7 +102,7 @@ public class GUIEmployeAccueil extends JFrame {
 
         //Onglet bouton comptes
         btnComptes = new JButton("Comptes");
-        btnComptes.setBounds(400, 40, 100, 30);
+        btnComptes.setBounds(650, 30, 100, 30);
         btnComptes.setForeground(Color.WHITE);
         btnComptes.setOpaque(false);
         btnComptes.setContentAreaFilled(false);
