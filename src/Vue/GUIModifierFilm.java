@@ -3,31 +3,24 @@ package Vue;
 import Controleur.ControleurModifierFilm;
 import Modele.Client;
 import Modele.Film;
-import Modele.Reduction;
 import Modele.Seance;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.*;
 
 public class GUIModifierFilm extends JFrame {
     //Attributs
-    private Client client;
-    private ControleurModifierFilm controleurModifierFilm;
-    private JButton boutonRetour;
-    private Film filmActuel;
-    private ArrayList<JButton> boutonsSeance;
-    private ArrayList<JButton> boutonsDate;
-    private ArrayList<Seance> seanceParDate;
+    private final Client client;
+    private final JButton boutonRetour;
+    private final Film filmActuel;
+    private final ArrayList<JButton> boutonsSeance;
 
-    private Reduction reduction;
-    private Seance seance;
     private JButton boutonModifier;
-    private JButton boutonEnregistrer;
+    private final JButton boutonEnregistrer;
     private ArrayList<Seance> seances;
-    private JButton boutonAjouterSeance;
+    private final JButton boutonAjouterSeance;
 
     private JTextField textFieldTitre;
     private JTextField textFieldChemin;
@@ -44,14 +37,12 @@ public class GUIModifierFilm extends JFrame {
     public GUIModifierFilm(Client client, ControleurModifierFilm controleurModifierFilm, Film film) {
         super("Cinéma");
         this.client = client;
-        this.controleurModifierFilm = controleurModifierFilm;
         this.filmActuel = film;
         this.boutonsSeance = new ArrayList<JButton>();
-        this.boutonsDate = new ArrayList<JButton>();
-        this.seanceParDate = new ArrayList<Seance>();
         this.boutonEnregistrer = new JButton("Enregistrer");
-        this.boutonsModifier = new ArrayList<JButton>();
-        this.boutonsSupprimer = new ArrayList<JButton>();
+        this.boutonAjouterSeance = new JButton("Ajouter une séance");
+        this.boutonsModifier = new ArrayList<>();
+        this.boutonsSupprimer = new ArrayList<>();
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         setSize(1500, 800);
@@ -114,20 +105,9 @@ public class GUIModifierFilm extends JFrame {
         add(panel);
     }
 
-    public void addListenerRetour(ActionListener listener){
-        boutonRetour.addActionListener(listener);
-    }
-    public void addListenerModifier(ActionListener listener){
-        boutonModifier.addActionListener(listener);
-    }
-
     public void closeWindow(){setVisible(false);dispose();}
 
-    public void addListenerSeance(ActionListener listener){
-        for(JButton b : boutonsSeance){
-            b.addActionListener(listener);
-        }
-    }
+    //Affichage de base
     public void affichage(){
 
         //Affichage du nom du film
@@ -175,9 +155,6 @@ public class GUIModifierFilm extends JFrame {
         boutonModifier.setBackground(Color.GRAY);
         panel.add(boutonModifier);
 
-
-
-
         JLabel labelSeances = new JLabel("Séances");
         labelSeances.setBounds(900, 120, 200, 30);
         labelSeances.setForeground(Color.WHITE);
@@ -201,14 +178,10 @@ public class GUIModifierFilm extends JFrame {
             boutonSupprimer.setFont(boutonSupprimer.getFont().deriveFont(Font.BOLD, 13));
             boutonSupprimer.setForeground(Color.WHITE);
             boutonSupprimer.setBackground(new Color(174, 27, 27));
-            boutonSupprimer.putClientProperty("infos", s.getId() + ',' + s.getDate() + ',' + s.getHeure() + "," + s.getPrix());
+            boutonSupprimer.putClientProperty("infos", s.getId() + "," + s.getDate() + "," + s.getHeure() + "," + s.getPrix());
             panel.add(boutonSupprimer);
+            this.boutonsSupprimer.add(boutonSupprimer);
         }
-
-
-
-
-
         int yBouton = 0;
         for(String date : datesUniques){
             String mois = date.substring(3, 5);
@@ -248,18 +221,7 @@ public class GUIModifierFilm extends JFrame {
                     bouton.add(labelHeure, gbcHeure);
 
                     //Prix
-                    float prix;
-                    //Calcul du prix selon les réductions
-                    if (client.getType() == 1) {
-                        prix = (float) (s.getPrix() * reduction.getReductionEnfant()) / 100;
-                    } else if (client.getType() == 2) {
-                        prix = (float) (s.getPrix() * reduction.getReductionRegulier()) / 100;
-                    } else if (client.getType() == 3) {
-                        prix = (float) (s.getPrix() * reduction.getReductionSenior()) / 100;
-                    } else {
-                        prix = s.getPrix();
-                    }
-
+                    float prix = s.getPrix();
                     JLabel labelPrix = new JLabel(prix + "€");
                     labelPrix.setFont(labelPrix.getFont().deriveFont(Font.PLAIN, 10));
                     GridBagConstraints gbcPrix = new GridBagConstraints();
@@ -282,7 +244,7 @@ public class GUIModifierFilm extends JFrame {
             }
         }
     }
-
+    //Affichage quand on veut modifier les données d'un film
     public void affichageModifier(){
         panel.removeAll();
         panel.revalidate();
@@ -309,52 +271,52 @@ public class GUIModifierFilm extends JFrame {
             panel.setLayout(null);
         }
 
-        // Label pour le nom du film
+        //Label pour le nom du film
         JLabel labelTitre = new JLabel("Titre:");
         labelTitre.setBounds(150, 200, 100, 30);
         labelTitre.setForeground(Color.WHITE);
         panel.add(labelTitre);
 
-        // Champ de texte pour le nom du film
+        //Champ de texte pour le nom du film
         textFieldTitre = new JTextField(filmActuel.getTitre());
         textFieldTitre.setBounds(300, 200, 400, 30);
         textFieldTitre.setForeground(Color.WHITE);
         textFieldTitre.setBackground(Color.BLACK);
         panel.add(textFieldTitre);
 
-        // Label pour le chemin de l'image
+        //Label pour le chemin de l'image
         JLabel labelChemin = new JLabel("Chemin de l'image:");
         labelChemin.setBounds(150, 230, 130, 30);
         labelChemin.setForeground(Color.WHITE);
         panel.add(labelChemin);
 
-        // Champ de texte pour le chemin de l'image
+        //Champ de texte pour le chemin de l'image
         textFieldChemin = new JTextField(filmActuel.getCheminImage());
         textFieldChemin.setBounds(300, 230, 400, 30);
         textFieldChemin.setForeground(Color.WHITE);
         textFieldChemin.setBackground(Color.BLACK);
         panel.add(textFieldChemin);
 
-        // Label pour le nom du réalisateur
+        //Label pour le nom du réalisateur
         JLabel labelRealisateur = new JLabel("Réalisateur:");
         labelRealisateur.setBounds(150, 260, 100, 30);
         labelRealisateur.setForeground(Color.WHITE);
         panel.add(labelRealisateur);
 
-        // Champ de texte pour le nom du réalisateur
+        //Champ de texte pour le nom du réalisateur
         textFieldRealisateur = new JTextField(filmActuel.getRealisateur());
         textFieldRealisateur.setBounds(300, 260, 400, 30);
         textFieldRealisateur.setForeground(Color.WHITE);
         textFieldRealisateur.setBackground(Color.BLACK);
         panel.add(textFieldRealisateur);
 
-        // Label pour le synopsis
+        //Label pour le synopsis
         JLabel labelSynopsis = new JLabel("Synopsis:");
         labelSynopsis.setBounds(150, 290, 100, 30);
         labelSynopsis.setForeground(Color.WHITE);
         panel.add(labelSynopsis);
 
-        // Zone de texte pour le synopsis
+        //Zone de texte pour le synopsis
         textAreaSynopsis = new JTextArea(filmActuel.getSynopsis());
         textAreaSynopsis.setBounds(300, 290, 400, 200);
         textAreaSynopsis.setLineWrap(true);
@@ -362,7 +324,6 @@ public class GUIModifierFilm extends JFrame {
         textAreaSynopsis.setForeground(Color.WHITE);
         textAreaSynopsis.setBackground(Color.BLACK);
         panel.add(textAreaSynopsis);
-
 
         //Label pour les séances
         JLabel labelSeances = new JLabel("Séances");
@@ -386,7 +347,6 @@ public class GUIModifierFilm extends JFrame {
         panel.add(boutonEnregistrer);
 
         //Bouton pour ajouter une séance
-        boutonAjouterSeance = new JButton("Ajouter une séance");
         boutonAjouterSeance.setBounds(1160, 700, 160, 50);
         boutonAjouterSeance.setFont(new Font("Arial", Font.BOLD, 15));
         boutonAjouterSeance.setForeground(Color.WHITE);
@@ -424,27 +384,29 @@ public class GUIModifierFilm extends JFrame {
     }
 
 
-    //Getters
+    //Add listeners
     public void addListenerEnregistrer(ActionListener listener){boutonEnregistrer.addActionListener(listener);}
+    public void addListenerAjouterSeance(ActionListener listener){boutonAjouterSeance.addActionListener(listener);}
+    public void addListenerRetour(ActionListener listener){
+        boutonRetour.addActionListener(listener);
+    }
+    public void addListenerModifier(ActionListener listener){
+        boutonModifier.addActionListener(listener);
+    }
     public void addListenersModifier(ActionListener l){
         for(JButton b : boutonsModifier){
             b.addActionListener(l);
         }
     }
-
     public void addListenersSupprimer(ActionListener listener){
         for(JButton b : this.boutonsSupprimer){
             b.addActionListener(listener);
         }
     }
-
+    //Getters
     public String getTitre(){return textFieldTitre.getText();}
     public String getRealisateur(){return textFieldRealisateur.getText();}
     public String getChemin(){return textFieldChemin.getText();}
     public String getSynopsis(){return textAreaSynopsis.getText();}
 
-
-    public ArrayList<JButton> getBoutonsModifier() {
-        return boutonsModifier;
-    }
 }

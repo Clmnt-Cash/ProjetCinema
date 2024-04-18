@@ -152,16 +152,6 @@ public class GUIEmployeAccueil extends JFrame {
             overlayPanel.setVisible(false);
             button.setLayout(new BorderLayout());
             button.add(overlayPanel, BorderLayout.CENTER);
-
-            JLabel labelTitre = new JLabel();
-            labelTitre.setForeground(Color.WHITE);
-            labelTitre.setHorizontalAlignment(SwingConstants.LEADING);
-            labelTitre.setVerticalAlignment(SwingConstants.CENTER);
-            overlayPanel.add(labelTitre);
-
-            Font police = new Font("Arial", Font.BOLD, 25);
-
-            labelTitre.setFont(police);
             boutons.add(button);
 
             boutonFilmMap.put(button, f);
@@ -170,13 +160,11 @@ public class GUIEmployeAccueil extends JFrame {
                 @Override
                 public void mouseEntered(MouseEvent e) {
                     overlayPanel.setVisible(true);
-                    labelTitre.setText(f.getTitre());
                 }
 
                 @Override
                 public void mouseExited(MouseEvent e) {
                     overlayPanel.setVisible(false);
-                    labelTitre.setText("");
                 }
             });
         }
