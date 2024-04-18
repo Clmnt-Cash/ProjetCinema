@@ -16,7 +16,7 @@ import java.util.ArrayList;
 public class ControleurModifierFilm {
     //Attributs
     private Client client;
-    private GUIfilm vueFilm;
+    private GUIModifierFilm vueModifierFilm;
     private Connexion connexion;
     private Film filmActuel;
     private GUIaccueil vueAccueil;
@@ -29,19 +29,36 @@ public class ControleurModifierFilm {
         this.client = client;
     }
     //Methode pour initialiser la vue
-    public void setVue(GUIfilm vue){
-        this.vueFilm = vue;
-
-        this.vueFilm.addListenerRetour(new ActionListener(){
+    public void setVue(GUIModifierFilm vue){
+        this.vueModifierFilm = vue;
+        this.vueModifierFilm.addListenerRetour(new ActionListener(){
             //Ouverture de la page menu
             @Override
             public void actionPerformed(ActionEvent e) {
-                vueFilm.closeWindow();
+                vueModifierFilm.closeWindow();
                 ControleurEmployeAccueil controleurEmployeAccueil = new ControleurEmployeAccueil(connexion);
                 GUIEmployeAccueil vueEmployeAccueil= new GUIEmployeAccueil(client, controleurEmployeAccueil);
                 controleurEmployeAccueil.setVue(vueEmployeAccueil);
                 controleurEmployeAccueil.setMembre(client);
                 controleurEmployeAccueil.openWindow();
+            }
+        });
+        // Après la création du bouton boutonModifier
+        this.vueModifierFilm.addListenerModifier(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                vueModifierFilm.affichageModifier();
+            }
+        });
+
+        this.vueModifierFilm.addListenerModifier(new ActionListener(){
+            //Modifier le film
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                vueModifierFilm.panel.removeAll();
+                vueModifierFilm.panel.revalidate();
+                vueModifierFilm.panel.repaint();
+                System.out.println("oui");
             }
         });
     }
@@ -53,6 +70,6 @@ public class ControleurModifierFilm {
 
     //Méthode pour ouvrir la fenetre
     public void openWindow(){
-        this.vueFilm.setVisible(true);
+        this.vueModifierFilm.setVisible(true);
     }
 }

@@ -41,6 +41,7 @@ public class ControleurEmployeAccueil {
             vueMembre.closeWindow();
             ControleurModifierFilm controleurModifierFilm = new ControleurModifierFilm(connexion, filmActuel, membre);
             GUIModifierFilm vueModifierFilm = new GUIModifierFilm(membre, controleurModifierFilm, filmActuel);
+            controleurModifierFilm.setVue(vueModifierFilm);
         });
 
         //Aller sur la page des films
