@@ -27,6 +27,7 @@ public class GUIModifierFilm extends JFrame {
     private Reduction reduction;
     private Seance seance;
     private JButton boutonModifier;
+    public JPanel panel;
 
     //Constructeur
     public GUIModifierFilm(Client client, ControleurModifierFilm controleurModifierFilm, Film film) {
@@ -47,7 +48,7 @@ public class GUIModifierFilm extends JFrame {
         int y = (screenSize.height - getHeight()) / 2;
         setLocation(x, y);
 
-        JPanel panel = new JPanel() {
+        panel = new JPanel() {
             @Override
             protected void paintComponent(Graphics g) {
                 super.paintComponent(g);
@@ -62,13 +63,6 @@ public class GUIModifierFilm extends JFrame {
                 g.drawImage(image, 0, 0, 100, 100, this);
             }
         };
-
-        JLabel labelFilm = new JLabel(filmActuel.getTitre());
-        labelFilm.setFont(labelFilm.getFont().deriveFont(Font.BOLD, 30));
-        Dimension size1 = labelFilm.getPreferredSize();
-        labelFilm.setBounds(750 - size1.width/2, 30, size1.width, size1.height);
-        labelFilm.setForeground(Color.WHITE);
-        panel.add(labelFilm);
 
         if(this.client.getType() != -1) {
             //Ajout du JLabel pour afficher le nom du client
@@ -89,6 +83,44 @@ public class GUIModifierFilm extends JFrame {
             panel.add(labelNom);
             panel.setLayout(null);
         }
+
+        //Ajout du bouton Retour
+        boutonRetour = new JButton("Retour");
+        boutonRetour.setBounds(10, 110, 100, 50);
+        boutonRetour.setForeground(Color.WHITE);
+        boutonRetour.setBackground(Color.BLACK);
+        panel.add(boutonRetour);
+
+        //Bouton pour modifier un film
+        boutonModifier = new JButton("Modifier");
+        boutonModifier.setBounds(1330, 700, 100, 50);
+        boutonModifier.setFont(new Font("Arial", Font.BOLD, 20));
+        boutonModifier.setForeground(Color.WHITE);
+        boutonModifier.setBackground(Color.GRAY);
+        panel.add(boutonModifier);
+
+        this.affichage();
+
+        setVisible(true);
+        panel.setLayout(null);
+        add(panel);
+    }
+
+    public void addListenerRetour(ActionListener listener){
+        boutonRetour.addActionListener(listener);
+    }
+    public void addListenerModifier(ActionListener listener){
+        boutonModifier.addActionListener(listener);
+    }
+
+    public void closeWindow(){setVisible(false);dispose();}
+
+    public void addListenerSeance(ActionListener listener){
+        for(JButton b : boutonsSeance){
+            b.addActionListener(listener);
+        }
+    }
+    public void affichage(){
 
         //Affichage du nom du film
         JLabel labelTitre = new JLabel(filmActuel.getTitre());
@@ -127,19 +159,9 @@ public class GUIModifierFilm extends JFrame {
         panel.add(labelSynopsis);
 
 
-        //Ajout du bouton Retour
-        boutonRetour = new JButton("Retour");
-        boutonRetour.setBounds(10, 110, 100, 50);
-        boutonRetour.setForeground(Color.WHITE);
-        boutonRetour.setBackground(Color.BLACK);
-        panel.add(boutonRetour);
 
-        boutonModifier = new JButton("Modifier");
-        boutonModifier.setBounds(1300, 700, 100, 50);
-        boutonModifier.setFont(new Font("Arial", Font.BOLD, 20));
-        boutonModifier.setForeground(Color.WHITE);
-        boutonModifier.setBackground(Color.GRAY);
-        panel.add(boutonModifier);
+
+
 
 
         JLabel labelSeances = new JLabel("Séances");
@@ -149,7 +171,7 @@ public class GUIModifierFilm extends JFrame {
         panel.add(labelSeances);
 
         //Ajout des boutons pour chaque séance
-        ArrayList<Seance> seances = film.getSeances();
+        ArrayList<Seance> seances = filmActuel.getSeances();
 
         ArrayList<String> datesUniques = new ArrayList<String>();
         for(Seance s : seances){
@@ -228,23 +250,45 @@ public class GUIModifierFilm extends JFrame {
                 }
             }
         }
-        setVisible(true);
+    }
+
+    public void clear(){
+        panel.removeAll();
+        panel.revalidate();
+        panel.repaint();
+    }
+
+    public void affichageModifier(){
+        panel.removeAll();
+        panel.revalidate();
+        panel.repaint();
+        /*
+        //Affichage du nom du film
+        JTextField textFieldTitre = new JTextField(filmActuel.getTitre());
+        textFieldTitre.setBounds(450, 200, 400, 30);
+        panel.add(textFieldTitre);
+
+        //Affichage du nom du réalisateur
+        JTextField textFieldRealisateur = new JTextField("Réalisé par " + filmActuel.getRealisateur());
+        textFieldRealisateur.setBounds(450, 230, 400, 30);
+        panel.add(textFieldRealisateur);
+
+        //Affichage du synopsis
+        JTextField textFieldSynopsis = new JTextField("Synopsis:\n" + filmActuel.getSynopsis());
+        textFieldSynopsis.setBounds(450, 280, 400, 500);
+
+        panel.add(textFieldSynopsis);
+
+        //Label pour les séances
+        JLabel labelSeances = new JLabel("Séances");
+        labelSeances.setBounds(900, 120, 200, 30);
+        labelSeances.setForeground(Color.WHITE);
+        labelSeances.setFont(new Font("Arial", Font.BOLD, 20));
+        panel.add(labelSeances);
+
         panel.setLayout(null);
         add(panel);
-    }
-
-    public void addListenerRetour(ActionListener listener){
-        boutonRetour.addActionListener(listener);
-    }
-    public void addListenerModifier(ActionListener listener){
-        boutonModifier.addActionListener(listener);
-    }
-
-    public void closeWindow(){setVisible(false);dispose();}
-
-    public void addListenerSeance(ActionListener listener){
-        for(JButton b : boutonsSeance){
-            b.addActionListener(listener);
-        }
+        *
+         */
     }
 }
