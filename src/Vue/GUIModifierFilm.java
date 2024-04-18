@@ -1,7 +1,5 @@
 package Vue;
 
-import Controleur.ControleurAccueil;
-import Controleur.ControleurFilm;
 import Controleur.ControleurModifierFilm;
 import Modele.Client;
 import Modele.Film;
@@ -30,15 +28,13 @@ public class GUIModifierFilm extends JFrame {
     private JButton boutonEnregistrer;
     private ArrayList<Seance> seances;
     private JButton boutonAjouterSeance;
-    private JComboBox<String> comboBoxJour;
-    private JComboBox<String> comboBoxMois;
-    private JComboBox<String> comboBoxHeure;
-    private JComboBox<String> comboBoxMinutes;
-    private JTextField textFieldPrix;
+
     private JTextField textFieldTitre;
     private JTextField textFieldChemin;
     private JTextField textFieldRealisateur;
     private JTextArea textAreaSynopsis;
+    public ArrayList<JButton> boutonsModifier;
+    public ArrayList<JButton> boutonsSupprimer;
 
 
     public JPanel panel;
@@ -54,6 +50,8 @@ public class GUIModifierFilm extends JFrame {
         this.boutonsDate = new ArrayList<JButton>();
         this.seanceParDate = new ArrayList<Seance>();
         this.boutonEnregistrer = new JButton("Enregistrer");
+        this.boutonsModifier = new ArrayList<JButton>();
+        this.boutonsSupprimer = new ArrayList<JButton>();
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         setSize(1500, 800);
@@ -192,7 +190,24 @@ public class GUIModifierFilm extends JFrame {
         ArrayList<String> datesUniques = new ArrayList<String>();
         for(Seance s : seances){
             if(!datesUniques.contains(s.getDate()))datesUniques.add(s.getDate());
+            JButton boutonModifier2 = new JButton("Modifier");
+            boutonModifier2.setFont(boutonModifier2.getFont().deriveFont(Font.BOLD, 13));
+            boutonModifier2.setForeground(new Color(163, 163, 163));
+            boutonModifier2.putClientProperty("infos", s.getId() + "," + s.getDate() + "," + s.getHeure() + "," + s.getPrix());
+            panel.add(boutonModifier2);
+            this.boutonsModifier.add(boutonModifier2);
+
+            JButton boutonSupprimer = new JButton("Supprimer");
+            boutonSupprimer.setFont(boutonSupprimer.getFont().deriveFont(Font.BOLD, 13));
+            boutonSupprimer.setForeground(Color.WHITE);
+            boutonSupprimer.setBackground(new Color(174, 27, 27));
+            boutonSupprimer.putClientProperty("infos", s.getId() + ',' + s.getDate() + ',' + s.getHeure() + "," + s.getPrix());
+            panel.add(boutonSupprimer);
         }
+
+
+
+
 
         int yBouton = 0;
         for(String date : datesUniques){
@@ -371,124 +386,65 @@ public class GUIModifierFilm extends JFrame {
         panel.add(boutonEnregistrer);
 
         //Bouton pour ajouter une séance
-        boutonEnregistrer = new JButton("Ajouter une séance");
-        boutonEnregistrer.setBounds(1160, 700, 160, 50);
-        boutonEnregistrer.setFont(new Font("Arial", Font.BOLD, 15));
-        boutonEnregistrer.setForeground(Color.WHITE);
-        boutonEnregistrer.setBackground(Color.GRAY);
-        panel.add(boutonEnregistrer);
+        boutonAjouterSeance = new JButton("Ajouter une séance");
+        boutonAjouterSeance.setBounds(1160, 700, 160, 50);
+        boutonAjouterSeance.setFont(new Font("Arial", Font.BOLD, 15));
+        boutonAjouterSeance.setForeground(Color.WHITE);
+        boutonAjouterSeance.setBackground(Color.GRAY);
+        panel.add(boutonAjouterSeance);
 
         int ySeance = 0;
         int nbSeance = 0;
 
         for (Seance s : seances) {
             nbSeance++;
-            //Label séance
-            JLabel labelSeance = new JLabel("Séance " + nbSeance);
-            labelSeance.setBounds(800, 200 + ySeance, 100, 30);
+
+            JLabel labelSeance = new JLabel("Séance " + nbSeance + "    Date : " + s.getDate() + "  Heure : " + s.getHeure() + "  Prix : " + s.getPrix());
+            labelSeance.setBounds(800, 200 + ySeance, 500, 30);
             labelSeance.setForeground(Color.WHITE);
             panel.add(labelSeance);
-
-            //Label Date
-            JLabel labelDate = new JLabel("Date :");
-            labelDate.setBounds(900, 200 + ySeance, 50, 30);
-            labelDate.setForeground(Color.WHITE);
-            panel.add(labelDate);
-
-            //Date
-            String date = s.getDate();
-            String[] elementsDate = date.split("/");
-
-            //ComboBox pour le jour
-            String[] jours = new String[31];
-            for (int i = 0; i < 31; i++) {
-                jours[i] = String.valueOf(i + 1);
-            }
-            comboBoxJour = new JComboBox<>(jours);
-            comboBoxJour.setSelectedItem(elementsDate[0]);
-            comboBoxJour.setBounds(950, 200 + ySeance, 50, 30);
-            panel.add(comboBoxJour);
-
-            //ComboBox pour le mois
-            String[] mois = {"01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12"};
-            comboBoxMois = new JComboBox<>(mois);
-            comboBoxMois.setSelectedItem(elementsDate[1]);
-            comboBoxMois.setBounds(1000, 200 + ySeance, 50, 30);
-            panel.add(comboBoxMois);
-
-            //Label Heure
-            JLabel labelHeure = new JLabel("Heure :");
-            labelHeure.setBounds(1060, 200 + ySeance, 50, 30);
-            labelHeure.setForeground(Color.WHITE);
-            panel.add(labelHeure);
-
-            //Heure
-            String heure = s.getHeure();
-            String[] elementsHeure = heure.split(":");
-
-            //ComboBox pour l'heure
-            String[] heures = new String[24]; //Heures de 0 à 23
-            for (int i = 0; i < 24; i++) {
-                heures[i] = String.valueOf(i);
-            }
-            comboBoxHeure = new JComboBox<>(heures);
-            comboBoxHeure.setSelectedItem(elementsHeure[0]);
-            comboBoxHeure.setBounds(1110, 200 + ySeance, 50, 30);
-            panel.add(comboBoxHeure);
-
-            //ComboBox pour les minutes
-            String[] minutes = new String[60]; //Minutes de 0 à 59
-            for (int i = 0; i < 60; i++) {
-                minutes[i] = String.valueOf(i);
-            }
-            comboBoxMinutes = new JComboBox<>(minutes);
-            comboBoxMinutes.setSelectedItem(elementsHeure[1]);
-            comboBoxMinutes.setBounds(1160, 200 + ySeance, 50, 30);
-            panel.add(comboBoxMinutes);
-
-            //Label Prix
-            JLabel labelPrix = new JLabel("Prix :");
-            labelPrix.setBounds(1220, 200 + ySeance, 50, 30);
-            labelPrix.setForeground(Color.WHITE);
-            panel.add(labelPrix);
-
-            //Prix
-            float prix = s.getPrix();
-            textFieldPrix = new JTextField(String.valueOf(prix));
-            textFieldPrix.setBounds(1270, 200 + ySeance, 50, 30);
-            panel.add(textFieldPrix);
-
             ySeance += 50;
         }
+
+        ySeance = 0;
+        for(JButton b : boutonsModifier){
+            b.setBounds(1100, 200 + ySeance, 100, 25);
+            ySeance += 50;
+            panel.add(b);
+        }
+        ySeance = 0;
+        for(JButton b : boutonsSupprimer){
+            b.setBounds(1210, 200 + ySeance, 100, 25);
+            ySeance += 50;
+            panel.add(b);
+        }
+
         panel.setLayout(null);
         add(panel);
     }
 
+
     //Getters
     public void addListenerEnregistrer(ActionListener listener){boutonEnregistrer.addActionListener(listener);}
-    public JComboBox<String> getComboBoxJour() {
-        return comboBoxJour;
+    public void addListenersModifier(ActionListener l){
+        for(JButton b : boutonsModifier){
+            b.addActionListener(l);
+        }
     }
 
-    public JComboBox<String> getComboBoxMois() {
-        return comboBoxMois;
+    public void addListenersSupprimer(ActionListener listener){
+        for(JButton b : this.boutonsSupprimer){
+            b.addActionListener(listener);
+        }
     }
 
-    public JComboBox<String> getComboBoxHeure() {
-        return comboBoxHeure;
-    }
-
-    public JComboBox<String> getComboBoxMinutes() {
-        return comboBoxMinutes;
-    }
-
-    public JTextField getTextFieldPrix() {
-        return textFieldPrix;
-    }
     public String getTitre(){return textFieldTitre.getText();}
     public String getRealisateur(){return textFieldRealisateur.getText();}
     public String getChemin(){return textFieldChemin.getText();}
     public String getSynopsis(){return textAreaSynopsis.getText();}
 
 
+    public ArrayList<JButton> getBoutonsModifier() {
+        return boutonsModifier;
+    }
 }
