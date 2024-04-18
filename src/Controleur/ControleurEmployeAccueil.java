@@ -5,6 +5,7 @@ import Modele.Film;
 import Modele.Seance;
 import Vue.GUIEmployeAccueil;
 import Vue.GUIModifierFilm;
+import Vue.GUIcomptes;
 import Vue.GUIfilm;
 
 import javax.swing.*;
@@ -23,6 +24,8 @@ public class ControleurEmployeAccueil {
     private ArrayList<Film> films;
     private Film filmActuel;
     private ControleurFilm controleurFilm;
+    private ControleurComptes controleurComptes;
+    private GUIcomptes vueComptes;
 
     public ControleurEmployeAccueil(Connexion connexion) {
         this.connexion = connexion;
@@ -38,6 +41,20 @@ public class ControleurEmployeAccueil {
             vueMembre.closeWindow();
             ControleurModifierFilm controleurModifierFilm = new ControleurModifierFilm(connexion, filmActuel, membre);
             GUIModifierFilm vueModifierFilm = new GUIModifierFilm(membre, controleurModifierFilm, filmActuel);
+        });
+
+        //Aller sur la page des films
+        this.vueMembre.addListenerOngletComptes(new ActionListener(){
+            //Ouverture de la page menu
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                vueMembre.closeWindow();
+                controleurComptes = new ControleurComptes(connexion);
+                controleurComptes.setMembre(membre);
+                vueComptes = new GUIcomptes(membre, controleurComptes);
+                controleurComptes.setVue(vueComptes);
+                controleurComptes.openWindow();
+            }
         });
     }
     public void setMembre(Client membre) {

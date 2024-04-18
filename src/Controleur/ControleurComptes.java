@@ -42,9 +42,9 @@ public class ControleurComptes {
             public void actionPerformed(ActionEvent e) {
                 vueComptes.closeWindow();
                 controleurEmployeAccueil = new ControleurEmployeAccueil(connexion);
+                controleurEmployeAccueil.setMembre(membre);
                 vueEmployeAccueil = new GUIEmployeAccueil(membre, controleurEmployeAccueil);
                 controleurEmployeAccueil.setVue(vueEmployeAccueil);
-                controleurEmployeAccueil.setMembre(membre);
                 controleurEmployeAccueil.openWindow();
             }
         });
