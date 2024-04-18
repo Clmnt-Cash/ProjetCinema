@@ -23,6 +23,7 @@ public class GUIEmployeAccueil extends JFrame {
     private ArrayList<JButton> boutons;
     private JButton btnFilms;
     private JButton btnComptes;
+    private JButton btnReduc;
     private JPanel scrollablePanel;
     private JPanel panel;
 
@@ -109,6 +110,15 @@ public class GUIEmployeAccueil extends JFrame {
         btnComptes.setBorderPainted(false);
         panel.add(btnComptes);
 
+        //Onglet bouton reductions
+        btnReduc = new JButton("Reductions");
+        btnReduc.setBounds(800, 30, 100, 30);
+        btnReduc.setForeground(Color.WHITE);
+        btnReduc.setOpaque(false);
+        btnReduc.setContentAreaFilled(false);
+        btnReduc.setBorderPainted(false);
+        panel.add(btnReduc);
+
         //Ajout du JLabel pour afficher le nom du client
         JLabel labelNom = new JLabel("Connecté en tant que " + membre.getPrenom() + " " + membre.getNom());
         labelNom.setBounds(1100, 30, 300, 30);
@@ -184,6 +194,9 @@ public class GUIEmployeAccueil extends JFrame {
 
     public void addListenerOngletComptes(ActionListener listener){
         btnComptes.addActionListener(listener);
+    }
+    public void addListenerOngletReduc(ActionListener listener){
+        btnReduc.addActionListener(listener);
     }
     public void closeWindow(){setVisible(false);dispose();}
     public void openWindow(){setVisible(true);}

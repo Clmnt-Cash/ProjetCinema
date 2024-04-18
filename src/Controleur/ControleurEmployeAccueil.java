@@ -3,10 +3,7 @@ package Controleur;
 import Modele.Client;
 import Modele.Film;
 import Modele.Seance;
-import Vue.GUIEmployeAccueil;
-import Vue.GUIModifierFilm;
-import Vue.GUIcomptes;
-import Vue.GUIfilm;
+import Vue.*;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
@@ -25,7 +22,9 @@ public class ControleurEmployeAccueil {
     private Film filmActuel;
     private ControleurFilm controleurFilm;
     private ControleurComptes controleurComptes;
+    private ControleurReduc controleurReduc;
     private GUIcomptes vueComptes;
+    private GUIreduc vueReduc;
 
     public ControleurEmployeAccueil(Connexion connexion) {
         this.connexion = connexion;
@@ -43,7 +42,7 @@ public class ControleurEmployeAccueil {
             GUIModifierFilm vueModifierFilm = new GUIModifierFilm(membre, controleurModifierFilm, filmActuel);
         });
 
-        //Aller sur la page des films
+        //Aller sur la page des comptes
         this.vueMembre.addListenerOngletComptes(new ActionListener(){
             //Ouverture de la page menu
             @Override
@@ -54,6 +53,19 @@ public class ControleurEmployeAccueil {
                 vueComptes = new GUIcomptes(membre, controleurComptes);
                 controleurComptes.setVue(vueComptes);
                 controleurComptes.openWindow();
+            }
+        });
+        //Aller sur la page des reductions
+        this.vueMembre.addListenerOngletReduc(new ActionListener(){
+            //Ouverture de la page menu
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                vueMembre.closeWindow();
+                controleurReduc = new ControleurReduc(connexion);
+                controleurReduc.setMembre(membre);
+                vueReduc = new GUIreduc(membre, controleurReduc);
+                controleurReduc.setVue(vueReduc);
+                controleurReduc.openWindow();
             }
         });
     }
