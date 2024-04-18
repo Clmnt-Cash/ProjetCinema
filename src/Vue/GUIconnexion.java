@@ -1,9 +1,7 @@
 package Vue;
 
-import Controleur.ControleurConnexion;
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 public class GUIconnexion extends JFrame {
@@ -95,12 +93,7 @@ public class GUIconnexion extends JFrame {
         drawComponents.add(errorLabel);
 
         //Ajoute un timer pour supprimer le label après 3 secondes
-        Timer timer = new Timer(3000, new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                errorLabel.setText("");
-            }
-        });
+        Timer timer = new Timer(3000, e -> errorLabel.setText(""));
         timer.setRepeats(false);
 
         drawComponents.setLayout(null);
@@ -120,12 +113,7 @@ public class GUIconnexion extends JFrame {
     //Message d'erreur
     public void displayError(String message){
         errorLabel.setText(message); // Afficher le message d'erreur dans le label
-        Timer timer = new Timer(3000, new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                errorLabel.setText("");
-            }
-        });
+        Timer timer = new Timer(3000, e -> errorLabel.setText(""));
         timer.setRepeats(false);
         timer.start();
     }

@@ -87,7 +87,6 @@ public class ControleurMembre {
                 films.add(film);
             }
 
-
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -99,7 +98,13 @@ public class ControleurMembre {
 
         try {
             //Récupérer les résultats de la requête SQL pour les séances du film donné
-            ArrayList<String> resultatsSeances = connexion.remplirChampsRequete("SELECT * FROM seance WHERE ID_film = " + filmId + " ORDER BY Date_diffusion");
+            ArrayList<String> resultatsSeances = connexion.remplirChampsRequete(
+                    "SELECT seance.*, films.Titre " +
+                            "FROM seance " +
+                            "INNER JOIN films ON seance.ID_film = films.ID " +
+                            "WHERE seance.ID_film = " + filmId + " " +
+                            "ORDER BY seance.Date_diffusion"
+            );
             for (String resultat : resultatsSeances) {
                 String[] infosSeance = resultat.split(",");
 
@@ -107,16 +112,16 @@ public class ControleurMembre {
                 int id = Integer.parseInt(infosSeance[0].trim());
 
                 String dateHeure = infosSeance[1].trim();
-                String[] parties = dateHeure.split("");
+                String[] parties = dateHeure.split(" ");
 
                 String date = parties[0];
                 String mois = date.substring(5, 7);
                 String jour = date.substring(8, 10);
-                date = jour + "-" + mois;
+                date = jour + "/" + mois;
 
                 String heure = parties[1];
                 heure = heure.substring(0, 5);
-                int prix = Integer.parseInt(infosSeance[2].trim());
+                float prix = Float.parseFloat(infosSeance[2].trim());
                 String titre = infosSeance[3].trim();
 
                 //Créer une séance avec les informations récupérées
@@ -128,7 +133,6 @@ public class ControleurMembre {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-
         return seances;
     }
 

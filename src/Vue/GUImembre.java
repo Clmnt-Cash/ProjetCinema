@@ -24,6 +24,7 @@ public class GUImembre extends JFrame {
     private JButton btnFilms;
     private JButton btnComptes;
     private JPanel scrollablePanel;
+    private JPanel panel;
 
     //Constructeur
     public GUImembre(Client membre, ControleurMembre controleurMembre) {
@@ -47,21 +48,6 @@ public class GUImembre extends JFrame {
         setVisible(true);
     }
 
-
-    JPanel drawComponents = new JPanel() {
-        @Override
-        protected void paintComponent(Graphics g) {
-            super.paintComponent(g);
-            g.setColor(new Color(0, 0, 0));
-            g.fillRect(0, 100, 1500, 700);
-            g.setColor(new Color(50, 50, 50, 200));
-            g.fillRect(0, 0, 1500, 100);
-            ImageIcon logo = new ImageIcon("images/logos/logo_black.png");
-            Image image = logo.getImage();
-            g.drawImage(image, 200, 0, 100, 100, this);
-        }
-    };
-
     //Méthode pour ajouter un listener sur les boutons
     public void addListener(ActionListener listener) {
         for(JButton b : boutons) {
@@ -81,7 +67,7 @@ public class GUImembre extends JFrame {
     }
 
     public void afficherMenu(){
-        JPanel panel = new JPanel() {
+        panel = new JPanel() {
             @Override
             protected void paintComponent(Graphics g) {
                 super.paintComponent(g);
@@ -99,19 +85,22 @@ public class GUImembre extends JFrame {
 
         //Onglet bouton films
         btnFilms = new JButton("Films");
-        btnFilms.setBounds(500, 30, 100, 30);
+        btnFilms.setBounds(300, 40, 100, 30);
         btnFilms.setForeground(Color.WHITE);
         btnFilms.setBackground(new Color(100, 100, 100));
-        drawComponents.add(btnFilms);
+        btnFilms.setOpaque(false);
+        btnFilms.setContentAreaFilled(false);
+        btnFilms.setBorderPainted(false);
+        panel.add(btnFilms);
 
         //Onglet bouton comptes
         btnComptes = new JButton("Comptes");
-        btnComptes.setBounds(650, 30, 100, 30);
+        btnComptes.setBounds(400, 40, 100, 30);
         btnComptes.setForeground(Color.WHITE);
         btnComptes.setOpaque(false);
         btnComptes.setContentAreaFilled(false);
         btnComptes.setBorderPainted(false);
-        drawComponents.add(btnComptes);
+        panel.add(btnComptes);
 
         //Ajout du JLabel pour afficher le nom du client
         JLabel labelNom = new JLabel("Connecté en tant que " + membre.getPrenom() + " " + membre.getNom());

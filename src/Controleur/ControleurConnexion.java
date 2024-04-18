@@ -5,6 +5,7 @@ import Vue.GUIconnexion;
 import Vue.GUIaccueil;
 import Modele.Client;
 import Vue.GUIcrea;
+import Vue.GUImembre;
 
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -41,12 +42,18 @@ public class ControleurConnexion {
                 } else {
                     if(handleConnexion(email, motDePasse)){
                         vue.closeWindow();
-                        // Envoyer le client à ControleurAccueil
-                        controleurAccueil = new ControleurAccueil(connexion);
-                        vueAccueil = new GUIaccueil(client, controleurAccueil);
-                        controleurAccueil.setVue(vueAccueil);
-                        controleurAccueil.setClient(client);
-                        controleurAccueil.openWindow();
+                        if(client.getType() == 0){
+                            //Envoyer vers la page employé
+                            ControleurMembre cMembre = new ControleurMembre(connexion);
+                            GUImembre vueMembre = new GUImembre(client, cMembre);
+                        } else {
+                            //Envoyer le client à ControleurAccueil
+                            controleurAccueil = new ControleurAccueil(connexion);
+                            vueAccueil = new GUIaccueil(client, controleurAccueil);
+                            controleurAccueil.setVue(vueAccueil);
+                            controleurAccueil.setClient(client);
+                            controleurAccueil.openWindow();
+                        }
                     }
                 }
             }
