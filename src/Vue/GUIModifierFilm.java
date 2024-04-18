@@ -27,7 +27,10 @@ public class GUIModifierFilm extends JFrame {
     private Reduction reduction;
     private Seance seance;
     private JButton boutonModifier;
+    private JButton boutonEnregistrer;
+
     public JPanel panel;
+
 
     //Constructeur
     public GUIModifierFilm(Client client, ControleurModifierFilm controleurModifierFilm, Film film) {
@@ -91,13 +94,7 @@ public class GUIModifierFilm extends JFrame {
         boutonRetour.setBackground(Color.BLACK);
         panel.add(boutonRetour);
 
-        //Bouton pour modifier un film
-        boutonModifier = new JButton("Modifier");
-        boutonModifier.setBounds(1330, 700, 100, 50);
-        boutonModifier.setFont(new Font("Arial", Font.BOLD, 20));
-        boutonModifier.setForeground(Color.WHITE);
-        boutonModifier.setBackground(Color.GRAY);
-        panel.add(boutonModifier);
+
 
         this.affichage();
 
@@ -159,7 +156,13 @@ public class GUIModifierFilm extends JFrame {
         panel.add(labelSynopsis);
 
 
-
+        //Bouton pour modifier un film
+        boutonModifier = new JButton("Modifier");
+        boutonModifier.setBounds(1330, 700, 100, 50);
+        boutonModifier.setFont(new Font("Arial", Font.BOLD, 20));
+        boutonModifier.setForeground(Color.WHITE);
+        boutonModifier.setBackground(Color.GRAY);
+        panel.add(boutonModifier);
 
 
 
@@ -252,32 +255,94 @@ public class GUIModifierFilm extends JFrame {
         }
     }
 
-    public void clear(){
-        panel.removeAll();
-        panel.revalidate();
-        panel.repaint();
-    }
-
     public void affichageModifier(){
         panel.removeAll();
         panel.revalidate();
         panel.repaint();
-        /*
-        //Affichage du nom du film
+
+
+        if(this.client.getType() != -1) {
+            //Ajout du JLabel pour afficher le nom du client
+            JLabel labelNom = new JLabel("Connecté en tant que " + client.getPrenom() + " " + client.getNom());
+            labelNom.setFont(labelNom.getFont().deriveFont(Font.BOLD, 15));
+            Dimension size2 = labelNom.getPreferredSize();
+            labelNom.setBounds(1470 - size2.width, 10, size2.width, size2.height);
+            labelNom.setForeground(Color.WHITE);
+            panel.add(labelNom);
+            panel.setLayout(null);
+        } else {
+            //Ajout du JLabel pour afficher invité
+            JLabel labelNom = new JLabel("Connecté en tant qu'invité ");
+            labelNom.setFont(labelNom.getFont().deriveFont(Font.BOLD, 15));
+            Dimension size = labelNom.getPreferredSize();
+            labelNom.setBounds(1470 - size.width, 10, size.width, size.height);
+            labelNom.setForeground(Color.WHITE);
+            panel.add(labelNom);
+            panel.setLayout(null);
+        }
+
+        //Ajout du bouton Retour
+        boutonRetour = new JButton("Retour");
+        boutonRetour.setBounds(10, 110, 100, 50);
+        boutonRetour.setForeground(Color.WHITE);
+        boutonRetour.setBackground(Color.BLACK);
+        panel.add(boutonRetour);
+
+
+        // Label pour le nom du film
+        JLabel labelTitre = new JLabel("Titre:");
+        labelTitre.setBounds(200, 200, 100, 30);
+        labelTitre.setForeground(Color.WHITE);
+        panel.add(labelTitre);
+
+        // Champ de texte pour le nom du film
         JTextField textFieldTitre = new JTextField(filmActuel.getTitre());
-        textFieldTitre.setBounds(450, 200, 400, 30);
+        textFieldTitre.setBounds(350, 200, 400, 30);
+        textFieldTitre.setForeground(Color.WHITE);
+        textFieldTitre.setBackground(Color.BLACK);
         panel.add(textFieldTitre);
 
-        //Affichage du nom du réalisateur
-        JTextField textFieldRealisateur = new JTextField("Réalisé par " + filmActuel.getRealisateur());
-        textFieldRealisateur.setBounds(450, 230, 400, 30);
+        // Label pour le chemin de l'image
+        JLabel labelChemin = new JLabel("Chemin de l'image:");
+        labelChemin.setBounds(200, 230, 130, 30);
+        labelChemin.setForeground(Color.WHITE);
+        panel.add(labelChemin);
+
+        // Champ de texte pour le chemin de l'image
+        JTextField textFieldChemin = new JTextField(filmActuel.getCheminImage());
+        textFieldChemin.setBounds(350, 230, 400, 30);
+        textFieldChemin.setForeground(Color.WHITE);
+        textFieldChemin.setBackground(Color.BLACK);
+        panel.add(textFieldChemin);
+
+        // Label pour le nom du réalisateur
+        JLabel labelRealisateur = new JLabel("Réalisateur:");
+        labelRealisateur.setBounds(200, 260, 100, 30);
+        labelRealisateur.setForeground(Color.WHITE);
+        panel.add(labelRealisateur);
+
+        // Champ de texte pour le nom du réalisateur
+        JTextField textFieldRealisateur = new JTextField(filmActuel.getRealisateur());
+        textFieldRealisateur.setBounds(350, 260, 400, 30);
+        textFieldRealisateur.setForeground(Color.WHITE);
+        textFieldRealisateur.setBackground(Color.BLACK);
         panel.add(textFieldRealisateur);
 
-        //Affichage du synopsis
-        JTextField textFieldSynopsis = new JTextField("Synopsis:\n" + filmActuel.getSynopsis());
-        textFieldSynopsis.setBounds(450, 280, 400, 500);
+        // Label pour le synopsis
+        JLabel labelSynopsis = new JLabel("Synopsis:");
+        labelSynopsis.setBounds(200, 290, 100, 30);
+        labelSynopsis.setForeground(Color.WHITE);
+        panel.add(labelSynopsis);
 
-        panel.add(textFieldSynopsis);
+        // Zone de texte pour le synopsis
+        JTextArea textAreaSynopsis = new JTextArea(filmActuel.getSynopsis());
+        textAreaSynopsis.setBounds(350, 290, 400, 200);
+        textAreaSynopsis.setLineWrap(true);
+        textAreaSynopsis.setWrapStyleWord(true);
+        textAreaSynopsis.setForeground(Color.WHITE);
+        textAreaSynopsis.setBackground(Color.BLACK);
+        panel.add(textAreaSynopsis);
+
 
         //Label pour les séances
         JLabel labelSeances = new JLabel("Séances");
@@ -286,9 +351,17 @@ public class GUIModifierFilm extends JFrame {
         labelSeances.setFont(new Font("Arial", Font.BOLD, 20));
         panel.add(labelSeances);
 
+        //Bouton pour modifier un film
+        boutonModifier = new JButton("Enregistrer");
+        boutonModifier.setBounds(1330, 700, 150, 50);
+        boutonModifier.setFont(new Font("Arial", Font.BOLD, 20));
+        boutonModifier.setForeground(Color.WHITE);
+        boutonModifier.setBackground(Color.GRAY);
+        panel.add(boutonModifier);
+
+
+
         panel.setLayout(null);
         add(panel);
-        *
-         */
     }
 }
