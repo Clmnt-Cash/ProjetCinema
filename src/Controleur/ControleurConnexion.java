@@ -1,11 +1,11 @@
 package Controleur;
 
 import Modele.Film;
+import Vue.GUIEmployeAccueil;
 import Vue.GUIconnexion;
 import Vue.GUIaccueil;
 import Modele.Client;
 import Vue.GUIcrea;
-import Vue.GUImembre;
 
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -44,8 +44,8 @@ public class ControleurConnexion {
                         vue.closeWindow();
                         if(client.getType() == 0){
                             //Envoyer vers la page employé
-                            ControleurMembre cMembre = new ControleurMembre(connexion);
-                            GUImembre vueMembre = new GUImembre(client, cMembre);
+                            ControleurEmployeAccueil cMembre = new ControleurEmployeAccueil(connexion);
+                            GUIEmployeAccueil vueMembre = new GUIEmployeAccueil(client, cMembre);
                         } else {
                             //Envoyer le client à ControleurAccueil
                             controleurAccueil = new ControleurAccueil(connexion);

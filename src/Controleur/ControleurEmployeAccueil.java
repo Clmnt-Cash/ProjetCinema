@@ -3,7 +3,7 @@ package Controleur;
 import Modele.Client;
 import Modele.Film;
 import Modele.Seance;
-import Vue.GUImembre;
+import Vue.GUIEmployeAccueil;
 import Vue.GUIfilm;
 
 import javax.swing.*;
@@ -15,34 +15,22 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
-public class ControleurMembre {
+public class ControleurEmployeAccueil {
     private Client membre;
-    private GUImembre vueMembre;
+    private GUIEmployeAccueil vueMembre;
     private Connexion connexion;
     private ArrayList<Film> films;
     private Film filmActuel;
     private ControleurFilm controleurFilm;
     private GUIfilm vueFilm;
 
-    public ControleurMembre(Connexion connexion) {
+    public ControleurEmployeAccueil(Connexion connexion) {
         this.connexion = connexion;
     }
 
-    public void setVue(GUImembre vue){
+    public void setVue(GUIEmployeAccueil vue){
         this.vueMembre = vue;
         this.films = this.getFilms();
-        //Aller sur la page du film
-        this.vueMembre.addListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                JButton clickedButton = (JButton) e.getSource();
-                filmActuel = vueMembre.getBoutonFilmMap().get(clickedButton);
-                vueMembre.closeWindow();
-                controleurFilm = new ControleurFilm(connexion, filmActuel, membre);
-                vueFilm = new GUIfilm(membre, controleurFilm, filmActuel);
-                controleurFilm.setVue(vueFilm);
-            }
-        });
     }
     public void setMembre(Client membre) {
         this.membre = membre;
@@ -86,7 +74,6 @@ public class ControleurMembre {
                 film.setSeances(seances);
                 films.add(film);
             }
-
         } catch (SQLException e) {
             e.printStackTrace();
         }

@@ -1,8 +1,8 @@
 package Vue;
 
+import Controleur.ControleurEmployeAccueil;
 import Modele.Client;
 import Modele.Film;
-import Controleur.ControleurMembre;
 
 import javax.swing.*;
 import java.awt.*;
@@ -14,12 +14,12 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-public class GUImembre extends JFrame {
+public class GUIEmployeAccueil extends JFrame {
     //Attributs
     private Map<JButton, Film> boutonFilmMap;
     private ArrayList<Film> films;
     private Client membre;
-    private ControleurMembre controleurMembre;
+    private ControleurEmployeAccueil controleurMembre;
     private ArrayList<JButton> boutons;
     private JButton btnFilms;
     private JButton btnComptes;
@@ -27,7 +27,7 @@ public class GUImembre extends JFrame {
     private JPanel panel;
 
     //Constructeur
-    public GUImembre(Client membre, ControleurMembre controleurMembre) {
+    public GUIEmployeAccueil(Client membre, ControleurEmployeAccueil controleurMembre) {
         super("Cinéma");
         this.membre = membre;
         this.controleurMembre = controleurMembre;
