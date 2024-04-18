@@ -44,8 +44,11 @@ public class ControleurConnexion {
                         vue.closeWindow();
                         if(client.getType() == 0){
                             //Envoyer vers la page employé
-                            ControleurEmployeAccueil cMembre = new ControleurEmployeAccueil(connexion);
-                            GUIEmployeAccueil vueMembre = new GUIEmployeAccueil(client, cMembre);
+                            ControleurEmployeAccueil controleurEmployeAccueil = new ControleurEmployeAccueil(connexion);
+                            GUIEmployeAccueil vueMembre = new GUIEmployeAccueil(client, controleurEmployeAccueil);
+                            controleurEmployeAccueil.setVue(vueMembre);
+                            controleurEmployeAccueil.setMembre(client);
+
                         } else {
                             //Envoyer le client à ControleurAccueil
                             controleurAccueil = new ControleurAccueil(connexion);

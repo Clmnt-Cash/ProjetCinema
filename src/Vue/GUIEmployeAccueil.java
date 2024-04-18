@@ -19,7 +19,7 @@ public class GUIEmployeAccueil extends JFrame {
     private Map<JButton, Film> boutonFilmMap;
     private ArrayList<Film> films;
     private Client membre;
-    private ControleurEmployeAccueil controleurMembre;
+    private ControleurEmployeAccueil controleurEmployeAccueil;
     private ArrayList<JButton> boutons;
     private JButton btnFilms;
     private JButton btnComptes;
@@ -27,11 +27,11 @@ public class GUIEmployeAccueil extends JFrame {
     private JPanel panel;
 
     //Constructeur
-    public GUIEmployeAccueil(Client membre, ControleurEmployeAccueil controleurMembre) {
+    public GUIEmployeAccueil(Client membre, ControleurEmployeAccueil controleurEmployeAccueil) {
         super("Cinéma");
         this.membre = membre;
-        this.controleurMembre = controleurMembre;
-        this.films = controleurMembre.getFilms();
+        this.controleurEmployeAccueil = controleurEmployeAccueil;
+        this.films = controleurEmployeAccueil.getFilms();
         this.boutons = new ArrayList<>();
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
@@ -82,6 +82,13 @@ public class GUIEmployeAccueil extends JFrame {
                 g.drawImage(image, 0, 0, 100, 100, this);
             }
         };
+        UIManager.put("OptionPane.background", Color.WHITE);
+        UIManager.put("Panel.background", Color.WHITE);
+        UIManager.put("OptionPane.messageForeground", Color.WHITE);
+        UIManager.put("Button.background", Color.WHITE);
+        UIManager.put("Button.foreground", Color.BLACK);
+        UIManager.put("Button.border", BorderFactory.createLineBorder(Color.WHITE));
+        UIManager.put("Button.focus", Color.WHITE);
 
         //Onglet bouton films
         btnFilms = new JButton("Films");
