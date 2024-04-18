@@ -177,6 +177,9 @@ public class GUIcomptes extends JFrame {
         add(panel);
     }
 
+    public void addListenerOngletFilms(ActionListener listener){
+        btnFilms.addActionListener(listener);
+    }
     public void closeWindow(){setVisible(false);dispose();}
     public void openWindow(){setVisible(true);}
 }

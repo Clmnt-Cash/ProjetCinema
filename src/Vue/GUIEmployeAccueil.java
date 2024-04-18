@@ -175,9 +175,6 @@ public class GUIEmployeAccueil extends JFrame {
         add(panel);
     }
 
-    public void addListenerOngletFilms(ActionListener listener){
-        btnFilms.addActionListener(listener);
-    }
     public void addListenerOngletComptes(ActionListener listener){
         btnComptes.addActionListener(listener);
     }

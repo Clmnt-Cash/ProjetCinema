@@ -3,6 +3,7 @@ package Controleur;
 import Modele.Client;
 import Modele.Film;
 import Modele.Seance;
+import Vue.GUIEmployeAccueil;
 import Vue.GUIcomptes;
 import Vue.GUIfilm;
 
@@ -22,7 +23,9 @@ public class ControleurComptes {
     private ArrayList<Client> comptes;
     private Film filmActuel;
     private ControleurFilm controleurFilm;
+    private ControleurEmployeAccueil controleurEmployeAccueil;
     private GUIfilm vueFilm;
+    private GUIEmployeAccueil vueEmployeAccueil;
 
     public ControleurComptes(Connexion connexion) {
         this.connexion = connexion;
@@ -31,11 +34,18 @@ public class ControleurComptes {
     public void setVue(GUIcomptes vue){
         this.vueComptes = vue;
         this.comptes = this.getComptes();
-        //Aller sur la page du film
-        this.vueComptes.addListener(new ActionListener() {
+
+        //Aller sur la page des films
+        this.vueComptes.addListenerOngletFilms(new ActionListener(){
+            //Ouverture de la page menu
             @Override
             public void actionPerformed(ActionEvent e) {
                 vueComptes.closeWindow();
+                controleurEmployeAccueil = new ControleurEmployeAccueil(connexion);
+                vueEmployeAccueil = new GUIEmployeAccueil(membre, controleurEmployeAccueil);
+                controleurEmployeAccueil.setVue(vueEmployeAccueil);
+                controleurEmployeAccueil.setMembre(membre);
+                controleurEmployeAccueil.openWindow();
             }
         });
     }
