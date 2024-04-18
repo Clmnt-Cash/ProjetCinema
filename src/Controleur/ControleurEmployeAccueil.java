@@ -22,9 +22,9 @@ public class ControleurEmployeAccueil {
     private Film filmActuel;
     private ControleurFilm controleurFilm;
     private ControleurComptes controleurComptes;
-    private ControleurReduc controleurReduc;
+    //private ControleurReduc controleurReduc;
     private GUIcomptes vueComptes;
-    private GUIreduc vueReduc;
+    //private GUIreduc vueReduc;
 
     public ControleurEmployeAccueil(Connexion connexion) {
         this.connexion = connexion;
@@ -62,11 +62,11 @@ public class ControleurEmployeAccueil {
             @Override
             public void actionPerformed(ActionEvent e) {
                 vueMembre.closeWindow();
-                controleurReduc = new ControleurReduc(connexion);
+                /*controleurReduc = new ControleurReduc(connexion);
                 controleurReduc.setMembre(membre);
                 vueReduc = new GUIreduc(membre, controleurReduc);
                 controleurReduc.setVue(vueReduc);
-                controleurReduc.openWindow();
+                controleurReduc.openWindow();*/
             }
         });
     }

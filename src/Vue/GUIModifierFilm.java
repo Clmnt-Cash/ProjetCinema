@@ -28,6 +28,18 @@ public class GUIModifierFilm extends JFrame {
     private Seance seance;
     private JButton boutonModifier;
     private JButton boutonEnregistrer;
+    private ArrayList<Seance> seances;
+    private JButton boutonAjouterSeance;
+    private JComboBox<String> comboBoxJour;
+    private JComboBox<String> comboBoxMois;
+    private JComboBox<String> comboBoxHeure;
+    private JComboBox<String> comboBoxMinutes;
+    private JTextField textFieldPrix;
+    private JTextField textFieldTitre;
+    private JTextField textFieldChemin;
+    private JTextField textFieldRealisateur;
+    private JTextArea textAreaSynopsis;
+
 
     public JPanel panel;
 
@@ -41,6 +53,7 @@ public class GUIModifierFilm extends JFrame {
         this.boutonsSeance = new ArrayList<JButton>();
         this.boutonsDate = new ArrayList<JButton>();
         this.seanceParDate = new ArrayList<Seance>();
+        this.boutonEnregistrer = new JButton("Enregistrer");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         setSize(1500, 800);
@@ -174,7 +187,7 @@ public class GUIModifierFilm extends JFrame {
         panel.add(labelSeances);
 
         //Ajout des boutons pour chaque séance
-        ArrayList<Seance> seances = filmActuel.getSeances();
+        seances = filmActuel.getSeances();
 
         ArrayList<String> datesUniques = new ArrayList<String>();
         for(Seance s : seances){
@@ -281,62 +294,54 @@ public class GUIModifierFilm extends JFrame {
             panel.setLayout(null);
         }
 
-        //Ajout du bouton Retour
-        boutonRetour = new JButton("Retour");
-        boutonRetour.setBounds(10, 110, 100, 50);
-        boutonRetour.setForeground(Color.WHITE);
-        boutonRetour.setBackground(Color.BLACK);
-        panel.add(boutonRetour);
-
-
         // Label pour le nom du film
         JLabel labelTitre = new JLabel("Titre:");
-        labelTitre.setBounds(200, 200, 100, 30);
+        labelTitre.setBounds(150, 200, 100, 30);
         labelTitre.setForeground(Color.WHITE);
         panel.add(labelTitre);
 
         // Champ de texte pour le nom du film
-        JTextField textFieldTitre = new JTextField(filmActuel.getTitre());
-        textFieldTitre.setBounds(350, 200, 400, 30);
+        textFieldTitre = new JTextField(filmActuel.getTitre());
+        textFieldTitre.setBounds(300, 200, 400, 30);
         textFieldTitre.setForeground(Color.WHITE);
         textFieldTitre.setBackground(Color.BLACK);
         panel.add(textFieldTitre);
 
         // Label pour le chemin de l'image
         JLabel labelChemin = new JLabel("Chemin de l'image:");
-        labelChemin.setBounds(200, 230, 130, 30);
+        labelChemin.setBounds(150, 230, 130, 30);
         labelChemin.setForeground(Color.WHITE);
         panel.add(labelChemin);
 
         // Champ de texte pour le chemin de l'image
-        JTextField textFieldChemin = new JTextField(filmActuel.getCheminImage());
-        textFieldChemin.setBounds(350, 230, 400, 30);
+        textFieldChemin = new JTextField(filmActuel.getCheminImage());
+        textFieldChemin.setBounds(300, 230, 400, 30);
         textFieldChemin.setForeground(Color.WHITE);
         textFieldChemin.setBackground(Color.BLACK);
         panel.add(textFieldChemin);
 
         // Label pour le nom du réalisateur
         JLabel labelRealisateur = new JLabel("Réalisateur:");
-        labelRealisateur.setBounds(200, 260, 100, 30);
+        labelRealisateur.setBounds(150, 260, 100, 30);
         labelRealisateur.setForeground(Color.WHITE);
         panel.add(labelRealisateur);
 
         // Champ de texte pour le nom du réalisateur
-        JTextField textFieldRealisateur = new JTextField(filmActuel.getRealisateur());
-        textFieldRealisateur.setBounds(350, 260, 400, 30);
+        textFieldRealisateur = new JTextField(filmActuel.getRealisateur());
+        textFieldRealisateur.setBounds(300, 260, 400, 30);
         textFieldRealisateur.setForeground(Color.WHITE);
         textFieldRealisateur.setBackground(Color.BLACK);
         panel.add(textFieldRealisateur);
 
         // Label pour le synopsis
         JLabel labelSynopsis = new JLabel("Synopsis:");
-        labelSynopsis.setBounds(200, 290, 100, 30);
+        labelSynopsis.setBounds(150, 290, 100, 30);
         labelSynopsis.setForeground(Color.WHITE);
         panel.add(labelSynopsis);
 
         // Zone de texte pour le synopsis
-        JTextArea textAreaSynopsis = new JTextArea(filmActuel.getSynopsis());
-        textAreaSynopsis.setBounds(350, 290, 400, 200);
+        textAreaSynopsis = new JTextArea(filmActuel.getSynopsis());
+        textAreaSynopsis.setBounds(300, 290, 400, 200);
         textAreaSynopsis.setLineWrap(true);
         textAreaSynopsis.setWrapStyleWord(true);
         textAreaSynopsis.setForeground(Color.WHITE);
@@ -351,17 +356,139 @@ public class GUIModifierFilm extends JFrame {
         labelSeances.setFont(new Font("Arial", Font.BOLD, 20));
         panel.add(labelSeances);
 
-        //Bouton pour modifier un film
-        boutonModifier = new JButton("Enregistrer");
-        boutonModifier.setBounds(1330, 700, 150, 50);
-        boutonModifier.setFont(new Font("Arial", Font.BOLD, 20));
-        boutonModifier.setForeground(Color.WHITE);
-        boutonModifier.setBackground(Color.GRAY);
-        panel.add(boutonModifier);
+        //Label pour le film
+        JLabel labelFilm = new JLabel("Film");
+        labelFilm.setBounds(300, 120, 200, 30);
+        labelFilm.setForeground(Color.WHITE);
+        labelFilm.setFont(new Font("Arial", Font.BOLD, 20));
+        panel.add(labelFilm);
 
+        //Bouton pour Enregistrer les modifs
+        boutonEnregistrer.setBounds(1330, 700, 150, 50);
+        boutonEnregistrer.setFont(new Font("Arial", Font.BOLD, 20));
+        boutonEnregistrer.setForeground(Color.WHITE);
+        boutonEnregistrer.setBackground(Color.GRAY);
+        panel.add(boutonEnregistrer);
 
+        //Bouton pour ajouter une séance
+        boutonEnregistrer = new JButton("Ajouter une séance");
+        boutonEnregistrer.setBounds(1160, 700, 160, 50);
+        boutonEnregistrer.setFont(new Font("Arial", Font.BOLD, 15));
+        boutonEnregistrer.setForeground(Color.WHITE);
+        boutonEnregistrer.setBackground(Color.GRAY);
+        panel.add(boutonEnregistrer);
 
+        int ySeance = 0;
+        int nbSeance = 0;
+
+        for (Seance s : seances) {
+            nbSeance++;
+            //Label séance
+            JLabel labelSeance = new JLabel("Séance " + nbSeance);
+            labelSeance.setBounds(800, 200 + ySeance, 100, 30);
+            labelSeance.setForeground(Color.WHITE);
+            panel.add(labelSeance);
+
+            //Label Date
+            JLabel labelDate = new JLabel("Date :");
+            labelDate.setBounds(900, 200 + ySeance, 50, 30);
+            labelDate.setForeground(Color.WHITE);
+            panel.add(labelDate);
+
+            //Date
+            String date = s.getDate();
+            String[] elementsDate = date.split("/");
+
+            //ComboBox pour le jour
+            String[] jours = new String[31];
+            for (int i = 0; i < 31; i++) {
+                jours[i] = String.valueOf(i + 1);
+            }
+            comboBoxJour = new JComboBox<>(jours);
+            comboBoxJour.setSelectedItem(elementsDate[0]);
+            comboBoxJour.setBounds(950, 200 + ySeance, 50, 30);
+            panel.add(comboBoxJour);
+
+            //ComboBox pour le mois
+            String[] mois = {"01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12"};
+            comboBoxMois = new JComboBox<>(mois);
+            comboBoxMois.setSelectedItem(elementsDate[1]);
+            comboBoxMois.setBounds(1000, 200 + ySeance, 50, 30);
+            panel.add(comboBoxMois);
+
+            //Label Heure
+            JLabel labelHeure = new JLabel("Heure :");
+            labelHeure.setBounds(1060, 200 + ySeance, 50, 30);
+            labelHeure.setForeground(Color.WHITE);
+            panel.add(labelHeure);
+
+            //Heure
+            String heure = s.getHeure();
+            String[] elementsHeure = heure.split(":");
+
+            //ComboBox pour l'heure
+            String[] heures = new String[24]; //Heures de 0 à 23
+            for (int i = 0; i < 24; i++) {
+                heures[i] = String.valueOf(i);
+            }
+            comboBoxHeure = new JComboBox<>(heures);
+            comboBoxHeure.setSelectedItem(elementsHeure[0]);
+            comboBoxHeure.setBounds(1110, 200 + ySeance, 50, 30);
+            panel.add(comboBoxHeure);
+
+            //ComboBox pour les minutes
+            String[] minutes = new String[60]; //Minutes de 0 à 59
+            for (int i = 0; i < 60; i++) {
+                minutes[i] = String.valueOf(i);
+            }
+            comboBoxMinutes = new JComboBox<>(minutes);
+            comboBoxMinutes.setSelectedItem(elementsHeure[1]);
+            comboBoxMinutes.setBounds(1160, 200 + ySeance, 50, 30);
+            panel.add(comboBoxMinutes);
+
+            //Label Prix
+            JLabel labelPrix = new JLabel("Prix :");
+            labelPrix.setBounds(1220, 200 + ySeance, 50, 30);
+            labelPrix.setForeground(Color.WHITE);
+            panel.add(labelPrix);
+
+            //Prix
+            float prix = s.getPrix();
+            textFieldPrix = new JTextField(String.valueOf(prix));
+            textFieldPrix.setBounds(1270, 200 + ySeance, 50, 30);
+            panel.add(textFieldPrix);
+
+            ySeance += 50;
+        }
         panel.setLayout(null);
         add(panel);
     }
+
+    //Getters
+    public void addListenerEnregistrer(ActionListener listener){boutonEnregistrer.addActionListener(listener);}
+    public JComboBox<String> getComboBoxJour() {
+        return comboBoxJour;
+    }
+
+    public JComboBox<String> getComboBoxMois() {
+        return comboBoxMois;
+    }
+
+    public JComboBox<String> getComboBoxHeure() {
+        return comboBoxHeure;
+    }
+
+    public JComboBox<String> getComboBoxMinutes() {
+        return comboBoxMinutes;
+    }
+
+    public JTextField getTextFieldPrix() {
+        return textFieldPrix;
+    }
+    public String getTitre(){return textFieldTitre.getText();}
+    public String getRealisateur(){return textFieldRealisateur.getText();}
+    public String getChemin(){return textFieldChemin.getText();}
+    public String getSynopsis(){return textAreaSynopsis.getText();}
+
+
 }

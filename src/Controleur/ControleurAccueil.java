@@ -123,7 +123,7 @@ public class ControleurAccueil {
 
         return films;
     }
-    private ArrayList<Seance> getSeancesForFilm(int filmId) {
+    public ArrayList<Seance> getSeancesForFilm(int filmId) {
         ArrayList<Seance> seances = new ArrayList<>();
 
         try {

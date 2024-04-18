@@ -6,7 +6,6 @@ import Modele.Seance;
 import Vue.GUIEmployeAccueil;
 import Vue.GUIcomptes;
 import Vue.GUIfilm;
-import Vue.GUIreduc;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
@@ -25,10 +24,10 @@ public class ControleurComptes {
     private Film filmActuel;
     private ControleurFilm controleurFilm;
     private ControleurEmployeAccueil controleurEmployeAccueil;
-    private ControleurReduc controleurReduc;
+    //private ControleurReduc controleurReduc;
     private GUIfilm vueFilm;
     private GUIEmployeAccueil vueEmployeAccueil;
-    private GUIreduc vueReduc;
+    //private GUIreduc vueReduc;
 
     public ControleurComptes(Connexion connexion) {
         this.connexion = connexion;
@@ -56,12 +55,12 @@ public class ControleurComptes {
             //Ouverture de la page menu
             @Override
             public void actionPerformed(ActionEvent e) {
-                vueComptes.closeWindow();
+                /*vueComptes.closeWindow();
                 controleurReduc = new ControleurReduc(connexion);
                 controleurReduc.setMembre(membre);
                 vueReduc = new GUIreduc(membre, controleurReduc);
                 controleurReduc.setVue(vueReduc);
-                controleurReduc.openWindow();
+                controleurReduc.openWindow();*/
             }
         });
     }
