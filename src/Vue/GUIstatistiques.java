@@ -1,8 +1,10 @@
 package Vue;
 
 import Controleur.ControleurEmployeAccueil;
+import Controleur.ControleurStatistiques;
 import Modele.Client;
 import Modele.Film;
+import Modele.FilmParAchat;
 
 import javax.swing.*;
 import java.awt.*;
@@ -11,31 +13,30 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map;
 
-public class GUIEmployeAccueil extends JFrame {
+public class GUIstatistiques extends JFrame {
     //Attributs
-    private Map<JButton, Film> boutonFilmMap;
     private ArrayList<Film> films;
+    private ArrayList<FilmParAchat> filmsParAchats;
+
     private Client membre;
-    private ControleurEmployeAccueil controleurEmployeAccueil;
-    private ArrayList<JButton> boutons;
+    private ControleurStatistiques controleurStatistiques;
     private JButton btnFilms;
     private JButton btnComptes;
     private JButton btnReduc;
     private JButton btnStat;
-    private JPanel scrollablePanel;
     private JPanel panel;
-    private JButton boutonAjouterFilm;
 
     //Constructeur
-    public GUIEmployeAccueil(Client membre, ControleurEmployeAccueil controleurEmployeAccueil) {
+    public GUIstatistiques(Client membre, ControleurStatistiques controleurStatistiques ) {
         super("Cinéma");
         this.membre = membre;
-        this.controleurEmployeAccueil = controleurEmployeAccueil;
-        this.films = controleurEmployeAccueil.getFilms();
-        this.boutons = new ArrayList<>();
+        this.controleurStatistiques = controleurStatistiques;
+        this.filmsParAchats = controleurStatistiques.getFilmsParAchat();
+
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         setSize(1500, 800);
@@ -49,24 +50,6 @@ public class GUIEmployeAccueil extends JFrame {
         this.afficherMenu();
 
         setVisible(true);
-    }
-
-    //Méthode pour ajouter un listener sur les boutons
-    public void addListener(ActionListener listener) {
-        for(JButton b : boutons) {
-            b.addActionListener(listener);
-        }
-    }
-
-    public Map<JButton, Film> getBoutonFilmMap() {
-        return boutonFilmMap;
-    }
-
-    public void changerAffichage(Component nouveauContenu) {
-        getContentPane().removeAll();
-        getContentPane().add(nouveauContenu);
-        revalidate();
-        repaint();
     }
 
     public void afficherMenu(){
@@ -83,6 +66,31 @@ public class GUIEmployeAccueil extends JFrame {
                 ImageIcon logo = new ImageIcon("images/logos/logo_black.png");
                 Image image = logo.getImage();
                 g.drawImage(image, 0, 0, 100, 100, this);
+
+                //Affichage du graphique
+                g.setColor(Color.WHITE);
+                int i = 0;
+                for(FilmParAchat f : filmsParAchats){
+                    g.fillRect(230, 205 + i * 30, 50 * f.getNbCommandes(), 20);
+                    JLabel labelGraph = new JLabel(f.getTitre());
+                    labelGraph.setBounds(20, 200 + i * 30, 200, 30);
+                    labelGraph.setForeground(Color.WHITE);
+                    labelGraph.setHorizontalAlignment(SwingConstants.RIGHT);
+                    panel.add(labelGraph);
+
+                    JLabel labelNum = new JLabel(String.valueOf(f.getNbCommandes()));
+                    labelNum.setBounds(200 + 50 * f.getNbCommandes(), 200 + i * 30, 20, 30);
+                    labelNum.setForeground(Color.BLACK);
+                    labelNum.setHorizontalAlignment(SwingConstants.RIGHT);
+                    if(f.getNbCommandes() == 0) {
+                        labelNum.setForeground(Color.WHITE);
+                        labelNum.setBounds(260, 200 + i * 30, 20, 30);
+                    } else {
+                        labelNum.setForeground(Color.BLACK);
+                    }
+                    panel.add(labelNum);
+                    i++;
+                }
             }
         };
         UIManager.put("OptionPane.background", Color.WHITE);
@@ -138,83 +146,15 @@ public class GUIEmployeAccueil extends JFrame {
         panel.add(labelNom);
         panel.setLayout(null);
 
-        JLabel labelModifier = new JLabel("Modifier les films");
-        labelModifier.setBounds(540, 120, 300, 30);
-        labelModifier.setFont(labelNom.getFont().deriveFont(Font.BOLD, 25));
-        labelModifier.setForeground(Color.WHITE);
-        labelModifier.setHorizontalAlignment(SwingConstants.RIGHT);
-        panel.add(labelModifier);
-
-        scrollablePanel = new JPanel();
-        scrollablePanel.setLayout(new GridLayout(0, films.size()));
-        boutonFilmMap = new HashMap<>();
 
 
-        for (Film f : films) {
-            JButton button = new JButton();
 
-            ImageIcon imageIcon = new ImageIcon("images/affiches/" + f.getCheminImage());
-
-            if (imageIcon.getImageLoadStatus() == MediaTracker.COMPLETE) {
-                Image image = imageIcon.getImage().getScaledInstance(350, 490, Image.SCALE_SMOOTH);
-                ImageIcon resizedIcon = new ImageIcon(image);
-                button.setIcon(resizedIcon);
-            } else {
-                button.setText("Image indisponible");
-            }
-            button.setPreferredSize(new Dimension(350, 100));
-
-            JPanel overlayPanel = new JPanel();
-            button.setBorderPainted(false);
-            overlayPanel.setBackground(new Color(0, 0, 0, 100));
-
-            overlayPanel.setVisible(false);
-            button.setLayout(new BorderLayout());
-            button.add(overlayPanel, BorderLayout.CENTER);
-            boutons.add(button);
-
-            boutonFilmMap.put(button, f);
-
-            button.addMouseListener(new MouseAdapter() {
-                @Override
-                public void mouseEntered(MouseEvent e) {
-                    overlayPanel.setVisible(true);
-                }
-
-                @Override
-                public void mouseExited(MouseEvent e) {
-                    overlayPanel.setVisible(false);
-                }
-            });
-        }
-        for (JButton button : boutons) {
-            scrollablePanel.add(button);
-        }
-
-        JScrollPane scrollPane = new JScrollPane(scrollablePanel);
-        scrollPane.setBounds(10, 160, 1463, 490);
-        scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
-        panel.add(scrollPane);
-
-
-        ImageIcon iconLogoPanier = new ImageIcon("images/logos/logoajouterfilm.png");
-        Image imagePanier = iconLogoPanier.getImage().getScaledInstance(50, 50, Image.SCALE_SMOOTH);
-        ImageIcon resizedimagePanier = new ImageIcon(imagePanier);
-        boutonAjouterFilm = new JButton();
-        boutonAjouterFilm.setIcon(resizedimagePanier);
-        boutonAjouterFilm.setBounds(1420, 700, 50, 50);
-        boutonAjouterFilm.setBorderPainted(false);
-        boutonAjouterFilm.setFocusPainted(false);
-        boutonAjouterFilm.setContentAreaFilled(false);
-        panel.add(boutonAjouterFilm);
 
         panel.setLayout(null);
         add(panel);
+        setVisible(true);
     }
 
-    public void addListenerAjouter(ActionListener listener){
-        boutonAjouterFilm.addActionListener(listener);
-    }
     public void addListenerOngletComptes(ActionListener listener){
         btnComptes.addActionListener(listener);
     }
@@ -225,5 +165,4 @@ public class GUIEmployeAccueil extends JFrame {
         btnStat.addActionListener(listener);
     }
     public void closeWindow(){setVisible(false);dispose();}
-    public void openWindow(){setVisible(true);}
 }

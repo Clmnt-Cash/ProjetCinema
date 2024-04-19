@@ -11,7 +11,6 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.SQLException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
 public class ControleurModifierFilm {
@@ -388,8 +387,21 @@ public class ControleurModifierFilm {
     //Méthode pour supprimer un film de la bdd
     public void supprimerFilm(int id){
         try {
-            String requeteInsertion = "DELETE FROM films" +
-                    " WHERE ID = " + id;
+            String requeteInsertion = "DELETE FROM films WHERE ID = " + id + "; ";
+            connexion.executerRequete(requeteInsertion);
+        } catch (SQLException e) {
+            e.printStackTrace();
+            System.out.println("Erreur lors de la connexion à la base de données : " + e);
+        }
+        try {
+            String requeteInsertion = "DELETE FROM seance WHERE ID_film = " + id + "; ";
+            connexion.executerRequete(requeteInsertion);
+        } catch (SQLException e) {
+            e.printStackTrace();
+            System.out.println("Erreur lors de la connexion à la base de données : " + e);
+        }
+        try {
+            String requeteInsertion = "DELETE FROM commande WHERE ID_seance IN (SELECT ID FROM seance WHERE ID_film = " + id + ");";
             connexion.executerRequete(requeteInsertion);
         } catch (SQLException e) {
             e.printStackTrace();
@@ -410,13 +422,20 @@ public class ControleurModifierFilm {
     //méthode pour supprimer une séance
     public void supprimerSeance(int id){
         try {
-            String requeteInsertion = "DELETE FROM seance" +
-                    " WHERE ID = " + id;
+            String requeteInsertion = "DELETE FROM seance WHERE ID = " + id + "; ";
             connexion.executerRequete(requeteInsertion);
         } catch (SQLException e) {
             e.printStackTrace();
             System.out.println("Erreur lors de la connexion à la base de données : " + e);
         }
+        try {
+            String requeteInsertion =  "DELETE FROM commande WHERE ID_seance = " + id + ";";
+            connexion.executerRequete(requeteInsertion);
+        } catch (SQLException e) {
+            e.printStackTrace();
+            System.out.println("Erreur lors de la connexion à la base de données : " + e);
+        }
+
     }
     //Méthode pour modifier une séance
     public void modifierSeance(int id, String dateHeure, float prix){

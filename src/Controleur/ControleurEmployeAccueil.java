@@ -56,6 +56,16 @@ public class ControleurEmployeAccueil {
                 controleurComptes.openWindow();
             }
         });
+        this.vueEmployeAccueil.addListenerOngletStat(new ActionListener(){
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                vueEmployeAccueil.closeWindow();
+                ControleurStatistiques controleurStatistiques = new ControleurStatistiques(connexion);
+                GUIstatistiques vueStat = new GUIstatistiques(membre, controleurStatistiques);
+                controleurStatistiques.setVue(vueStat);
+                controleurStatistiques.setMembre(membre);
+            }
+        });
         this.vueEmployeAccueil.addListenerAjouter(new ActionListener(){
             @Override
             public void actionPerformed(ActionEvent e) {
