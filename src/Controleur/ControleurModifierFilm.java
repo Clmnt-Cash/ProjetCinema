@@ -8,8 +8,7 @@ import Vue.*;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.awt.event.*;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
@@ -43,6 +42,23 @@ public class ControleurModifierFilm {
                 controleurEmployeAccueil.openWindow();
             }
         });
+        //////////////////////////////////////////Listener pour se déconnecter//////////////////////////////////////
+        MouseListener mouseListener = new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                JPanel panel = new JPanel();
+                panel.add(new JLabel("Etes-vous sûr de vouloir vous déconnecter ?"));
+
+                int resultat = JOptionPane.showConfirmDialog(null, panel, "Déconnexion", JOptionPane.OK_CANCEL_OPTION);
+
+                if (resultat == JOptionPane.OK_OPTION) {
+                    vueModifierFilm.closeWindow();
+                    GUIconnexion vueConnexion = new GUIconnexion();
+                    ControleurConnexion controleurConnexion = new ControleurConnexion(vueConnexion);
+                }
+            }
+        };
+        this.vueModifierFilm.addMouseListenerBoutonDeconnexion(mouseListener);
         //////////////////////////////////////////Listener pour enregistrer les modifs//////////////////////////////////////
         this.vueModifierFilm.addListenerEnregistrer(new ActionListener(){
             @Override

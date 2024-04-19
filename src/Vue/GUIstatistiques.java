@@ -8,10 +8,7 @@ import Modele.FilmParAchat;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
+import java.awt.event.*;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -29,6 +26,7 @@ public class GUIstatistiques extends JFrame {
     private JButton btnReduc;
     private JButton btnStat;
     private JPanel panel;
+    private JLabel boutonDeconnexion;
 
     //Constructeur
     public GUIstatistiques(Client membre, ControleurStatistiques controleurStatistiques ) {
@@ -71,20 +69,20 @@ public class GUIstatistiques extends JFrame {
                 g.setColor(Color.WHITE);
                 int i = 0;
                 for(FilmParAchat f : filmsParAchats){
-                    g.fillRect(230, 205 + i * 30, 50 * f.getNbCommandes(), 20);
+                    g.fillRect(530, 305 + i * 30, 40 * f.getNbCommandes(), 20);
                     JLabel labelGraph = new JLabel(f.getTitre());
-                    labelGraph.setBounds(20, 200 + i * 30, 200, 30);
+                    labelGraph.setBounds(320, 300 + i * 30, 200, 30);
                     labelGraph.setForeground(Color.WHITE);
                     labelGraph.setHorizontalAlignment(SwingConstants.RIGHT);
                     panel.add(labelGraph);
 
                     JLabel labelNum = new JLabel(String.valueOf(f.getNbCommandes()));
-                    labelNum.setBounds(200 + 50 * f.getNbCommandes(), 200 + i * 30, 20, 30);
+                    labelNum.setBounds(500 + 40 * f.getNbCommandes(), 300 + i * 30, 20, 30);
                     labelNum.setForeground(Color.BLACK);
                     labelNum.setHorizontalAlignment(SwingConstants.RIGHT);
                     if(f.getNbCommandes() == 0) {
                         labelNum.setForeground(Color.WHITE);
-                        labelNum.setBounds(260, 200 + i * 30, 20, 30);
+                        labelNum.setBounds(560, 300 + i * 30, 20, 30);
                     } else {
                         labelNum.setForeground(Color.BLACK);
                     }
@@ -104,7 +102,7 @@ public class GUIstatistiques extends JFrame {
         //Onglet bouton films
         btnFilms = new JButton("Films");
         btnFilms.setBounds(100, 60, 100, 30);
-        btnFilms.setForeground(Color.BLACK);
+        btnFilms.setForeground(Color.WHITE);
         btnFilms.setBackground(new Color(100, 100, 100));
         btnFilms.setOpaque(false);
         btnFilms.setContentAreaFilled(false);
@@ -132,19 +130,35 @@ public class GUIstatistiques extends JFrame {
         //Onglet bouton statistiques
         btnStat = new JButton("Statistiques");
         btnStat.setBounds(400, 60, 100, 30);
-        btnStat.setForeground(Color.WHITE);
+        btnStat.setForeground(Color.BLACK);
         btnStat.setOpaque(false);
         btnStat.setContentAreaFilled(false);
         btnStat.setBorderPainted(false);
         panel.add(btnStat);
 
-        //Ajout du JLabel pour afficher le nom du client
-        JLabel labelNom = new JLabel("Connecté en tant que " + membre.getPrenom() + " " + membre.getNom());
-        labelNom.setBounds(1100, 30, 300, 30);
+        //Label pour le nom de la personne connectée
+        JLabel labelNom = new JLabel("Connecté en tant que " + membre.getPrenom() + " " + membre.getNom() + " (employé)");
+        labelNom.setFont(labelNom.getFont().deriveFont(Font.BOLD, 15));
+        Dimension size = labelNom.getPreferredSize();
+        labelNom.setBounds(1470 - size.width, 10, size.width, size.height);
         labelNom.setForeground(Color.WHITE);
-        labelNom.setHorizontalAlignment(SwingConstants.RIGHT);
         panel.add(labelNom);
-        panel.setLayout(null);
+
+        //Bouton déconnexion
+        boutonDeconnexion = new JLabel("Déconnexion");
+        boutonDeconnexion.setFont(boutonDeconnexion.getFont().deriveFont(Font.BOLD, 12));
+        boutonDeconnexion.setBounds(1400, 50, 100, 20);
+        boutonDeconnexion.setForeground(Color.WHITE);
+        panel.add(boutonDeconnexion);
+
+        //Label pour le nom de la personne connectée
+        JLabel labelFilm = new JLabel("Le film le plus regardé est " + filmsParAchats.getFirst().getTitre() + " avec " + filmsParAchats.getFirst().getNbCommandes() + " ventes.");
+        labelFilm.setFont(labelFilm.getFont().deriveFont(Font.BOLD, 20));
+        Dimension size2 = labelFilm.getPreferredSize();
+        labelFilm.setBounds(750 - size2.width/2, 200, size2.width, size2.height);
+        labelFilm.setForeground(Color.WHITE);
+        panel.add(labelFilm);
+
 
 
 
@@ -154,12 +168,17 @@ public class GUIstatistiques extends JFrame {
         add(panel);
         setVisible(true);
     }
-
+    public void addListenerOngletFilms(ActionListener listener){
+        btnFilms.addActionListener(listener);
+    }
     public void addListenerOngletComptes(ActionListener listener){
         btnComptes.addActionListener(listener);
     }
     public void addListenerOngletReduc(ActionListener listener){
         btnReduc.addActionListener(listener);
+    }
+    public void addMouseListenerBoutonDeconnexion(MouseListener listener) {
+        boutonDeconnexion.addMouseListener(listener);
     }
     public void addListenerOngletStat(ActionListener listener){
         btnStat.addActionListener(listener);

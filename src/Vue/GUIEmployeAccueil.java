@@ -6,10 +6,7 @@ import Modele.Film;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
+import java.awt.event.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -28,6 +25,7 @@ public class GUIEmployeAccueil extends JFrame {
     private JPanel scrollablePanel;
     private JPanel panel;
     private JButton boutonAjouterFilm;
+    private JLabel boutonDeconnexion;
 
     //Constructeur
     public GUIEmployeAccueil(Client membre, ControleurEmployeAccueil controleurEmployeAccueil) {
@@ -93,6 +91,14 @@ public class GUIEmployeAccueil extends JFrame {
         UIManager.put("Button.border", BorderFactory.createLineBorder(Color.WHITE));
         UIManager.put("Button.focus", Color.WHITE);
 
+
+        //Bouton déconnexion
+        boutonDeconnexion = new JLabel("Déconnexion");
+        boutonDeconnexion.setFont(boutonDeconnexion.getFont().deriveFont(Font.BOLD, 12));
+        boutonDeconnexion.setBounds(1400, 50, 100, 20);
+        boutonDeconnexion.setForeground(Color.WHITE);
+        panel.add(boutonDeconnexion);
+
         //Onglet bouton films
         btnFilms = new JButton("Films");
         btnFilms.setBounds(100, 60, 100, 30);
@@ -130,11 +136,12 @@ public class GUIEmployeAccueil extends JFrame {
         btnStat.setBorderPainted(false);
         panel.add(btnStat);
 
-        //Ajout du JLabel pour afficher le nom du client
-        JLabel labelNom = new JLabel("Connecté en tant que " + membre.getPrenom() + " " + membre.getNom());
-        labelNom.setBounds(1100, 30, 300, 30);
+        //Label pour le nom de la personne connectée
+        JLabel labelNom = new JLabel("Connecté en tant que " + membre.getPrenom() + " " + membre.getNom() + " (employé)");
+        labelNom.setFont(labelNom.getFont().deriveFont(Font.BOLD, 15));
+        Dimension size = labelNom.getPreferredSize();
+        labelNom.setBounds(1470 - size.width, 10, size.width, size.height);
         labelNom.setForeground(Color.WHITE);
-        labelNom.setHorizontalAlignment(SwingConstants.RIGHT);
         panel.add(labelNom);
         panel.setLayout(null);
 
@@ -223,6 +230,9 @@ public class GUIEmployeAccueil extends JFrame {
     }
     public void addListenerOngletStat(ActionListener listener){
         btnStat.addActionListener(listener);
+    }
+    public void addMouseListenerBoutonDeconnexion(MouseListener listener) {
+        boutonDeconnexion.addMouseListener(listener);
     }
     public void closeWindow(){setVisible(false);dispose();}
     public void openWindow(){setVisible(true);}

@@ -7,8 +7,7 @@ import Vue.*;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.awt.event.*;
 import java.sql.SQLException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -35,6 +34,22 @@ public class ControleurEmployeAccueil {
         this.vueEmployeAccueil = vue;
         this.films = this.getFilms();
 
+        MouseListener mouseListener = new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                JPanel panel = new JPanel();
+                panel.add(new JLabel("Etes-vous sûr de vouloir vous déconnecter ?"));
+
+                int resultat = JOptionPane.showConfirmDialog(null, panel, "Déconnexion", JOptionPane.OK_CANCEL_OPTION);
+
+                if (resultat == JOptionPane.OK_OPTION) {
+                    vueEmployeAccueil.closeWindow();
+                    GUIconnexion vueConnexion = new GUIconnexion();
+                    ControleurConnexion controleurConnexion = new ControleurConnexion(vueConnexion);
+                }
+            }
+        };
+        this.vueEmployeAccueil.addMouseListenerBoutonDeconnexion(mouseListener);
         this.vueEmployeAccueil.addListener(e -> {
             JButton clickedButton = (JButton) e.getSource();
             filmActuel = vueEmployeAccueil.getBoutonFilmMap().get(clickedButton);

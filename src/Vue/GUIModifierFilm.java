@@ -8,6 +8,7 @@ import Modele.Seance;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseListener;
 import java.util.*;
 
 public class GUIModifierFilm extends JFrame {
@@ -29,7 +30,7 @@ public class GUIModifierFilm extends JFrame {
     public ArrayList<JButton> boutonsModifier;
     public ArrayList<JButton> boutonsSupprimer;
     private JButton boutonSupprimer;
-
+    private JLabel boutonDeconnexion;
 
     public JPanel panel;
 
@@ -70,25 +71,14 @@ public class GUIModifierFilm extends JFrame {
             }
         };
 
-        if(this.client.getType() != -1) {
-            //Ajout du JLabel pour afficher le nom du client
-            JLabel labelNom = new JLabel("Connecté en tant que " + client.getPrenom() + " " + client.getNom());
-            labelNom.setFont(labelNom.getFont().deriveFont(Font.BOLD, 15));
-            Dimension size2 = labelNom.getPreferredSize();
-            labelNom.setBounds(1470 - size2.width, 10, size2.width, size2.height);
-            labelNom.setForeground(Color.WHITE);
-            panel.add(labelNom);
-            panel.setLayout(null);
-        } else {
-            //Ajout du JLabel pour afficher invité
-            JLabel labelNom = new JLabel("Connecté en tant qu'invité ");
-            labelNom.setFont(labelNom.getFont().deriveFont(Font.BOLD, 15));
-            Dimension size = labelNom.getPreferredSize();
-            labelNom.setBounds(1470 - size.width, 10, size.width, size.height);
-            labelNom.setForeground(Color.WHITE);
-            panel.add(labelNom);
-            panel.setLayout(null);
-        }
+        //Label pour le nom de la personne connectée
+        JLabel labelNom = new JLabel("Connecté en tant que " + client.getPrenom() + " " + client.getNom() + " (employé)");
+        labelNom.setFont(labelNom.getFont().deriveFont(Font.BOLD, 15));
+        Dimension size = labelNom.getPreferredSize();
+        labelNom.setBounds(1470 - size.width, 10, size.width, size.height);
+        labelNom.setForeground(Color.WHITE);
+        panel.add(labelNom);
+        panel.setLayout(null);
 
         //Ajout du bouton Retour
         boutonRetour = new JButton("Retour");
@@ -97,7 +87,12 @@ public class GUIModifierFilm extends JFrame {
         boutonRetour.setBackground(Color.BLACK);
         panel.add(boutonRetour);
 
-
+        //Bouton déconnexion
+        boutonDeconnexion = new JLabel("Déconnexion");
+        boutonDeconnexion.setFont(boutonDeconnexion.getFont().deriveFont(Font.BOLD, 12));
+        boutonDeconnexion.setBounds(1400, 50, 100, 20);
+        boutonDeconnexion.setForeground(Color.WHITE);
+        panel.add(boutonDeconnexion);
 
         this.affichage();
 
@@ -402,6 +397,9 @@ public class GUIModifierFilm extends JFrame {
     }
     public void addListenerModifier(ActionListener listener){
         boutonModifier.addActionListener(listener);
+    }
+    public void addMouseListenerBoutonDeconnexion(MouseListener listener) {
+        boutonDeconnexion.addMouseListener(listener);
     }
     public void addListenersModifier(ActionListener l){
         for(JButton b : boutonsModifier){

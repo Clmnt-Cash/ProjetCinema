@@ -8,8 +8,7 @@ import Vue.*;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.awt.event.*;
 import java.sql.SQLException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -35,7 +34,34 @@ public class ControleurStatistiques {
     public void setVue(GUIstatistiques vue){
         this.vueStat = vue;
         this.filmsParAchat = this.getFilmsParAchat();
+        this.vueStat.addListenerOngletFilms(new ActionListener(){
+            //Ouverture de la page menu
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                vueStat.closeWindow();
+                ControleurEmployeAccueil controleurAccueil = new ControleurEmployeAccueil(connexion);
+                GUIEmployeAccueil vueAccueil = new GUIEmployeAccueil(membre, controleurAccueil);
+                controleurAccueil.setVue(vueAccueil);
+                controleurAccueil.setMembre(membre);
+                controleurAccueil.openWindow();
+            }
+        });
+        MouseListener mouseListener = new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                JPanel panel = new JPanel();
+                panel.add(new JLabel("Etes-vous sûr de vouloir vous déconnecter ?"));
 
+                int resultat = JOptionPane.showConfirmDialog(null, panel, "Déconnexion", JOptionPane.OK_CANCEL_OPTION);
+
+                if (resultat == JOptionPane.OK_OPTION) {
+                    vueStat.closeWindow();
+                    GUIconnexion vueConnexion = new GUIconnexion();
+                    ControleurConnexion controleurConnexion = new ControleurConnexion(vueConnexion);
+                }
+            }
+        };
+        this.vueStat.addMouseListenerBoutonDeconnexion(mouseListener);
         //Aller sur la page des comptes
         this.vueStat.addListenerOngletComptes(new ActionListener(){
             @Override
