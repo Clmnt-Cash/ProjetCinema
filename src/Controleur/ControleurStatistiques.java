@@ -70,21 +70,32 @@ public class ControleurStatistiques {
         ArrayList<FilmParAchat> filmsParAchat = new ArrayList<>();
 
         try {
-            String requete = "SELECT films.Titre, COUNT(DISTINCT commande.ID) AS Nombre_de_commandes " +
+            String requete = "SELECT films.Titre, SUM(commande.Nb_places) AS Nombre_de_commandes " +
                     "FROM films " +
                     "LEFT JOIN seance ON films.ID = seance.ID_film " +
                     "LEFT JOIN commande ON seance.ID = commande.ID_seance " +
                     "GROUP BY films.ID, films.Titre " +
                     "ORDER BY Nombre_de_commandes DESC;";
-
             ArrayList<String> resultatsFilms = connexion.remplirChampsRequete(requete);
 
             for (String resultat : resultatsFilms) {
                 String[] infosFilm = resultat.split(",");
                 String titre = infosFilm[0];
-                int nbCommandes = Integer.parseInt(infosFilm[1].trim()); // Convertir le nombre de commandes en entier
+                int nbCommandes;
+                if (infosFilm[1] != null && !infosFilm[1].equals("null") && !infosFilm[1].isEmpty()) {
+                    try {
+                        nbCommandes = Integer.parseInt(infosFilm[1].trim());
+                    } catch (NumberFormatException e) {
+                        nbCommandes = 0; // Valeur par défaut si la conversion échoue
+                    }
+                } else {
+                    nbCommandes = 0; // Valeur par défaut si le nombre de commandes est null ou vide
+                }
                 filmsParAchat.add(new FilmParAchat(titre, nbCommandes));
             }
+
+
+
 
         } catch (SQLException e) {
             e.printStackTrace();
