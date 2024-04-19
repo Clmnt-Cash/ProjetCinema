@@ -28,6 +28,7 @@ public class GUIModifierFilm extends JFrame {
     private JTextArea textAreaSynopsis;
     public ArrayList<JButton> boutonsModifier;
     public ArrayList<JButton> boutonsSupprimer;
+    private JButton boutonSupprimer;
 
 
     public JPanel panel;
@@ -154,6 +155,14 @@ public class GUIModifierFilm extends JFrame {
         boutonModifier.setForeground(Color.WHITE);
         boutonModifier.setBackground(Color.GRAY);
         panel.add(boutonModifier);
+
+        //Bouton pour supprimer un film
+        boutonSupprimer = new JButton("Supprimer");
+        boutonSupprimer.setBounds(1220, 700, 100, 50);
+        boutonSupprimer.setFont(new Font("Arial", Font.BOLD, 18));
+        boutonSupprimer.setForeground(Color.WHITE);
+        boutonSupprimer.setBackground(new Color(174, 27, 27));
+        panel.add(boutonSupprimer);
 
         JLabel labelSeances = new JLabel("Séances");
         labelSeances.setBounds(900, 120, 200, 30);
@@ -386,6 +395,7 @@ public class GUIModifierFilm extends JFrame {
 
     //Add listeners
     public void addListenerEnregistrer(ActionListener listener){boutonEnregistrer.addActionListener(listener);}
+    public void addListenerSupprimer(ActionListener listener){boutonSupprimer.addActionListener(listener);}
     public void addListenerAjouterSeance(ActionListener listener){boutonAjouterSeance.addActionListener(listener);}
     public void addListenerRetour(ActionListener listener){
         boutonRetour.addActionListener(listener);

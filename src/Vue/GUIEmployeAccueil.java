@@ -26,6 +26,7 @@ public class GUIEmployeAccueil extends JFrame {
     private JButton btnReduc;
     private JPanel scrollablePanel;
     private JPanel panel;
+    private JButton boutonAjouterFilm;
 
     //Constructeur
     public GUIEmployeAccueil(Client membre, ControleurEmployeAccueil controleurEmployeAccueil) {
@@ -127,9 +128,17 @@ public class GUIEmployeAccueil extends JFrame {
         panel.add(labelNom);
         panel.setLayout(null);
 
+        JLabel labelModifier = new JLabel("Modifier les films");
+        labelModifier.setBounds(540, 120, 300, 30);
+        labelModifier.setFont(labelNom.getFont().deriveFont(Font.BOLD, 25));
+        labelModifier.setForeground(Color.WHITE);
+        labelModifier.setHorizontalAlignment(SwingConstants.RIGHT);
+        panel.add(labelModifier);
+
         scrollablePanel = new JPanel();
         scrollablePanel.setLayout(new GridLayout(0, films.size()));
         boutonFilmMap = new HashMap<>();
+
 
         for (Film f : films) {
             JButton button = new JButton();
@@ -137,13 +146,13 @@ public class GUIEmployeAccueil extends JFrame {
             ImageIcon imageIcon = new ImageIcon("images/affiches/" + f.getCheminImage());
 
             if (imageIcon.getImageLoadStatus() == MediaTracker.COMPLETE) {
-                Image image = imageIcon.getImage().getScaledInstance(500, 700, Image.SCALE_SMOOTH);
+                Image image = imageIcon.getImage().getScaledInstance(350, 490, Image.SCALE_SMOOTH);
                 ImageIcon resizedIcon = new ImageIcon(image);
                 button.setIcon(resizedIcon);
             } else {
                 button.setText("Image indisponible");
             }
-            button.setPreferredSize(new Dimension(500, 200));
+            button.setPreferredSize(new Dimension(350, 100));
 
             JPanel overlayPanel = new JPanel();
             button.setBorderPainted(false);
@@ -173,13 +182,29 @@ public class GUIEmployeAccueil extends JFrame {
         }
 
         JScrollPane scrollPane = new JScrollPane(scrollablePanel);
-        scrollPane.setBounds(10, 110, 1463, 670);
+        scrollPane.setBounds(10, 160, 1463, 490);
         scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
         panel.add(scrollPane);
+
+
+        ImageIcon iconLogoPanier = new ImageIcon("images/logos/logoajouterfilm.png");
+        Image imagePanier = iconLogoPanier.getImage().getScaledInstance(50, 50, Image.SCALE_SMOOTH);
+        ImageIcon resizedimagePanier = new ImageIcon(imagePanier);
+        boutonAjouterFilm = new JButton();
+        boutonAjouterFilm.setIcon(resizedimagePanier);
+        boutonAjouterFilm.setBounds(1420, 700, 50, 50);
+        boutonAjouterFilm.setBorderPainted(false);
+        boutonAjouterFilm.setFocusPainted(false);
+        boutonAjouterFilm.setContentAreaFilled(false);
+        panel.add(boutonAjouterFilm);
+
         panel.setLayout(null);
         add(panel);
     }
 
+    public void addListenerAjouter(ActionListener listener){
+        boutonAjouterFilm.addActionListener(listener);
+    }
     public void addListenerOngletComptes(ActionListener listener){
         btnComptes.addActionListener(listener);
     }

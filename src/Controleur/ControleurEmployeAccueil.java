@@ -6,6 +6,7 @@ import Modele.Seance;
 import Vue.*;
 
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.SQLException;
@@ -16,7 +17,7 @@ import java.util.Date;
 
 public class ControleurEmployeAccueil {
     private Client membre;
-    private GUIEmployeAccueil vueMembre;
+    private GUIEmployeAccueil vueEmployeAccueil;
     private Connexion connexion;
     private ArrayList<Film> films;
     private Film filmActuel;
@@ -31,24 +32,23 @@ public class ControleurEmployeAccueil {
     }
 
     public void setVue(GUIEmployeAccueil vue){
-        this.vueMembre = vue;
+        this.vueEmployeAccueil = vue;
         this.films = this.getFilms();
 
-        this.vueMembre.addListener(e -> {
+        this.vueEmployeAccueil.addListener(e -> {
             JButton clickedButton = (JButton) e.getSource();
-            filmActuel = vueMembre.getBoutonFilmMap().get(clickedButton);
-            vueMembre.closeWindow();
+            filmActuel = vueEmployeAccueil.getBoutonFilmMap().get(clickedButton);
+            vueEmployeAccueil.closeWindow();
             ControleurModifierFilm controleurModifierFilm = new ControleurModifierFilm(connexion, filmActuel, membre);
             GUIModifierFilm vueModifierFilm = new GUIModifierFilm(membre, controleurModifierFilm, filmActuel);
             controleurModifierFilm.setVue(vueModifierFilm);
         });
 
         //Aller sur la page des comptes
-        this.vueMembre.addListenerOngletComptes(new ActionListener(){
-            //Ouverture de la page menu
+        this.vueEmployeAccueil.addListenerOngletComptes(new ActionListener(){
             @Override
             public void actionPerformed(ActionEvent e) {
-                vueMembre.closeWindow();
+                vueEmployeAccueil.closeWindow();
                 controleurComptes = new ControleurComptes(connexion);
                 controleurComptes.setMembre(membre);
                 vueComptes = new GUIcomptes(membre, controleurComptes);
@@ -56,12 +56,76 @@ public class ControleurEmployeAccueil {
                 controleurComptes.openWindow();
             }
         });
+        this.vueEmployeAccueil.addListenerAjouter(new ActionListener(){
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                //Customisation de la fenetre de dialogue
+                UIManager.put("OptionPane.background", Color.WHITE);
+                UIManager.put("Panel.background", Color.WHITE);
+                UIManager.put("OptionPane.messageForeground", Color.WHITE);
+                UIManager.put("Button.background", Color.WHITE);
+                UIManager.put("Button.foreground", Color.BLACK);
+                UIManager.put("Button.border", BorderFactory.createLineBorder(Color.WHITE));
+                UIManager.put("Button.focus", Color.WHITE);
+
+                JPanel panel = new JPanel();
+                panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS)); // Utilisation de BoxLayout pour aligner les composants verticalement
+
+                //Ajout du champ de texte pour le titre
+                JLabel labelTitre = new JLabel("Titre :");
+                JTextField textFieldTitre = new JTextField();
+                textFieldTitre.setMaximumSize(new Dimension(Integer.MAX_VALUE, 30)); // Augmentation de la hauteur à 30 pixels
+                panel.add(labelTitre);
+                panel.add(textFieldTitre);
+
+                //Ajout du champ de texte pour le réalisateur
+                JLabel labelRealisateur = new JLabel("Réalisateur :");
+                JTextField textFieldRealisateur = new JTextField();
+                textFieldRealisateur.setMaximumSize(new Dimension(Integer.MAX_VALUE, 30)); // Augmentation de la hauteur à 30 pixels
+                panel.add(labelRealisateur);
+                panel.add(textFieldRealisateur);
+
+                //Ajout du champ de texte pour le chemin vers l'image
+                JLabel labelChemin = new JLabel("chemin vers l'affiche :");
+                JTextField textFieldChemin = new JTextField();
+                textFieldChemin.setMaximumSize(new Dimension(Integer.MAX_VALUE, 30)); // Augmentation de la hauteur à 30 pixels
+                panel.add(labelChemin);
+                panel.add(textFieldChemin);
+
+                //Ajout du champ de texte pour le synopsis
+                JLabel labelSynopsis = new JLabel("Synopsis :");
+                JTextArea textAreaSynopsis = new JTextArea();
+                textAreaSynopsis.setLineWrap(true);
+                textAreaSynopsis.setWrapStyleWord(true);
+                JScrollPane scrollPane = new JScrollPane(textAreaSynopsis);
+                scrollPane.setPreferredSize(new Dimension(Integer.MAX_VALUE, 200)); // Le synopsis peut occuper toute la largeur, mais seulement 200 pixels de hauteur
+                panel.add(labelSynopsis);
+                panel.add(scrollPane);
+
+
+                int resultat = JOptionPane.showConfirmDialog(null, panel, "Ajouter un film", JOptionPane.OK_CANCEL_OPTION);
+
+                if (resultat == JOptionPane.OK_OPTION) {
+                    vueEmployeAccueil.closeWindow();
+                    String titre = textFieldTitre.getText();
+                    String realisateur = textFieldRealisateur.getText();
+                    String synopsis = textAreaSynopsis.getText();
+                    String chemin = textFieldChemin.getText();
+                    ajouterFilm(titre, realisateur, synopsis, chemin);
+                    ControleurEmployeAccueil controleurEmployeAccueil = new ControleurEmployeAccueil(connexion);
+                    GUIEmployeAccueil vueEmployeAccueil = new GUIEmployeAccueil(membre, controleurEmployeAccueil);
+                    controleurEmployeAccueil.setVue(vueEmployeAccueil);
+                    controleurEmployeAccueil.setMembre(membre);
+
+                }
+            }
+        });
         //Aller sur la page des reductions
-        this.vueMembre.addListenerOngletReduc(new ActionListener(){
+        this.vueEmployeAccueil.addListenerOngletReduc(new ActionListener(){
             //Ouverture de la page menu
             @Override
             public void actionPerformed(ActionEvent e) {
-                vueMembre.closeWindow();
+                vueEmployeAccueil.closeWindow();
                 /*controleurReduc = new ControleurReduc(connexion);
                 controleurReduc.setMembre(membre);
                 vueReduc = new GUIreduc(membre, controleurReduc);
@@ -75,7 +139,17 @@ public class ControleurEmployeAccueil {
     }
 
     public void openWindow(){
-        this.vueMembre.setVisible(true);
+        this.vueEmployeAccueil.setVisible(true);
+    }
+
+    public void ajouterFilm(String titre, String realisateur, String synopsis, String chemin){
+        try {
+            String requeteInsertion = "INSERT INTO films (Titre, Realisateur, Synopsis, Chemin_image) VALUES ('" + titre + "', '" + realisateur + "', '" + synopsis + "','" + chemin + "')";
+            connexion.executerRequete(requeteInsertion);
+        } catch (SQLException e) {
+            e.printStackTrace();
+            System.out.println("Erreur lors de la connexion à la base de données : " + e);
+        }
     }
 
     public ArrayList<Film> getFilms(){

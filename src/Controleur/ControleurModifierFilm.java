@@ -58,7 +58,34 @@ public class ControleurModifierFilm {
                 controleurModifierFilm.setClient(client);
             }
         });
-        //////////////////////////////////////////Listener pour supprimer une séance//////////////////////////////////////
+        //////////////////////////////////////////Listener pour supprimer un film//////////////////////////////////////
+        this.vueModifierFilm.addListenerSupprimer(e -> {
+
+            //Customisation de la fenetre de dialogue
+            UIManager.put("OptionPane.background", Color.WHITE);
+            UIManager.put("Panel.background", Color.WHITE);
+            UIManager.put("OptionPane.messageForeground", Color.WHITE);
+            UIManager.put("Button.background", Color.WHITE);
+            UIManager.put("Button.foreground", Color.BLACK);
+            UIManager.put("Button.border", BorderFactory.createLineBorder(Color.WHITE));
+            UIManager.put("Button.focus", Color.WHITE);
+
+            //Création de la fenêtre de dialogue
+            JPanel panel = new JPanel();
+            JLabel label = new JLabel("Etes-vous sûr de vouloir supprimer " + filmActuel.getTitre() + " ?") ;
+            panel.add(label);
+
+            int resultat = JOptionPane.showConfirmDialog(null, panel, "Supprimer "+filmActuel.getTitre(), JOptionPane.OK_CANCEL_OPTION);
+
+            if (resultat == JOptionPane.OK_OPTION) {
+                supprimerFilm(filmActuel.getId());
+                vueModifierFilm.closeWindow();
+                ControleurEmployeAccueil controleurEmployeAccueil = new ControleurEmployeAccueil(connexion);
+                GUIEmployeAccueil vueEmployeAccueil = new GUIEmployeAccueil(client, controleurEmployeAccueil);
+                controleurEmployeAccueil.setVue(vueEmployeAccueil);
+                controleurEmployeAccueil.setMembre(client);
+            }
+        });
         this.vueModifierFilm.addListenersSupprimer(e -> {
             JButton bouton = (JButton) e.getSource();
 
@@ -357,6 +384,19 @@ public class ControleurModifierFilm {
     public void openWindow(){
         this.vueModifierFilm.setVisible(true);
     }
+
+    //Méthode pour supprimer un film de la bdd
+    public void supprimerFilm(int id){
+        try {
+            String requeteInsertion = "DELETE FROM films" +
+                    " WHERE ID = " + id;
+            connexion.executerRequete(requeteInsertion);
+        } catch (SQLException e) {
+            e.printStackTrace();
+            System.out.println("Erreur lors de la connexion à la base de données : " + e);
+        }
+    }
+
     //Méthode pour ajouter une séance à un film dans la bdd
     public void ajouterSeance(String date, float prix){
         try {
