@@ -64,9 +64,9 @@ public class ControleurEmployeAccueil {
             @Override
             public void actionPerformed(ActionEvent e) {
                 vueEmployeAccueil.closeWindow();
-                controleurComptes = new ControleurComptes(connexion);
+                ControleurComptes controleurComptes = new ControleurComptes(connexion);
                 controleurComptes.setMembre(membre);
-                vueComptes = new GUIcomptes(membre, controleurComptes);
+                GUIcomptes vueComptes = new GUIcomptes(membre, controleurComptes);
                 controleurComptes.setVue(vueComptes);
                 controleurComptes.openWindow();
             }

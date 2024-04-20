@@ -23,9 +23,7 @@ public class ControleurStatistiques {
     private ArrayList<FilmParAchat> filmsParAchat;
 
     private ControleurComptes controleurComptes;
-    //private ControleurReduc controleurReduc;
     private GUIcomptes vueComptes;
-    //private GUIreduc vueReduc;
 
     public ControleurStatistiques(Connexion connexion) {
         this.connexion = connexion;
@@ -80,11 +78,7 @@ public class ControleurStatistiques {
             @Override
             public void actionPerformed(ActionEvent e) {
                 vueStat.closeWindow();
-                /*controleurReduc = new ControleurReduc(connexion);
-                controleurReduc.setMembre(membre);
-                vueReduc = new GUIreduc(membre, controleurReduc);
-                controleurReduc.setVue(vueReduc);
-                controleurReduc.openWindow();*/
+
             }
         });
     }

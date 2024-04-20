@@ -1,39 +1,36 @@
 package Vue;
 
-import Modele.Client;
-import Modele.Film;
 import Controleur.ControleurComptes;
+import Modele.Client;
+import Modele.Seance;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
+import java.awt.event.*;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
 
 public class GUIcomptes extends JFrame {
     //Attributs
-    private Map<JButton, Client> boutonClientMap;
-    private ArrayList<Client> comptes;
-    private Client membre;
+    private Client employe;
     private ControleurComptes controleurComptes;
-    private ArrayList<JButton> boutons;
     private JButton btnFilms;
     private JButton btnComptes;
     private JButton btnReduc;
-    private JPanel scrollablePanel;
+    private JButton btnStat;
     private JPanel panel;
+    private JLabel boutonDeconnexion;
+    private ArrayList<Client> clients;
+    private ArrayList<JButton> boutonsModifier;
+    private ArrayList<JButton> boutonsSupprimer;
 
     //Constructeur
-    public GUIcomptes(Client membre, ControleurComptes controleurComptes) {
+    public GUIcomptes(Client employe, ControleurComptes controleurComptes) {
         super("Cinéma");
-        this.membre = membre;
+        this.employe = employe;
         this.controleurComptes = controleurComptes;
-        this.comptes = controleurComptes.getComptes();
-        this.boutons = new ArrayList<>();
+        this.clients = controleurComptes.getComptes();
+        this.boutonsModifier = new ArrayList<>();
+        this.boutonsSupprimer = new ArrayList<>();
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         setSize(1500, 800);
@@ -47,39 +44,6 @@ public class GUIcomptes extends JFrame {
         this.afficherMenu();
 
         setVisible(true);
-    }
-
-
-    JPanel drawComponents = new JPanel() {
-        @Override
-        protected void paintComponent(Graphics g) {
-            super.paintComponent(g);
-            g.setColor(new Color(0, 0, 0));
-            g.fillRect(0, 100, 1500, 700);
-            g.setColor(new Color(50, 50, 50, 200));
-            g.fillRect(0, 0, 1500, 100);
-            ImageIcon logo = new ImageIcon("images/logos/logo_black.png");
-            Image image = logo.getImage();
-            g.drawImage(image, 200, 0, 100, 100, this);
-        }
-    };
-
-    //Méthode pour ajouter un listener sur les boutons
-    public void addListener(ActionListener listener) {
-        for(JButton b : boutons) {
-            b.addActionListener(listener);
-        }
-    }
-
-    public Map<JButton, Client> getBoutonFilmMap() {
-        return boutonClientMap;
-    }
-
-    public void changerAffichage(Component nouveauContenu) {
-        getContentPane().removeAll();
-        getContentPane().add(nouveauContenu);
-        revalidate();
-        repaint();
     }
 
     public void afficherMenu(){
@@ -98,10 +62,17 @@ public class GUIcomptes extends JFrame {
                 g.drawImage(image, 0, 0, 100, 100, this);
             }
         };
+        UIManager.put("OptionPane.background", Color.WHITE);
+        UIManager.put("Panel.background", Color.WHITE);
+        UIManager.put("OptionPane.messageForeground", Color.WHITE);
+        UIManager.put("Button.background", Color.WHITE);
+        UIManager.put("Button.foreground", Color.BLACK);
+        UIManager.put("Button.border", BorderFactory.createLineBorder(Color.WHITE));
+        UIManager.put("Button.focus", Color.WHITE);
 
         //Onglet bouton films
         btnFilms = new JButton("Films");
-        btnFilms.setBounds(500, 30, 100, 30);
+        btnFilms.setBounds(100, 60, 100, 30);
         btnFilms.setForeground(Color.WHITE);
         btnFilms.setBackground(new Color(100, 100, 100));
         btnFilms.setOpaque(false);
@@ -111,8 +82,8 @@ public class GUIcomptes extends JFrame {
 
         //Onglet bouton comptes
         btnComptes = new JButton("Comptes");
-        btnComptes.setBounds(650, 30, 100, 30);
-        btnComptes.setForeground(Color.WHITE);
+        btnComptes.setBounds(200, 60, 100, 30);
+        btnComptes.setForeground(Color.BLACK);
         btnComptes.setOpaque(false);
         btnComptes.setContentAreaFilled(false);
         btnComptes.setBorderPainted(false);
@@ -120,84 +91,106 @@ public class GUIcomptes extends JFrame {
 
         //Onglet bouton reductions
         btnReduc = new JButton("Reductions");
-        btnReduc.setBounds(800, 30, 100, 30);
+        btnReduc.setBounds(300, 60, 100, 30);
         btnReduc.setForeground(Color.WHITE);
         btnReduc.setOpaque(false);
         btnReduc.setContentAreaFilled(false);
         btnReduc.setBorderPainted(false);
         panel.add(btnReduc);
 
+        //Onglet bouton statistiques
+        btnStat = new JButton("Statistiques");
+        btnStat.setBounds(400, 60, 100, 30);
+        btnStat.setForeground(Color.WHITE);
+        btnStat.setOpaque(false);
+        btnStat.setContentAreaFilled(false);
+        btnStat.setBorderPainted(false);
+        panel.add(btnStat);
 
-        //Ajout du JLabel pour afficher le nom du client
-        JLabel labelNom = new JLabel("Connecté en tant que " + membre.getPrenom() + " " + membre.getNom());
-        labelNom.setBounds(1100, 30, 300, 30);
+        //Label pour le nom de la personne connectée
+        JLabel labelNom = new JLabel("Connecté en tant que " + employe.getPrenom() + " " + employe.getNom() + " (employé)");
+        labelNom.setFont(labelNom.getFont().deriveFont(Font.BOLD, 15));
+        Dimension size = labelNom.getPreferredSize();
+        labelNom.setBounds(1470 - size.width, 10, size.width, size.height);
         labelNom.setForeground(Color.WHITE);
-        labelNom.setHorizontalAlignment(SwingConstants.RIGHT);
         panel.add(labelNom);
-        panel.setLayout(null);
 
-        scrollablePanel = new JPanel();
-        scrollablePanel.setLayout(new GridLayout(0, comptes.size()));
-        boutonClientMap = new HashMap<>();
+        //Bouton déconnexion
+        boutonDeconnexion = new JLabel("Déconnexion");
+        boutonDeconnexion.setFont(boutonDeconnexion.getFont().deriveFont(Font.BOLD, 12));
+        boutonDeconnexion.setBounds(1400, 50, 100, 20);
+        boutonDeconnexion.setForeground(Color.WHITE);
+        panel.add(boutonDeconnexion);
+        int i = 0;
+        for (Client c : clients) {
+            String type = "";
+            if(c.getType() == 1) type = "enfant";
+            else if(c.getType() == 2) type = "régulier";
+            else type = "sénior";
 
-        for (Client c : comptes) {
-            JButton button = new JButton();
 
-            button.setPreferredSize(new Dimension(500, 200));
+            JLabel labelClient = new JLabel("   Type : " + type + "    E-mail : " + c.getEmail() + "    Mot de passe : " + c.getMotDePasse());
+            labelClient.setBounds(200, 200 + i, 500, 30);
+            Dimension size2 = labelClient.getPreferredSize();
+            labelClient.setBounds(750 - size2.width, 200 + i, size2.width, size2.height);
+            labelClient.setForeground(Color.WHITE);
+            panel.add(labelClient);
 
-            JPanel overlayPanel = new JPanel();
-            button.setBorderPainted(false);
-            overlayPanel.setBackground(new Color(0, 0, 0, 100));
+            // Création du label pour le nom et le prénom en gras
+            JLabel labelNomPrenom = new JLabel(c.getNom() + " " + c.getPrenom());
+            labelNomPrenom.setFont(new Font("Arial", Font.BOLD, 15));
+            Dimension size3 = labelNomPrenom.getPreferredSize();
+            labelNomPrenom.setBounds(730 - size2.width - size3.width, 195 + i, size3.width, 30);
+            labelNomPrenom.setForeground(Color.WHITE);
+            panel.add(labelNomPrenom);
 
-            overlayPanel.setVisible(false);
-            button.setLayout(new BorderLayout());
-            button.add(overlayPanel, BorderLayout.CENTER);
 
-            JLabel labelTitre = new JLabel();
-            labelTitre.setForeground(Color.WHITE);
-            labelTitre.setHorizontalAlignment(SwingConstants.LEADING);
-            labelTitre.setVerticalAlignment(SwingConstants.CENTER);
-            overlayPanel.add(labelTitre);
+            JButton boutonModifier = new JButton("Modifier");
+            boutonModifier.setFont(boutonModifier.getFont().deriveFont(Font.BOLD, 13));
+            boutonModifier.setForeground(new Color(163, 163, 163));
+            boutonModifier.putClientProperty("infos", c.getId() + "," + c.getNom() + "," + c.getPrenom() + "," + type + "," + c.getEmail() + ',' + c.getMotDePasse());
+            boutonModifier.setBounds(760, 200 + i, 100, 25);
+            panel.add(boutonModifier);
+            this.boutonsModifier.add(boutonModifier);
 
-            Font police = new Font("Arial", Font.BOLD, 25);
+            JButton boutonSupprimer = new JButton("Supprimer");
+            boutonSupprimer.setFont(boutonSupprimer.getFont().deriveFont(Font.BOLD, 13));
+            boutonSupprimer.setForeground(Color.WHITE);
+            boutonSupprimer.setBackground(new Color(174, 27, 27));
+            boutonSupprimer.putClientProperty("infos", c.getId() + "," + c.getNom() + "," + c.getPrenom() + "," + type + "," + c.getEmail() + ',' + c.getMotDePasse());
+            boutonSupprimer.setBounds(870, 200 + i, 100, 25);
+            panel.add(boutonSupprimer);
+            this.boutonsSupprimer.add(boutonSupprimer);
 
-            labelTitre.setFont(police);
-            boutons.add(button);
-
-            boutonClientMap.put(button, c);
-
-            button.addMouseListener(new MouseAdapter() {
-                @Override
-                public void mouseEntered(MouseEvent e) {
-                    overlayPanel.setVisible(true);
-                    labelTitre.setText(c.getEmail());
-                }
-
-                @Override
-                public void mouseExited(MouseEvent e) {
-                    overlayPanel.setVisible(false);
-                    labelTitre.setText("");
-                }
-            });
+            i+=50;
         }
-        for (JButton button : boutons) {
-            scrollablePanel.add(button);
-        }
 
-        JScrollPane scrollPane = new JScrollPane(scrollablePanel);
-        scrollPane.setBounds(10, 110, 1463, 670);
-        scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
-        panel.add(scrollPane);
+
         panel.setLayout(null);
         add(panel);
+        setVisible(true);
     }
-
     public void addListenerOngletFilms(ActionListener listener){
         btnFilms.addActionListener(listener);
     }
     public void addListenerOngletReduc(ActionListener listener){
         btnReduc.addActionListener(listener);
     }
+    public void addMouseListenerBoutonDeconnexion(MouseListener listener) {
+        boutonDeconnexion.addMouseListener(listener);
+    }
+    public void addListenersModifier(ActionListener l){
+        for(JButton b : boutonsModifier){
+            b.addActionListener(l);
+        }
+    }
+    public void addListenersSupprimer(ActionListener listener){
+        for(JButton b : this.boutonsSupprimer){
+            b.addActionListener(listener);
+        }
+    }
+    public void addListenerOngletStat(ActionListener listener){
+        btnStat.addActionListener(listener);
+    }
     public void closeWindow(){setVisible(false);dispose();}
-    public void openWindow(){setVisible(true);}
 }
