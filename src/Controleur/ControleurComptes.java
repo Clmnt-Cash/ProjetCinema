@@ -76,12 +76,15 @@ public class ControleurComptes {
                 controleurStatistiques.setMembre(membre);
             }
         });
-        this.vueComptes.addListenerOngletReduc(new ActionListener() {
+        this.vueComptes.addListenerOngletReduc(new ActionListener(){
             //Ouverture de la page menu
             @Override
             public void actionPerformed(ActionEvent e) {
-                //vueComptes.closeWindow();
-
+                vueComptes.closeWindow();
+                ControleurReduction controleurReduction = new ControleurReduction(connexion);
+                GUIreduction vueReduction = new GUIreduction(membre, controleurReduction);
+                controleurReduction.setVue(vueReduction);
+                controleurReduction.setMembre(membre);
             }
         });
         //Modifier un compte

@@ -19,8 +19,6 @@ public class ControleurStatistiques {
     private Client membre;
     private GUIstatistiques vueStat;
     private Connexion connexion;
-    private ArrayList<Film> films;
-    private ArrayList<FilmParAchat> filmsParAchat;
 
     private ControleurComptes controleurComptes;
     private GUIcomptes vueComptes;
@@ -31,7 +29,6 @@ public class ControleurStatistiques {
 
     public void setVue(GUIstatistiques vue){
         this.vueStat = vue;
-        this.filmsParAchat = this.getFilmsParAchat();
         this.vueStat.addListenerOngletFilms(new ActionListener(){
             //Ouverture de la page menu
             @Override
@@ -78,7 +75,10 @@ public class ControleurStatistiques {
             @Override
             public void actionPerformed(ActionEvent e) {
                 vueStat.closeWindow();
-
+                ControleurReduction controleurReduction = new ControleurReduction(connexion);
+                GUIreduction vueReduction = new GUIreduction(membre, controleurReduction);
+                controleurReduction.setVue(vueReduction);
+                controleurReduction.setMembre(membre);
             }
         });
     }

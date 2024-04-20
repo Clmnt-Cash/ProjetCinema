@@ -115,6 +115,13 @@ public class GUIcomptes extends JFrame {
         labelNom.setForeground(Color.WHITE);
         panel.add(labelNom);
 
+        JLabel labelGerer = new JLabel("Gérer les comptes des membres");
+        labelGerer.setFont(labelGerer.getFont().deriveFont(Font.BOLD, 20));
+        Dimension size4 = labelGerer.getPreferredSize();
+        labelGerer.setBounds(750 - size4.width/2, 130, size4.width, size4.height);
+        labelGerer.setForeground(Color.WHITE);
+        panel.add(labelGerer);
+
         //Bouton déconnexion
         boutonDeconnexion = new JLabel("Déconnexion");
         boutonDeconnexion.setFont(boutonDeconnexion.getFont().deriveFont(Font.BOLD, 12));

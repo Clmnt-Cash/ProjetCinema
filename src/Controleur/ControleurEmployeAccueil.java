@@ -5,6 +5,7 @@ import Modele.Film;
 import Modele.Seance;
 import Vue.*;
 
+import javax.naming.ldap.Control;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
@@ -151,11 +152,10 @@ public class ControleurEmployeAccueil {
             @Override
             public void actionPerformed(ActionEvent e) {
                 vueEmployeAccueil.closeWindow();
-                /*controleurReduc = new ControleurReduc(connexion);
-                controleurReduc.setMembre(membre);
-                vueReduc = new GUIreduc(membre, controleurReduc);
-                controleurReduc.setVue(vueReduc);
-                controleurReduc.openWindow();*/
+                ControleurReduction controleurReduction = new ControleurReduction(connexion);
+                GUIreduction vueReduction = new GUIreduction(membre, controleurReduction);
+                controleurReduction.setVue(vueReduction);
+                controleurReduction.setMembre(membre);
             }
         });
     }
