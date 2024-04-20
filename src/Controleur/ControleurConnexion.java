@@ -52,9 +52,9 @@ public class ControleurConnexion {
                         } else {
                             //Envoyer le client à ControleurAccueil
                             controleurAccueil = new ControleurAccueil(connexion);
+                            controleurAccueil.setClient(client);
                             vueAccueil = new GUIaccueil(client, controleurAccueil);
                             controleurAccueil.setVue(vueAccueil);
-                            controleurAccueil.setClient(client);
                             controleurAccueil.openWindow();
                         }
                     }

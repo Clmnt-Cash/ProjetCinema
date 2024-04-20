@@ -2,6 +2,7 @@ package Controleur;
 
 import Modele.Client;
 import Modele.Film;
+import Modele.FilmParAchat;
 import Modele.Seance;
 import Vue.GUIaccueil;
 import Vue.GUIconnexion;
@@ -81,6 +82,29 @@ public class ControleurAccueil {
     public void openWindow(){
         this.vueAccueil.setVisible(true);
     }
+    public int getNbCommande(){
+        int nbCommandes = 0;
+        try {
+            String requete = "SELECT SUM(ID_client=" + client.getId() + ") AS Nombre_de_commandes FROM commande WHERE Paye = 0";
+            ArrayList<String> resultatsFilms = connexion.remplirChampsRequete(requete);
+
+            for (String resultat : resultatsFilms) {
+                String[] infosFilm = resultat.split(",");
+                if (infosFilm[0] != null && !infosFilm[0].equals("null") && !infosFilm[0].isEmpty()) {
+                    try {
+                        nbCommandes = Integer.parseInt(infosFilm[0].trim());
+                    } catch (NumberFormatException e) {
+                        nbCommandes = 0; // Valeur par défaut si la conversion échoue
+                    }
+                } else {
+                    nbCommandes = 0; // Valeur par défaut si le nombre de commandes est null ou vide
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return nbCommandes;
+    }
 
     public ArrayList<Film> getFilms(){
         ArrayList<Film> films = new ArrayList<>();
@@ -94,23 +118,19 @@ public class ControleurAccueil {
                 String titre = infosFilm[0].trim();
                 String realisateur = infosFilm[1].trim();
 
+
+                int id = Integer.parseInt(infosFilm[2].trim());
+                String cheminImage = infosFilm[3].trim();
                 StringBuilder synopsisBuilder = new StringBuilder();
                 boolean reachedID = false;
                 //Pour le synopsis, prendre tout jusqu'à ce qu'il y ait ',numero'
-                for (int i = 2; i < infosFilm.length; i++) {
+                for (int i = 4; i < infosFilm.length; i++) {
                     if (!reachedID) {
-                        if (i + 1 < infosFilm.length && Character.isUpperCase(infosFilm[i + 1].charAt(0))) {
-                            reachedID = true;
-                        }
-                        else{
-                            synopsisBuilder.append(infosFilm[i]);
-                        }
+                        synopsisBuilder.append(infosFilm[i]);
                     }
                 }
                 String synopsis = synopsisBuilder.toString().trim();
 
-                int id = Integer.parseInt(infosFilm[infosFilm.length - 2].trim());
-                String cheminImage = infosFilm[infosFilm.length - 1].trim();
                 Film film = new Film(id, titre, realisateur, synopsis, cheminImage);
                 ArrayList<Seance> seances = getSeancesForFilm(id); // Méthode à implémenter
                 film.setSeances(seances);

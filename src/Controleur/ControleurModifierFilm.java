@@ -231,7 +231,6 @@ public class ControleurModifierFilm {
                 String newheure = (String) comboBoxHeure.getSelectedItem();
                 String newminute = (String) comboBoxMinutes.getSelectedItem();
                 double newprix = (double) spinnerModel.getValue();
-                System.out.println(newprix);
 
                 //Formatage de la date et de l'heure
                 String dateHeure = "2024-" + newmois + "-" + newjour + " " + newheure + ":" + newminute + ":00";
@@ -410,19 +409,20 @@ public class ControleurModifierFilm {
             System.out.println("Erreur lors de la connexion à la base de données : " + e);
         }
         try {
-            String requeteInsertion = "DELETE FROM seance WHERE ID_film = " + id + "; ";
-            connexion.executerRequete(requeteInsertion);
-        } catch (SQLException e) {
-            e.printStackTrace();
-            System.out.println("Erreur lors de la connexion à la base de données : " + e);
-        }
-        try {
             String requeteInsertion = "DELETE FROM commande WHERE ID_seance IN (SELECT ID FROM seance WHERE ID_film = " + id + ");";
             connexion.executerRequete(requeteInsertion);
         } catch (SQLException e) {
             e.printStackTrace();
             System.out.println("Erreur lors de la connexion à la base de données : " + e);
         }
+        try {
+            String requeteInsertion = "DELETE FROM seance WHERE ID_film = " + id + "; ";
+            connexion.executerRequete(requeteInsertion);
+        } catch (SQLException e) {
+            e.printStackTrace();
+            System.out.println("Erreur lors de la connexion à la base de données : " + e);
+        }
+
     }
 
     //Méthode pour ajouter une séance à un film dans la bdd
@@ -478,7 +478,7 @@ public class ControleurModifierFilm {
         this.filmActuel.setRealisateur(realisateur);
         this.filmActuel.setCheminImage(chemin);
         this.filmActuel.setSynopsis(synopsis);
-
+        synopsis = synopsis.replace("'", "''");
         try {
             String requeteInsertion = "UPDATE films" +
                     " SET Titre = '" + titre + "'," +

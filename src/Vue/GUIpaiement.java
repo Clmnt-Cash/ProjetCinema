@@ -246,12 +246,12 @@ public class GUIpaiement extends JFrame {
                         //Fermer la fenetre après 3 secondes
                         Timer timer = new Timer(3000, e -> {
                             dispose();
+                            payerCommande(client.getId());
                             ControleurAccueil controleurAccueil = new ControleurAccueil(conn);
+                            controleurAccueil.setClient(client);
                             GUIaccueil vueAccueil = new GUIaccueil(client, controleurAccueil);
                             controleurAccueil.setVue(vueAccueil);
-                            controleurAccueil.setClient(client);
                             controleurAccueil.openWindow();
-                            payerCommande(client.getId());
                         });
                         timer.setRepeats(false);
                         timer.start();

@@ -49,9 +49,9 @@ public class ControleurPanier {
             public void actionPerformed(ActionEvent e) {
                 vuePanier.closeWindow();
                 ControleurAccueil controleurAccueil = new ControleurAccueil(connexion);
+                controleurAccueil.setClient(client);
                 GUIaccueil vueAccueil = new GUIaccueil(client, controleurAccueil);
                 controleurAccueil.setVue(vueAccueil);
-                controleurAccueil.setClient(client);
                 controleurAccueil.openWindow();
             }
         });

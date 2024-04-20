@@ -95,26 +95,26 @@ public class ControleurEmployeAccueil {
                 UIManager.put("Button.focus", Color.WHITE);
 
                 JPanel panel = new JPanel();
-                panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS)); // Utilisation de BoxLayout pour aligner les composants verticalement
+                panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
 
                 //Ajout du champ de texte pour le titre
                 JLabel labelTitre = new JLabel("Titre :");
                 JTextField textFieldTitre = new JTextField();
-                textFieldTitre.setMaximumSize(new Dimension(Integer.MAX_VALUE, 30)); // Augmentation de la hauteur à 30 pixels
+                textFieldTitre.setMaximumSize(new Dimension(Integer.MAX_VALUE, 30));
                 panel.add(labelTitre);
                 panel.add(textFieldTitre);
 
                 //Ajout du champ de texte pour le réalisateur
                 JLabel labelRealisateur = new JLabel("Réalisateur :");
                 JTextField textFieldRealisateur = new JTextField();
-                textFieldRealisateur.setMaximumSize(new Dimension(Integer.MAX_VALUE, 30)); // Augmentation de la hauteur à 30 pixels
+                textFieldRealisateur.setMaximumSize(new Dimension(Integer.MAX_VALUE, 30));
                 panel.add(labelRealisateur);
                 panel.add(textFieldRealisateur);
 
                 //Ajout du champ de texte pour le chemin vers l'image
                 JLabel labelChemin = new JLabel("chemin vers l'affiche :");
                 JTextField textFieldChemin = new JTextField();
-                textFieldChemin.setMaximumSize(new Dimension(Integer.MAX_VALUE, 30)); // Augmentation de la hauteur à 30 pixels
+                textFieldChemin.setMaximumSize(new Dimension(Integer.MAX_VALUE, 30));
                 panel.add(labelChemin);
                 panel.add(textFieldChemin);
 
@@ -124,7 +124,7 @@ public class ControleurEmployeAccueil {
                 textAreaSynopsis.setLineWrap(true);
                 textAreaSynopsis.setWrapStyleWord(true);
                 JScrollPane scrollPane = new JScrollPane(textAreaSynopsis);
-                scrollPane.setPreferredSize(new Dimension(Integer.MAX_VALUE, 200)); // Le synopsis peut occuper toute la largeur, mais seulement 200 pixels de hauteur
+                scrollPane.setPreferredSize(new Dimension(Integer.MAX_VALUE, 200));
                 panel.add(labelSynopsis);
                 panel.add(scrollPane);
 
@@ -132,16 +132,24 @@ public class ControleurEmployeAccueil {
                 int resultat = JOptionPane.showConfirmDialog(null, panel, "Ajouter un film", JOptionPane.OK_CANCEL_OPTION);
 
                 if (resultat == JOptionPane.OK_OPTION) {
-                    vueEmployeAccueil.closeWindow();
-                    String titre = textFieldTitre.getText();
-                    String realisateur = textFieldRealisateur.getText();
-                    String synopsis = textAreaSynopsis.getText();
-                    String chemin = textFieldChemin.getText();
-                    ajouterFilm(titre, realisateur, synopsis, chemin);
-                    ControleurEmployeAccueil controleurEmployeAccueil = new ControleurEmployeAccueil(connexion);
-                    GUIEmployeAccueil vueEmployeAccueil = new GUIEmployeAccueil(membre, controleurEmployeAccueil);
-                    controleurEmployeAccueil.setVue(vueEmployeAccueil);
-                    controleurEmployeAccueil.setMembre(membre);
+                    if(!textAreaSynopsis.getText().isEmpty() && !textFieldChemin.getText().isEmpty() && !textFieldTitre.getText().isEmpty() && !textFieldRealisateur.getText().isEmpty()) {
+                        vueEmployeAccueil.closeWindow();
+                        String titre = textFieldTitre.getText();
+                        String realisateur = textFieldRealisateur.getText();
+                        String synopsis = textAreaSynopsis.getText();
+                        String chemin = textFieldChemin.getText();
+                        ajouterFilm(titre, realisateur, synopsis, chemin);
+                        ControleurEmployeAccueil controleurEmployeAccueil = new ControleurEmployeAccueil(connexion);
+                        GUIEmployeAccueil vueEmployeAccueil = new GUIEmployeAccueil(membre, controleurEmployeAccueil);
+                        controleurEmployeAccueil.setVue(vueEmployeAccueil);
+                        controleurEmployeAccueil.setMembre(membre);
+                    } else { // Si un champ est vide
+                        JPanel newpanel = new JPanel();
+                        JLabel labelErreur = new JLabel();
+                        newpanel.add(labelErreur);
+                        labelErreur.setText("Certains champs sont vide, veuillez réessayer.");
+                        JOptionPane.showConfirmDialog(null, newpanel, "Erreur", JOptionPane.OK_CANCEL_OPTION);
+                    }
 
                 }
             }
@@ -168,6 +176,7 @@ public class ControleurEmployeAccueil {
     }
 
     public void ajouterFilm(String titre, String realisateur, String synopsis, String chemin){
+        synopsis = synopsis.replace("'", "''");
         try {
             String requeteInsertion = "INSERT INTO films (Titre, Realisateur, Synopsis, Chemin_image) VALUES ('" + titre + "', '" + realisateur + "', '" + synopsis + "','" + chemin + "')";
             connexion.executerRequete(requeteInsertion);
@@ -189,23 +198,17 @@ public class ControleurEmployeAccueil {
                 String titre = infosFilm[0].trim();
                 String realisateur = infosFilm[1].trim();
 
+                int id = Integer.parseInt(infosFilm[2].trim());
+                String cheminImage = infosFilm[3].trim();
                 StringBuilder synopsisBuilder = new StringBuilder();
                 boolean reachedID = false;
-                //Pour le synopsis, prendre tout jusqu'à ce qu'il y ait ',numero'
-                for (int i = 2; i < infosFilm.length; i++) {
+                //Pour le synopsis, prendre tout jusqu'à la fin
+                for (int i = 4; i < infosFilm.length; i++) {
                     if (!reachedID) {
-                        if (i + 1 < infosFilm.length && Character.isUpperCase(infosFilm[i + 1].charAt(0))) {
-                            reachedID = true;
-                        }
-                        else{
-                            synopsisBuilder.append(infosFilm[i]);
-                        }
+                        synopsisBuilder.append(infosFilm[i]);
                     }
                 }
                 String synopsis = synopsisBuilder.toString().trim();
-
-                int id = Integer.parseInt(infosFilm[infosFilm.length - 2].trim());
-                String cheminImage = infosFilm[infosFilm.length - 1].trim();
                 Film film = new Film(id, titre, realisateur, synopsis, cheminImage);
                 ArrayList<Seance> seances = getSeancesForFilm(id); // Méthode à implémenter
                 film.setSeances(seances);

@@ -58,9 +58,9 @@ public class ControleurFilm {
             public void actionPerformed(ActionEvent e) {
                 vueFilm.closeWindow();
                 controleurAccueil = new ControleurAccueil(connexion);
+                controleurAccueil.setClient(client);
                 vueAccueil = new GUIaccueil(client, controleurAccueil);
                 controleurAccueil.setVue(vueAccueil);
-                controleurAccueil.setClient(client);
                 controleurAccueil.openWindow();
             }
         });
