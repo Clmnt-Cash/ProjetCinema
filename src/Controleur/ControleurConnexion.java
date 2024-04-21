@@ -26,7 +26,7 @@ public class ControleurConnexion {
     public ControleurConnexion(GUIconnexion vue) {
         this.vueConnexion = vue;
         try {
-            connexion = new Connexion("cinema", "root", "");
+            connexion = new Connexion("cinema", "root", "Garcon1?");
         } catch (SQLException | ClassNotFoundException e) {
             e.printStackTrace();
         }
