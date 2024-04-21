@@ -38,7 +38,7 @@ public class GUIpanier extends JFrame {
         this.reduc = controleurPanier.getReduction();
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-        setSize(1500, 800);
+        setSize(1250, 700);
 
         //Obtenir les dimensions de l'écran
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
@@ -52,10 +52,10 @@ public class GUIpanier extends JFrame {
                 super.paintComponent(g);
                 Color c1 = new Color(0, 0, 0);
                 g.setColor(c1);
-                g.fillRect(0, 100, 1500, 700);
+                g.fillRect(0, 100, 1100, 700);
                 Color c2 = new Color(50, 50, 50, 200);
                 g.setColor(c2);
-                g.fillRect(0, 0, 1500, 100);
+                g.fillRect(0, 0, 1100, 100);
                 ImageIcon logo = new ImageIcon("images/logos/logo_black.png");
                 Image image = logo.getImage();
                 g.drawImage(image, 0, 0, 100, 100, this);

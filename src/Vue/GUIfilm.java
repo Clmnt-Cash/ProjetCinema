@@ -38,7 +38,7 @@ public class GUIfilm extends JFrame {
         this.reduction = controleurFilm.getReduction();
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-        setSize(1500, 800);
+        setSize(1250, 700);
 
         //Obtenir les dimensions de l'écran
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
