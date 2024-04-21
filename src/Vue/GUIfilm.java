@@ -186,16 +186,14 @@ public class GUIfilm extends JFrame {
                     bouton.add(labelHeure, gbcHeure);
 
                     //Prix
-                    float prix;
+                    float prix = s.getPrix();
                     //Calcul du prix selon les réductions
                     if (client.getType() == 1) {
-                        prix = (float) (s.getPrix() * reduction.getReductionEnfant()) / 100;
+                        prix = prix - (prix * reduction.getReductionEnfant()/100);
                     } else if (client.getType() == 2) {
-                        prix = (float) (s.getPrix() * reduction.getReductionRegulier()) / 100;
+                        prix = prix - (prix* reduction.getReductionRegulier()/100);
                     } else if (client.getType() == 3) {
-                        prix = (float) (s.getPrix() * reduction.getReductionSenior()) / 100;
-                    } else {
-                        prix = s.getPrix();
+                        prix = (prix * reduction.getReductionSenior()/100);
                     }
 
                     JLabel labelPrix = new JLabel(prix + "€");

@@ -52,6 +52,7 @@ public class ControleurFilm {
     public void setVue(GUIfilm vue){
         this.vueFilm = vue;
 
+        //Retourneer sur l'accueil
         this.vueFilm.addListenerRetour(new ActionListener(){
             //Ouverture de la page menu
             @Override
@@ -65,6 +66,7 @@ public class ControleurFilm {
             }
         });
 
+        //Choisir une séance
         this.vueFilm.addListenerSeance(new ActionListener() {
 
             @Override
@@ -97,9 +99,6 @@ public class ControleurFilm {
 
                 //Création du spinner
                 JSpinner spinner = new JSpinner(nombres);
-
-
-
                 //Création de la fenêtre de dialogue
                 JPanel panel = new JPanel();
                 panel.add(new JLabel("Choisissez le nombre de places pour la séance du " + date + " à " + heure + " :"));
@@ -109,21 +108,22 @@ public class ControleurFilm {
 
                 if (resultat == JOptionPane.OK_OPTION) {
                     int nbPlaces = (int) spinner.getValue();
+                    //Si le client est un membre, ajouter sa séance au panier
                     if(client.getType() != -1)ajouterPanier(id, nbPlaces);
+                    //Sinon, payer directement
                     else{
                         vueFilm.closeWindow();
                         //Supprimer le symbole "€"
                         String prixSansEuro = prix.substring(0, prix.length() - 1);
                         //Convertir la chaîne en float
                         float prixTot = Float.parseFloat(prixSansEuro) * nbPlaces;
-
                         GUIpaiement vuePaiement = new GUIpaiement(prixTot, connexion, client);
                     }
                 }
             }
         });
     }
-
+    //Méthode pour ajouter une commande dans la table commande
     public void ajouterPanier(int IDseance, int nbPlaces){
         try {
             String requeteInsertion = "INSERT INTO commande (ID_seance, ID_client, Nb_places, Paye) VALUES ('" + IDseance + "','"+ client.getId() + "','" + nbPlaces + "', 0)";
@@ -133,6 +133,7 @@ public class ControleurFilm {
         }
     }
 
+    //Getter pour récupérer les réductions
     public Reduction getReduction(){
         return reduction;
     }

@@ -16,25 +16,21 @@ import java.util.Date;
 import java.util.Objects;
 
 public class ControleurComptes {
+    //Attributs
     private Client membre;
     private GUIcomptes vueComptes;
     private Connexion connexion;
-    private ArrayList<Client> comptes;
-    private Film filmActuel;
-    private ControleurFilm controleurFilm;
     private ControleurEmployeAccueil controleurEmployeAccueil;
-    //private ControleurReduc controleurReduc;
-    private GUIfilm vueFilm;
     private GUIEmployeAccueil vueEmployeAccueil;
-    //private GUIreduc vueReduc;
 
+    //Constructeur
     public ControleurComptes(Connexion connexion) {
         this.connexion = connexion;
     }
 
+    //Méthode pour initialiser la vue
     public void setVue(GUIcomptes vue) {
         this.vueComptes = vue;
-        this.comptes = this.getComptes();
 
         //Aller sur la page des films
         this.vueComptes.addListenerOngletFilms(new ActionListener() {
@@ -49,6 +45,7 @@ public class ControleurComptes {
                 controleurEmployeAccueil.openWindow();
             }
         });
+        //Se déconnecter
         MouseListener mouseListener = new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
@@ -66,6 +63,7 @@ public class ControleurComptes {
         };
         this.vueComptes.addMouseListenerBoutonDeconnexion(mouseListener);
 
+        //Aller sur la page des statistiques
         this.vueComptes.addListenerOngletStat(new ActionListener(){
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -76,6 +74,7 @@ public class ControleurComptes {
                 controleurStatistiques.setMembre(membre);
             }
         });
+        //Aller sur la page réductions
         this.vueComptes.addListenerOngletReduc(new ActionListener(){
             //Ouverture de la page menu
             @Override
@@ -146,10 +145,11 @@ public class ControleurComptes {
             panel.add(labelMotDePasse);
             panel.add(textFieldMotDePasse);
 
-
+            //Création d'une fenetre OK CANCEL
             int resultat = JOptionPane.showConfirmDialog(null, panel, "Modifier le profil de " + nom + " " + prenom, JOptionPane.OK_CANCEL_OPTION);
 
             if (resultat == JOptionPane.OK_OPTION) {
+                //Récupérer les contenus des textFields
                 String newemail = textFieldEmail.getText();
                 String newnom = textFieldNom.getText();
                 String newprenom = textFieldPrenom.getText();
@@ -159,19 +159,19 @@ public class ControleurComptes {
                 JPanel newpanel = new JPanel();
                 JLabel labelErreur = new JLabel();
                 newpanel.add(labelErreur);
-                // Vérifier si l'email contient un "@"
 
+                //Vérifier si les champs ne sont pas vides
                 if (textFieldNom.getText().isEmpty() || textFieldPrenom.getText().isEmpty() || textFieldEmail.getText().isEmpty() || textFieldMotDePasse.getText().isEmpty()){
                     labelErreur.setText("Certains champs sont vide, veuillez réessayer.");
                     JOptionPane.showConfirmDialog(null, newpanel, "Erreur", JOptionPane.OK_CANCEL_OPTION);
-                } else if (!newemail.contains("@")) {
+                } else if (!newemail.contains("@")) { //Vérifier si le mail contient un '@'
                     labelErreur.setText("L'e-mail est invalide");
                     JOptionPane.showConfirmDialog(null, newpanel, "Erreur", JOptionPane.OK_CANCEL_OPTION);
-                } else if(emailExisteDeja(id, newemail)){
+                } else if(emailExisteDeja(id, newemail)){ //Vérifier si le mail est déjà associé à un compte
                     labelErreur.setText("L'e-mail est déjà associé à un autre compte.");
                     JOptionPane.showConfirmDialog(null, newpanel, "Erreur", JOptionPane.OK_CANCEL_OPTION);
                 }
-                else {
+                else { //Appel de la méthode modifierClient et ouvrir la fenetre comptes
                     modifierClient(id, newnom, newprenom, newtype, newemail, newmdp);
                     vueComptes.closeWindow();
                     ControleurComptes controleurComptes = new ControleurComptes(connexion);
@@ -216,7 +216,7 @@ public class ControleurComptes {
 
             int resultat = JOptionPane.showConfirmDialog(null, panel, "Supprimer le profil de " + nom + " " + prenom, JOptionPane.OK_CANCEL_OPTION);
 
-            if (resultat == JOptionPane.OK_OPTION) {
+            if (resultat == JOptionPane.OK_OPTION) { //Ouvrir la page comptes
                 vueComptes.closeWindow();
                 supprimerClient(id);
                 ControleurComptes controleurComptes = new ControleurComptes(connexion);
@@ -229,21 +229,22 @@ public class ControleurComptes {
 
         });
     }
+    //Méthode pour initialiser le membre/employé
     public void setMembre(Client membre) {
         this.membre = membre;
     }
-
+    //Méthode pour rendre la fenetre visible
     public void openWindow(){
         this.vueComptes.setVisible(true);
     }
-
+    //Méthode pour modifier un client dans la bdd
     public void modifierClient(int id, String nom, String prenom, String type, String email, String mdp){
         int newType = 0;
         if(Objects.equals(type, "enfant")) newType = 1;
         else if(Objects.equals(type, "régulier")) newType = 2;
         else newType = 1;
 
-        try {
+        try { //requete d'insertion
             String requeteInsertion = "UPDATE membre SET " +
                     "Nom = '" + nom + "', " +
                     "Prenom = '" + prenom + "', " +
@@ -254,7 +255,7 @@ public class ControleurComptes {
             connexion.executerRequete(requeteInsertion);
         } catch (SQLException e) {
             e.printStackTrace();
-            System.out.println("Erreur lors de la connexion à la base de données : " + e);
+            System.out.println("Erreur lors de l'insertion d'un client : " + e);
         }
     }
     //Méthode pour vérifier si l'email existe déjà
@@ -284,10 +285,10 @@ public class ControleurComptes {
         }
     }
 
-
+    //Méthode pour récupérer tous les comptes de membre (pas les employés)
     public ArrayList<Client> getComptes(){
+        //Liste de comptes
         ArrayList<Client> comptes = new ArrayList<>();
-
         try {
             ArrayList<String> resultatsComptes = connexion.remplirChampsRequete("SELECT * FROM membre WHERE Type > 0 ORDER BY Nom");
 
@@ -301,15 +302,14 @@ public class ControleurComptes {
                 String mail = infosCompte[4].trim();
                 String mdp = infosCompte[5].trim();
 
+                //Création d'un nouveau compte et ajour de celui-ci dans la liste
                 Client compte = new Client(id, type, nom, prenom, mail, mdp);
                 comptes.add(compte);
             }
-
-
         } catch (SQLException e) {
             e.printStackTrace();
         }
-
+        //On retourne la liste
         return comptes;
     }
 }

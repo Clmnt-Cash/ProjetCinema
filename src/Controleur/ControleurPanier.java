@@ -16,8 +16,6 @@ public class ControleurPanier {
     private GUIpanier vuePanier;
     private Reduction reduction;
     private ArrayList<Commande> commandes;
-    private float prixTotal;
-
 
     //Constructeur
     public ControleurPanier(Connexion connexion, Client client) {
@@ -43,6 +41,7 @@ public class ControleurPanier {
     //Methode pour initialiser la vue
     public void setVue(GUIpanier vue){
         this.vuePanier = vue;
+        //Revenir à l'accueil
         this.vuePanier.addListenerRetour(new ActionListener(){
             //Ouverture de la page menu
             @Override
@@ -55,6 +54,7 @@ public class ControleurPanier {
                 controleurAccueil.openWindow();
             }
         });
+        //Listener sur le bouton payer
         this.vuePanier.addListenerPayer(new ActionListener(){
             //Ouverture de la page menu
             @Override
@@ -64,6 +64,7 @@ public class ControleurPanier {
                 GUIpaiement vuePaiement = new GUIpaiement(prix, connexion, client);
             }
         });
+        //Listener sur les bouton modifier
         this.vuePanier.addListenerModifier(new ActionListener() {
 
             @Override
@@ -99,8 +100,9 @@ public class ControleurPanier {
                 int resultat = JOptionPane.showConfirmDialog(null, panel, "Places pour " + film, JOptionPane.OK_CANCEL_OPTION);
 
                 if (resultat == JOptionPane.OK_OPTION) {
+                    //modifier la commande puis rouvrir la page
                     int nbPlaces = (int) spinner.getValue();
-                    modifierCommande(idCommande, nbPlaces, client.getId());
+                    modifierCommande(idCommande, nbPlaces);
                     vuePanier.closeWindow();
                     ControleurPanier controleurPanier = new ControleurPanier(connexion, client);
                     GUIpanier vuePanier = new GUIpanier(client, controleurPanier);
@@ -108,6 +110,7 @@ public class ControleurPanier {
                 }
             }
         });
+        //Listener sur les boutons supprimer
         this.vuePanier.addListenerSupprimer(new ActionListener() {
 
             @Override
@@ -136,6 +139,7 @@ public class ControleurPanier {
                 int resultat = JOptionPane.showConfirmDialog(null, panel, "Annuler une commande", JOptionPane.OK_CANCEL_OPTION);
 
                 if (resultat == JOptionPane.OK_OPTION) {
+                    //Supprimer la commande puis rouvrir la page
                     supprimerCommande(idCommande);
                     vuePanier.closeWindow();
                     ControleurPanier controleurPanier = new ControleurPanier(connexion, client);
@@ -144,6 +148,7 @@ public class ControleurPanier {
                 }
             }
         });
+        //Se déconnecter
         MouseListener mouseListener = new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
@@ -163,30 +168,30 @@ public class ControleurPanier {
     }
 
     //Methode pour modifier le nombre de places pour une seance
-    public void modifierCommande(int idCommande, int places, int idClient){
+    public void modifierCommande(int idCommande, int places){
         try {
             String requeteInsertion = "UPDATE commande" +
                     " SET Nb_places = " + places +
                     " WHERE ID = " + idCommande;
             connexion.executerRequete(requeteInsertion);
-
-
         } catch (SQLException e) {
             e.printStackTrace();
-            System.out.println("Erreur lors de la connexion à la base de données : " + e);
+            System.out.println("Erreur lors de la mise à jour d'une commande : " + e);
         }
     }
 
+    //Méthode pour supprimer une commande de la bdd
     public void supprimerCommande(int idCommande){
         try {
             String requeteInsertion = "DELETE FROM commande WHERE ID = " + idCommande;
             connexion.executerRequete(requeteInsertion);
         } catch (SQLException e) {
             e.printStackTrace();
-            System.out.println("Erreur lors de la connexion à la base de données : " + e);
+            System.out.println("Erreur lors de la suppression d'une commande : " + e);
         }
     }
 
+    //Méthode pour récupérer els commandes
     public ArrayList<Commande> getCommandes(int clientID, Reduction reduction){
         ArrayList<Commande> commandes = new ArrayList<>();
 
@@ -201,6 +206,7 @@ public class ControleurPanier {
                             "ORDER BY s.Date_diffusion"
             );
             for (String resultat : resultatsCommande) {
+                //Récupération des données
                 String[] infosSeance = resultat.split(",");
                 int id = Integer.parseInt(infosSeance[0].trim());
                 String dateHeure = infosSeance[1].trim();
@@ -221,16 +227,16 @@ public class ControleurPanier {
                 prix *= nbPlaces;
 
                 float prixAvecReduction = prix;
-                if(this.client.getType() == 1){prixAvecReduction = (float)prixAvecReduction*reduction.getReductionEnfant()/100;}
-                else if(this.client.getType() == 2){prixAvecReduction = (float)prixAvecReduction*reduction.getReductionEnfant()/100;}
-                else if(this.client.getType() == 3){prixAvecReduction = (float)prixAvecReduction*reduction.getReductionSenior()/100;}
+                if(this.client.getType() == 1){ prixAvecReduction = prix - (prix* reduction.getReductionEnfant()/100);}
+                else if(this.client.getType() == 2){ prixAvecReduction = prix - (prix* reduction.getReductionRegulier()/100);}
+                else if(this.client.getType() == 3){ prixAvecReduction = prix - (prix* reduction.getReductionSenior()/100);}
 
                 //Créer une séance avec les informations récupérées
                 Seance seance = new Seance(date, heure, prix, id, titre);
 
                 //Créer une commande avec les informations récupérées
                 Commande commande = new Commande(nbPlaces, seance, prixAvecReduction, prix, idCommande, paye);
-                //Ajouter la séance à la liste
+                //Ajouter la commande à la liste
                 commandes.add(commande);
             }
         } catch (SQLException e) {
@@ -239,11 +245,6 @@ public class ControleurPanier {
 
         return commandes;
     }
-
-    public Reduction getReduction(){
-        return reduction;
-    }
-
     //Méthode pour initialiser le client
     public void setClient(Client client) {
         this.client = client;

@@ -1,7 +1,5 @@
 package Modele;
 
-import java.util.ArrayList;
-
 public class FilmParAchat {
     //attributs
     private String titre;
