@@ -69,7 +69,7 @@ public class GUIstatistiques extends JFrame {
                 g.setColor(Color.WHITE);
                 int i = 0;
                 for(FilmParAchat f : filmsParAchats){
-                    g.fillRect(530, 305 + i * 30, 40 * f.getNbCommandes(), 20);
+                    g.fillRect(530, 305 + i * 30, 20 * f.getNbCommandes(), 20);
                     JLabel labelGraph = new JLabel(f.getTitre());
                     labelGraph.setBounds(320, 300 + i * 30, 200, 30);
                     labelGraph.setForeground(Color.WHITE);
@@ -77,7 +77,7 @@ public class GUIstatistiques extends JFrame {
                     panel.add(labelGraph);
 
                     JLabel labelNum = new JLabel(String.valueOf(f.getNbCommandes()));
-                    labelNum.setBounds(500 + 40 * f.getNbCommandes(), 300 + i * 30, 20, 30);
+                    labelNum.setBounds(500 + 20 * f.getNbCommandes(), 300 + i * 30, 20, 30);
                     labelNum.setForeground(Color.BLACK);
                     labelNum.setHorizontalAlignment(SwingConstants.RIGHT);
                     if(f.getNbCommandes() == 0) {
