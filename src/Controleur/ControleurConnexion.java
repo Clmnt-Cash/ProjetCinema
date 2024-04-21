@@ -30,11 +30,14 @@ public class ControleurConnexion {
         } catch (SQLException | ClassNotFoundException e) {
             e.printStackTrace();
         }
+        //Listener sur le bouton connexion
         this.vueConnexion.addConnexionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                //Récupérer le contenu des champs
                 String email = vue.getEmail();
                 String motDePasse = vue.getMotDePasse();
+                //Vérifier si les champs sont vides et si le mail contient un "@"
                 if (email.isEmpty() || motDePasse.isEmpty()) {
                     vue.displayError("Veuillez remplir tous les champs");
                 } else if (!email.contains("@")) {
@@ -61,10 +64,11 @@ public class ControleurConnexion {
                 }
             }
         });
-
+        //Se connecter en tant qu'invité
         this.vueConnexion.addListenerInvite(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                    //Création d'un invité
                     Client invite = new Client(0, -1, "", "", "", "");
                     vue.closeWindow();
                     // Envoyer l'invité à ControleurAccueil
@@ -75,6 +79,7 @@ public class ControleurConnexion {
                     controleurAccueil.openWindow();
             }
         });
+        //Se créer un compte
         this.vueConnexion.addCreationListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -91,20 +96,15 @@ public class ControleurConnexion {
         this.vueConnexion.setVisible(true);
     }
 
-    /**
-     *
-     * @param email
-     * @param motDePasse
-     */
+    //Méthode pour gérer la connexion, retourne true si tout est en ordre
     public boolean handleConnexion(String email, String motDePasse) {
         try {
-            //Requete pour vérifier si lemail existe dans la bdd
+            //Requete pour vérifier si l email existe dans la bdd
             ArrayList<String> emails = connexion.remplirChampsRequete("SELECT * FROM membre WHERE Email = '" + email + "'");
             if (!emails.isEmpty()) {
                 //Vérifier si le mot de passe correspond à l'email
                 ArrayList<String> resultatsMdp = connexion.remplirChampsRequete("SELECT * FROM membre WHERE Email = '" + email + "' AND Mot_de_passe = '" + motDePasse + "'");
                 if (!resultatsMdp.isEmpty()) {
-
                     //Création du client avec toutes les infos
                     String[] infosMembre = resultatsMdp.get(0).split(",");
 

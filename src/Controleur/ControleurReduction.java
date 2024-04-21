@@ -1,20 +1,13 @@
 package Controleur;
 
 import Modele.Client;
-import Modele.Film;
 import Modele.Reduction;
-import Modele.Seance;
 import Vue.*;
 
 import javax.swing.*;
-import java.awt.*;
 import java.awt.event.*;
 import java.sql.SQLException;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
-import java.util.Objects;
 
 public class ControleurReduction {
     private Client membre;
@@ -28,30 +21,7 @@ public class ControleurReduction {
 
     public void setVue(GUIreduction vue) {
         this.vueReduction = vue;
-        //Aller sur la page des films
-        this.vueReduction.addListenerOngletFilms(new ActionListener() {
-            //Ouverture de la page menu
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                vueReduction.closeWindow();
-                controleurEmployeAccueil = new ControleurEmployeAccueil(connexion);
-                controleurEmployeAccueil.setMembre(membre);
-                vueEmployeAccueil = new GUIEmployeAccueil(membre, controleurEmployeAccueil);
-                controleurEmployeAccueil.setVue(vueEmployeAccueil);
-                controleurEmployeAccueil.openWindow();
-            }
-        });
-        this.vueReduction.addListenerOngletComptes(new ActionListener(){
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                vueReduction.closeWindow();
-                ControleurComptes controleurComptes = new ControleurComptes(connexion);
-                controleurComptes.setMembre(membre);
-                GUIcomptes vueComptes = new GUIcomptes(membre, controleurComptes);
-                controleurComptes.setVue(vueComptes);
-                controleurComptes.openWindow();
-            }
-        });
+        //Se déconnecter
         MouseListener mouseListener = new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
@@ -69,6 +39,29 @@ public class ControleurReduction {
         };
         this.vueReduction.addMouseListenerBoutonDeconnexion(mouseListener);
 
+        //Aller sur la page des films
+        this.vueReduction.addListenerOngletFilms(e -> {
+            vueReduction.closeWindow();
+            controleurEmployeAccueil = new ControleurEmployeAccueil(connexion);
+            controleurEmployeAccueil.setMembre(membre);
+            vueEmployeAccueil = new GUIEmployeAccueil(membre, controleurEmployeAccueil);
+            controleurEmployeAccueil.setVue(vueEmployeAccueil);
+            controleurEmployeAccueil.openWindow();
+        });
+        //Aller sur la page dex comptes
+        this.vueReduction.addListenerOngletComptes(new ActionListener(){
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                vueReduction.closeWindow();
+                ControleurComptes controleurComptes = new ControleurComptes(connexion);
+                controleurComptes.setMembre(membre);
+                GUIcomptes vueComptes = new GUIcomptes(membre, controleurComptes);
+                controleurComptes.setVue(vueComptes);
+                controleurComptes.openWindow();
+            }
+        });
+
+        //Aller sur la page des statistiques
         this.vueReduction.addListenerOngletStat(new ActionListener(){
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -98,6 +91,7 @@ public class ControleurReduction {
         this.vueReduction.setVisible(true);
     }
 
+    //Mathode pour modifier les réductions dans la bdd
     public void modifierReduction(int en, int r, int s){
         try {
             String requeteInsertion = "UPDATE reduction SET enfant = " + en + ", regulier = " + r + ", senior = " + s ;
@@ -107,6 +101,7 @@ public class ControleurReduction {
         }
     }
 
+    //Méthode pour récupérer les réductions
     public Reduction getReduction(){
         Reduction red = new Reduction(0, 0, 0);
         try {
@@ -121,8 +116,6 @@ public class ControleurReduction {
                 Reduction reduc = new Reduction(e, r, s);
                 return reduc;
             }
-
-
         } catch (SQLException e) {
             e.printStackTrace();
         }

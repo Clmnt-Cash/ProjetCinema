@@ -16,25 +16,19 @@ import java.util.ArrayList;
 import java.util.Date;
 
 public class ControleurEmployeAccueil {
+    //Attributs
     private Client membre;
     private GUIEmployeAccueil vueEmployeAccueil;
     private Connexion connexion;
-    private ArrayList<Film> films;
     private Film filmActuel;
-    private ControleurFilm controleurFilm;
-    private ControleurComptes controleurComptes;
-    //private ControleurReduc controleurReduc;
-    private GUIcomptes vueComptes;
-    //private GUIreduc vueReduc;
-
+    //Constructeur
     public ControleurEmployeAccueil(Connexion connexion) {
         this.connexion = connexion;
     }
 
     public void setVue(GUIEmployeAccueil vue){
         this.vueEmployeAccueil = vue;
-        this.films = this.getFilms();
-
+        //Se déconnecter
         MouseListener mouseListener = new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
@@ -44,6 +38,7 @@ public class ControleurEmployeAccueil {
                 int resultat = JOptionPane.showConfirmDialog(null, panel, "Déconnexion", JOptionPane.OK_CANCEL_OPTION);
 
                 if (resultat == JOptionPane.OK_OPTION) {
+                    //Renvoyer sur la ppage connexion
                     vueEmployeAccueil.closeWindow();
                     GUIconnexion vueConnexion = new GUIconnexion();
                     ControleurConnexion controleurConnexion = new ControleurConnexion(vueConnexion);
@@ -51,6 +46,8 @@ public class ControleurEmployeAccueil {
             }
         };
         this.vueEmployeAccueil.addMouseListenerBoutonDeconnexion(mouseListener);
+
+        //Si l'employé clique sur un film, ouvrir la page pour modifier le film
         this.vueEmployeAccueil.addListener(e -> {
             JButton clickedButton = (JButton) e.getSource();
             filmActuel = vueEmployeAccueil.getBoutonFilmMap().get(clickedButton);
@@ -72,6 +69,8 @@ public class ControleurEmployeAccueil {
                 controleurComptes.openWindow();
             }
         });
+
+        //Aller sur la page des statistiques
         this.vueEmployeAccueil.addListenerOngletStat(new ActionListener(){
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -82,6 +81,8 @@ public class ControleurEmployeAccueil {
                 controleurStatistiques.setMembre(membre);
             }
         });
+
+        //Ajouter un nouveau film
         this.vueEmployeAccueil.addListenerAjouter(new ActionListener(){
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -111,7 +112,7 @@ public class ControleurEmployeAccueil {
                 panel.add(labelRealisateur);
                 panel.add(textFieldRealisateur);
 
-                //Ajout du champ de texte pour le chemin vers l'image
+                //Ajout du champ de texte pour le chemin vers l image
                 JLabel labelChemin = new JLabel("chemin vers l'affiche :");
                 JTextField textFieldChemin = new JTextField();
                 textFieldChemin.setMaximumSize(new Dimension(Integer.MAX_VALUE, 30));
@@ -132,6 +133,7 @@ public class ControleurEmployeAccueil {
                 int resultat = JOptionPane.showConfirmDialog(null, panel, "Ajouter un film", JOptionPane.OK_CANCEL_OPTION);
 
                 if (resultat == JOptionPane.OK_OPTION) {
+                    //Vérifier si les champs sont tous remplis
                     if(!textAreaSynopsis.getText().isEmpty() && !textFieldChemin.getText().isEmpty() && !textFieldTitre.getText().isEmpty() && !textFieldRealisateur.getText().isEmpty()) {
                         vueEmployeAccueil.closeWindow();
                         String titre = textFieldTitre.getText();
@@ -143,7 +145,7 @@ public class ControleurEmployeAccueil {
                         GUIEmployeAccueil vueEmployeAccueil = new GUIEmployeAccueil(membre, controleurEmployeAccueil);
                         controleurEmployeAccueil.setVue(vueEmployeAccueil);
                         controleurEmployeAccueil.setMembre(membre);
-                    } else { // Si un champ est vide
+                    } else { //Si un champ est vide
                         JPanel newpanel = new JPanel();
                         JLabel labelErreur = new JLabel();
                         newpanel.add(labelErreur);
@@ -167,6 +169,8 @@ public class ControleurEmployeAccueil {
             }
         });
     }
+
+    //Méthode pour set le membre
     public void setMembre(Client membre) {
         this.membre = membre;
     }
@@ -175,17 +179,20 @@ public class ControleurEmployeAccueil {
         this.vueEmployeAccueil.setVisible(true);
     }
 
+    //Méthode pour ajouter un membre dans la bdd
     public void ajouterFilm(String titre, String realisateur, String synopsis, String chemin){
+        //Remplacer les ' dans le synopsis par des '' pour éviter les problèmes
         synopsis = synopsis.replace("'", "''");
         try {
             String requeteInsertion = "INSERT INTO films (Titre, Realisateur, Synopsis, Chemin_image) VALUES ('" + titre + "', '" + realisateur + "', '" + synopsis + "','" + chemin + "')";
             connexion.executerRequete(requeteInsertion);
         } catch (SQLException e) {
             e.printStackTrace();
-            System.out.println("Erreur lors de la connexion à la base de données : " + e);
+            System.out.println("Erreur lors de l'insertion du film : " + e);
         }
     }
 
+    //Méthode pour récupérer les films
     public ArrayList<Film> getFilms(){
         ArrayList<Film> films = new ArrayList<>();
 
@@ -220,6 +227,8 @@ public class ControleurEmployeAccueil {
 
         return films;
     }
+
+    //Méthode pour récupérer les séances d un film
     private ArrayList<Seance> getSeancesForFilm(int filmId) {
         ArrayList<Seance> seances = new ArrayList<>();
 
@@ -262,5 +271,4 @@ public class ControleurEmployeAccueil {
         }
         return seances;
     }
-
 }

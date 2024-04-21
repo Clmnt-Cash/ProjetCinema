@@ -25,6 +25,7 @@ public class GUIpanier extends JFrame {
     private JButton boutonPanier;
     private JButton boutonPayer;
     private float prix;
+    private Reduction reduc;
 
 
     //Constructeur
@@ -34,6 +35,7 @@ public class GUIpanier extends JFrame {
         this.commandes = controleurPanier.getCommandes();
         this.boutonsModifier = new ArrayList<JButton>();
         this.boutonsSupprimer = new ArrayList<JButton>();
+        this.reduc = controleurPanier.getReduction();
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         setSize(1500, 800);
@@ -120,7 +122,7 @@ public class GUIpanier extends JFrame {
                 if (client.getType() == -1) {
                     labelPrix = new JLabel("Prix : " + c.getPrixSansReduc() + "€");
                 } else {
-                    labelPrix = new JLabel("<html>Prix : " + "<strike>" + c.getPrixSansReduc() + "€</strike> " + c.getPrixAvecReduc() + "€</html>");
+                    labelPrix = new JLabel("<html>Prix : " + "<strike>" + c.getPrixSansReduc() + "€</strike> " + c.getPrixAvecReduc() + "€ (-" + "</html>");
                 }
 
                 labelPrix.setFont(labelNom.getFont().deriveFont(Font.BOLD, 15));
@@ -169,7 +171,10 @@ public class GUIpanier extends JFrame {
         //Si il y a des commandes, afficher le bouton pour payer
         if(!this.commandes.isEmpty() && prixTotSansReduction != 0) {
             this.prix = prixTotAvecReduction;
-            boutonPayer = new JButton("<html>Payer : " + "<strike>" + prixTotSansReduction + "€</strike> " + prixTotAvecReduction + "€</html>");
+            if(client.getType() == 1) boutonPayer = new JButton("<html>Payer : " + "<strike>" + prixTotSansReduction + "€</strike> " + prixTotAvecReduction + "€ (-"+ reduc.getReductionEnfant() + "%)</html>");
+            else if (client.getType() == 2)boutonPayer = new JButton("<html>Payer : " + "<strike>" + prixTotSansReduction + "€</strike> " + prixTotAvecReduction + "€ (-"+ reduc.getReductionRegulier() + "%)</html>");
+            else boutonPayer = new JButton("<html>Payer : " + "<strike>" + prixTotSansReduction + "€</strike> " + prixTotAvecReduction + "€ (-"+ reduc.getReductionSenior() + "%)</html>");
+
             boutonPayer.setFont(labelNom.getFont().deriveFont(Font.BOLD, 15));
             boutonPayer.setBounds(1200, 640, 200, 30);
             boutonPayer.setForeground(Color.WHITE);

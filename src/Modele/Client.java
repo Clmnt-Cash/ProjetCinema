@@ -1,12 +1,14 @@
 package Modele;
 
 public class Client {
+    //Attributs
     private int id;
     private int type;
     private String nom;
     private String prenom;
     private String email;
     private String mdp;
+    //Constructeur
     public Client(int id, int type, String nom, String prenom, String email, String mdp) {
         this.id = id;
         this.type = type;
@@ -16,6 +18,7 @@ public class Client {
         this.mdp = mdp;
     }
 
+    //Getters et setters
     public int getId() {
         return id;
     }

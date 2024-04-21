@@ -18,9 +18,6 @@ public class ControleurModifierFilm {
     private GUIModifierFilm vueModifierFilm;
     private Connexion connexion;
     private Film filmActuel;
-    private GUIaccueil vueAccueil;
-    private ControleurAccueil controleurAccueil;
-
     //Constructeur
     public ControleurModifierFilm(Connexion connexion, Film film, Client client) {
         this.connexion = connexion;
@@ -214,7 +211,7 @@ public class ControleurModifierFilm {
             JLabel labelPrix= new JLabel("  Prix :");
             panel.add(labelPrix);
 
-
+            //Spinner pour le prix qui autorise les double
             SpinnerNumberModel spinnerModel = new SpinnerNumberModel(Double.parseDouble("0.00"), null, null, 0.1);
             JSpinner spinner = new JSpinner(spinnerModel);
             JSpinner.NumberEditor editor = new JSpinner.NumberEditor(spinner, "#0.00");
@@ -236,7 +233,7 @@ public class ControleurModifierFilm {
                 String dateHeure = "2024-" + newmois + "-" + newjour + " " + newheure + ":" + newminute + ":00";
 
                 ajouterSeance(dateHeure, (float) newprix);
-
+                //Fermer la fenetre actuelle et ouvror l'accueil
                 vueModifierFilm.closeWindow();
                 ArrayList<Seance> seances = getSeancesForFilm(filmActuel.getId());
                 filmActuel.setSeances(seances);
@@ -399,28 +396,28 @@ public class ControleurModifierFilm {
         this.vueModifierFilm.setVisible(true);
     }
 
-    //Méthode pour supprimer un film de la bdd
+    //Méthode pour supprimer un film de la bdd, les séances et les commandes associées
     public void supprimerFilm(int id){
         try {
             String requeteInsertion = "DELETE FROM films WHERE ID = " + id + "; ";
             connexion.executerRequete(requeteInsertion);
         } catch (SQLException e) {
             e.printStackTrace();
-            System.out.println("Erreur lors de la connexion à la base de données : " + e);
+            System.out.println("Erreur lors de la suppression d'un film : " + e);
         }
         try {
             String requeteInsertion = "DELETE FROM commande WHERE ID_seance IN (SELECT ID FROM seance WHERE ID_film = " + id + ");";
             connexion.executerRequete(requeteInsertion);
         } catch (SQLException e) {
             e.printStackTrace();
-            System.out.println("Erreur lors de la connexion à la base de données : " + e);
+            System.out.println("Erreur lors de la suppression d'une commande : " + e);
         }
         try {
             String requeteInsertion = "DELETE FROM seance WHERE ID_film = " + id + "; ";
             connexion.executerRequete(requeteInsertion);
         } catch (SQLException e) {
             e.printStackTrace();
-            System.out.println("Erreur lors de la connexion à la base de données : " + e);
+            System.out.println("Erreur lors de la suppression d'une séance : " + e);
         }
 
     }
@@ -432,26 +429,25 @@ public class ControleurModifierFilm {
             connexion.executerRequete(requeteInsertion);
         } catch (SQLException e) {
             e.printStackTrace();
-            System.out.println("Erreur lors de la connexion à la base de données : " + e);
+            System.out.println("Erreur lors de l'insertion d'une séance : " + e);
         }
     }
     //méthode pour supprimer une séance
     public void supprimerSeance(int id){
         try {
-            String requeteInsertion = "DELETE FROM seance WHERE ID = " + id + "; ";
-            connexion.executerRequete(requeteInsertion);
-        } catch (SQLException e) {
-            e.printStackTrace();
-            System.out.println("Erreur lors de la connexion à la base de données : " + e);
-        }
-        try {
             String requeteInsertion =  "DELETE FROM commande WHERE ID_seance = " + id + ";";
             connexion.executerRequete(requeteInsertion);
         } catch (SQLException e) {
             e.printStackTrace();
-            System.out.println("Erreur lors de la connexion à la base de données : " + e);
+            System.out.println("Erreur lors de la suppression d'une commande : " + e);
         }
-
+        try {
+            String requeteInsertion = "DELETE FROM seance WHERE ID = " + id + "; ";
+            connexion.executerRequete(requeteInsertion);
+        } catch (SQLException e) {
+            e.printStackTrace();
+            System.out.println("Erreur lors de la suppression de la séance : " + e);
+        }
     }
     //Méthode pour modifier une séance
     public void modifierSeance(int id, String dateHeure, float prix){
@@ -465,7 +461,7 @@ public class ControleurModifierFilm {
             connexion.executerRequete(requeteInsertion);
         } catch (SQLException e) {
             e.printStackTrace();
-            System.out.println("Erreur lors de la connexion à la base de données : " + e);
+            System.out.println("Erreur lors de la modification d'une séance : " + e);
         }
     }
     //Méthode pour modifier les infos d'un film
@@ -492,7 +488,7 @@ public class ControleurModifierFilm {
 
         } catch (SQLException e) {
             e.printStackTrace();
-            System.out.println("Erreur lors de la connexion à la base de données : " + e);
+            System.out.println("Erreur lors de la modification d'un film : " + e);
         }
     }
 

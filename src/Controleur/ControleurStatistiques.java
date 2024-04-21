@@ -1,19 +1,14 @@
 package Controleur;
 
 import Modele.Client;
-import Modele.Film;
 import Modele.FilmParAchat;
-import Modele.Seance;
 import Vue.*;
 
 import javax.swing.*;
-import java.awt.*;
 import java.awt.event.*;
 import java.sql.SQLException;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
+
 
 public class ControleurStatistiques {
     private Client membre;
@@ -29,8 +24,8 @@ public class ControleurStatistiques {
 
     public void setVue(GUIstatistiques vue){
         this.vueStat = vue;
+        //Aller sur la page films
         this.vueStat.addListenerOngletFilms(new ActionListener(){
-            //Ouverture de la page menu
             @Override
             public void actionPerformed(ActionEvent e) {
                 vueStat.closeWindow();
@@ -41,6 +36,7 @@ public class ControleurStatistiques {
                 controleurAccueil.openWindow();
             }
         });
+        //Se déconnecter
         MouseListener mouseListener = new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
@@ -57,6 +53,7 @@ public class ControleurStatistiques {
             }
         };
         this.vueStat.addMouseListenerBoutonDeconnexion(mouseListener);
+
         //Aller sur la page des comptes
         this.vueStat.addListenerOngletComptes(new ActionListener(){
             @Override
@@ -86,6 +83,7 @@ public class ControleurStatistiques {
         this.membre = membre;
     }
 
+    //Méthode pour récupérer les films avec leur nombre de places prises pour chaque commande
     public ArrayList<FilmParAchat> getFilmsParAchat(){
         ArrayList<FilmParAchat> filmsParAchat = new ArrayList<>();
 
@@ -106,17 +104,13 @@ public class ControleurStatistiques {
                     try {
                         nbCommandes = Integer.parseInt(infosFilm[1].trim());
                     } catch (NumberFormatException e) {
-                        nbCommandes = 0; // Valeur par défaut si la conversion échoue
+                        nbCommandes = 0;
                     }
                 } else {
-                    nbCommandes = 0; // Valeur par défaut si le nombre de commandes est null ou vide
+                    nbCommandes = 0;
                 }
                 filmsParAchat.add(new FilmParAchat(titre, nbCommandes));
             }
-
-
-
-
         } catch (SQLException e) {
             e.printStackTrace();
         }
