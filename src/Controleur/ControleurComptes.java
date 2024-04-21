@@ -15,6 +15,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.Objects;
 
+// Contrôleur gérant les comptes utilisateur dans un système de gestion de cinéma
 public class ControleurComptes {
     private Client membre;
     private GUIcomptes vueComptes;
@@ -27,11 +28,11 @@ public class ControleurComptes {
     private GUIfilm vueFilm;
     private GUIEmployeAccueil vueEmployeAccueil;
     //private GUIreduc vueReduc;
-
+// Constructeur initialisant la connexion à la base de données
     public ControleurComptes(Connexion connexion) {
         this.connexion = connexion;
     }
-
+    // Définit la vue et configure les écouteurs pour la gestion des comptes
     public void setVue(GUIcomptes vue) {
         this.vueComptes = vue;
         this.comptes = this.getComptes();
@@ -40,7 +41,7 @@ public class ControleurComptes {
         this.vueComptes.addListenerOngletFilms(new ActionListener() {
             //Ouverture de la page menu
             @Override
-            public void actionPerformed(ActionEvent e) {
+            public void actionPerformed(ActionEvent e) {                 // Ouvre la vue des statistiques
                 vueComptes.closeWindow();
                 controleurEmployeAccueil = new ControleurEmployeAccueil(connexion);
                 controleurEmployeAccueil.setMembre(membre);
@@ -87,7 +88,7 @@ public class ControleurComptes {
                 controleurReduction.setMembre(membre);
             }
         });
-        //Modifier un compte
+        // Modifie un compte utilisateur
         this.vueComptes.addListenersModifier(e -> {
             JButton bouton = (JButton) e.getSource();
 
