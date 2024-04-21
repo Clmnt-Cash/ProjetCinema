@@ -16,10 +16,9 @@ public class GUIcrea extends JFrame {
 
 
     public GUIcrea() {
-        super("Creation de compte");
+        super("Création de compte"); // Titre de la fenêtre
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
-        setSize(500, 800);
+        setSize(500, 800); // Taille de la fenêtre
 
         //Obtenir les dimensions de l'écran
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
