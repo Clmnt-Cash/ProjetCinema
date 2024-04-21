@@ -252,5 +252,8 @@ public class ControleurPanier {
     public ArrayList<Commande> getCommandes(){
         return commandes;
     }
+    public Reduction getReduction(){
+        return reduction;
+    }
 
 }
