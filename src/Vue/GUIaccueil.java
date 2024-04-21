@@ -27,7 +27,7 @@ public class GUIaccueil extends JFrame {
         super("Cinéma");
         this.client = client;
         this.controleurAccueil = controleurAccueil;
-        this.films = controleurAccueil.getFilms();
+        this.films = controleurAccueil.getFilms();  // Récupération des films via le contrôleur
         this.boutons = new ArrayList<>();
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
