@@ -122,7 +122,7 @@ public class GUIpanier extends JFrame {
                 if (client.getType() == -1) {
                     labelPrix = new JLabel("Prix : " + c.getPrixSansReduc() + "€");
                 } else {
-                    labelPrix = new JLabel("<html>Prix : " + "<strike>" + c.getPrixSansReduc() + "€</strike> " + c.getPrixAvecReduc() + "€ (-" + "</html>");
+                    labelPrix = new JLabel("<html>Prix : " + "<strike>" + c.getPrixSansReduc() + "€</strike> " + c.getPrixAvecReduc() + "€ " + "</html>");
                 }
 
                 labelPrix.setFont(labelNom.getFont().deriveFont(Font.BOLD, 15));
