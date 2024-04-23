@@ -8,7 +8,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.util.ArrayList;
-
+// Interface graphique pour la gestion des comptes d'employés
 public class GUIcomptes extends JFrame {
     //Attributs
     private Client employe;
@@ -45,7 +45,7 @@ public class GUIcomptes extends JFrame {
 
         setVisible(true);
     }
-
+    // Méthode pour afficher et configurer le menu et les composants de l'interface
     public void afficherMenu(){
         panel = new JPanel() {
             @Override

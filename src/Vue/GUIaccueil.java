@@ -27,7 +27,7 @@ public class GUIaccueil extends JFrame {
         super("Cinéma");
         this.client = client;
         this.controleurAccueil = controleurAccueil;
-        this.films = controleurAccueil.getFilms();
+        this.films = controleurAccueil.getFilms();  // Récupération des films via le contrôleur
         this.boutons = new ArrayList<>();
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
@@ -56,6 +56,13 @@ public class GUIaccueil extends JFrame {
         return boutonFilmMap;
     }
 
+    public void changerAffichage(Component nouveauContenu) {
+        getContentPane().removeAll();
+        getContentPane().add(nouveauContenu);
+        revalidate();
+        repaint();
+    }
+
     public void afficherMenu(){
         JPanel panel = new JPanel() {
             @Override
@@ -70,13 +77,6 @@ public class GUIaccueil extends JFrame {
                 ImageIcon logo = new ImageIcon("images/logos/logo_black.png");
                 Image image = logo.getImage();
                 g.drawImage(image, 0, 0, 100, 100, this);
-                if(controleurAccueil.getNbCommande() > 0) {
-                    g.setColor(new Color(192, 19, 19));
-                    int x = 1353;
-                    int y = 50;
-                    int r = 8; // rayon du cercle
-                    g.fillOval(x - r, y - r, 2 * r, 2 * r);
-                }
             }
         };
 
@@ -107,30 +107,21 @@ public class GUIaccueil extends JFrame {
             JLabel labelNom = new JLabel("Connecté en tant que " + client.getPrenom() + " " + client.getNom());
             labelNom.setFont(labelNom.getFont().deriveFont(Font.BOLD, 15));
             Dimension size = labelNom.getPreferredSize();
-            labelNom.setBounds(1470 - size.width, 10, size.width, size.height);
+            labelNom.setBounds(1100 - size.width, 10, size.width, size.height);
             labelNom.setForeground(Color.WHITE);
             panel.add(labelNom);
             panel.setLayout(null);
 
             //Création d'un bouton avec une image
             ImageIcon iconLogoPanier = new ImageIcon("images/logos/logopanier.png");
-            Image imagePanier = iconLogoPanier.getImage().getScaledInstance(60, 60, Image.SCALE_SMOOTH);
+            Image imagePanier = iconLogoPanier.getImage().getScaledInstance(40, 40, Image.SCALE_SMOOTH);
             ImageIcon resizedimagePanier = new ImageIcon(imagePanier);
             boutonPanier.setIcon(resizedimagePanier);
-            boutonPanier.setBounds(1320, 30, 60, 60);
+            boutonPanier.setBounds(1100, 40, 40, 40);
             boutonPanier.setBorderPainted(false);
             boutonPanier.setFocusPainted(false);
             boutonPanier.setContentAreaFilled(false);
             panel.add(boutonPanier);
-
-            if(controleurAccueil.getNbCommande() > 0) {
-                JLabel labelNb = new JLabel(String.valueOf(controleurAccueil.getNbCommande()));
-                labelNb.setFont(labelNb.getFont().deriveFont(Font.BOLD, 15));
-                labelNb.setBounds(1349, 45, 10, 10);
-                labelNb.setForeground(Color.WHITE);
-                panel.add(labelNb);
-            }
-
         } else {
             //Ajout du JLabel pour afficher invité
             JLabel labelNom = new JLabel("Connecté en tant qu'invité ");

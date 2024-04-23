@@ -1,19 +1,13 @@
 package Controleur;
 
-import Modele.Film;
-import Vue.GUIEmployeAccueil;
-import Vue.GUIconnexion;
-import Vue.GUIaccueil;
+import Vue.*;
 import Modele.Client;
-import Vue.GUIcrea;
-
-import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.SQLException;
 import java.util.ArrayList;
+
 public class ControleurConnexion {
-    //Attributs
     private Client client;
     private GUIconnexion vueConnexion;
     private GUIcrea vueCrea;
@@ -22,114 +16,104 @@ public class ControleurConnexion {
     private ControleurCrea controleurCrea;
     private GUIaccueil vueAccueil;
 
-    //Constructeur
     public ControleurConnexion(GUIconnexion vue) {
         this.vueConnexion = vue;
         try {
-            connexion = new Connexion("cinema", "root", "");
+            connexion = new Connexion("cinema", "root", "Garcon1?");  // Initialisation de la connexion à la base de données
         } catch (SQLException | ClassNotFoundException e) {
             e.printStackTrace();
         }
-        //Listener sur le bouton connexion
-        this.vueConnexion.addConnexionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                //Récupérer le contenu des champs
-                String email = vue.getEmail();
-                String motDePasse = vue.getMotDePasse();
-                //Vérifier si les champs sont vides et si le mail contient un "@"
-                if (email.isEmpty() || motDePasse.isEmpty()) {
-                    vue.displayError("Veuillez remplir tous les champs");
-                } else if (!email.contains("@")) {
-                    vue.displayError("E-mail invalide");
-                } else {
-                    if(handleConnexion(email, motDePasse)){
-                        vue.closeWindow();
-                        if(client.getType() == 0){
-                            //Envoyer vers la page employé
-                            ControleurEmployeAccueil controleurEmployeAccueil = new ControleurEmployeAccueil(connexion);
-                            GUIEmployeAccueil vueMembre = new GUIEmployeAccueil(client, controleurEmployeAccueil);
-                            controleurEmployeAccueil.setVue(vueMembre);
-                            controleurEmployeAccueil.setMembre(client);
 
-                        } else {
-                            //Envoyer le client à ControleurAccueil
-                            controleurAccueil = new ControleurAccueil(connexion);
-                            controleurAccueil.setClient(client);
-                            vueAccueil = new GUIaccueil(client, controleurAccueil);
-                            controleurAccueil.setVue(vueAccueil);
-                            controleurAccueil.openWindow();
-                        }
-                    }
+        // Écouteur pour le bouton de connexion
+        this.vueConnexion.addConnexionListener(e -> verifierConnexion());
+
+        // Écouteur pour la connexion en tant qu'invité
+        this.vueConnexion.addListenerInvite(e -> connexionInvite());
+
+        // Écouteur pour la création d'un compte
+        this.vueConnexion.addCreationListener(e -> creerCompte());
+    }
+
+    private void verifierConnexion() {
+        String email = vueConnexion.getEmail();
+        String motDePasse = vueConnexion.getMotDePasse();
+        if (email.isEmpty() || motDePasse.isEmpty()) {
+            vueConnexion.displayError("Veuillez remplir tous les champs");
+        } else if (!email.contains("@")) {
+            vueConnexion.displayError("E-mail invalide");
+        } else {
+            if (handleConnexion(email, motDePasse)) {
+                vueConnexion.closeWindow();
+                if (client.getType() == 0) {
+                    ouvrirAccueilEmploye();
+                } else {
+                    ouvrirAccueilClient();
                 }
             }
-        });
-        //Se connecter en tant qu'invité
-        this.vueConnexion.addListenerInvite(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                    //Création d'un invité
-                    Client invite = new Client(0, -1, "", "", "", "");
-                    vue.closeWindow();
-                    // Envoyer l'invité à ControleurAccueil
-                    controleurAccueil = new ControleurAccueil(connexion);
-                    vueAccueil = new GUIaccueil(invite, controleurAccueil);
-                    controleurAccueil.setVue(vueAccueil);
-                    controleurAccueil.setClient(invite);
-                    controleurAccueil.openWindow();
-            }
-        });
-        //Se créer un compte
-        this.vueConnexion.addCreationListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                vue.closeWindow();
-                // Envoyer le client à ControleurCrea
-                vueCrea = new GUIcrea();
-                controleurCrea = new ControleurCrea(vueCrea, connexion);
-                controleurCrea.openWindow();
-            }
-        });
+        }
     }
 
-    public void openWindow(){
-        this.vueConnexion.setVisible(true);
+    private void connexionInvite() {
+        Client invite = new Client(0, -1, "", "", "", "");
+        vueConnexion.closeWindow();
+        controleurAccueil = new ControleurAccueil(connexion);
+        vueAccueil = new GUIaccueil(invite, controleurAccueil);
+        controleurAccueil.setVue(vueAccueil);
+        controleurAccueil.setClient(invite);
+        controleurAccueil.openWindow();
     }
 
-    //Méthode pour gérer la connexion, retourne true si tout est en ordre
-    public boolean handleConnexion(String email, String motDePasse) {
+    private void creerCompte() {
+        vueConnexion.closeWindow();
+        vueCrea = new GUIcrea();
+        controleurCrea = new ControleurCrea(vueCrea, connexion);
+        controleurCrea.openWindow();
+    }
+
+    private boolean handleConnexion(String email, String motDePasse) {
         try {
-            //Requete pour vérifier si l email existe dans la bdd
-            ArrayList<String> emails = connexion.remplirChampsRequete("SELECT * FROM membre WHERE Email = '" + email + "'");
-            if (!emails.isEmpty()) {
-                //Vérifier si le mot de passe correspond à l'email
-                ArrayList<String> resultatsMdp = connexion.remplirChampsRequete("SELECT * FROM membre WHERE Email = '" + email + "' AND Mot_de_passe = '" + motDePasse + "'");
-                if (!resultatsMdp.isEmpty()) {
-                    //Création du client avec toutes les infos
-                    String[] infosMembre = resultatsMdp.get(0).split(",");
-
-                    int idMembre = Integer.parseInt(infosMembre[0].trim());
-                    int typeMembre = Integer.parseInt(infosMembre[1].trim());
-                    String nomMembre = infosMembre[2].trim();
-                    String prenomMembre = infosMembre[3].trim();
-                    String emailMembre = infosMembre[4].trim();
-                    String mdpMembre = infosMembre[5].trim();
-                    client = new Client(idMembre, typeMembre, nomMembre, prenomMembre, emailMembre, mdpMembre);
-                    return true;
-                } else {
-                    //Mot de passe incorrect
-                    vueConnexion.displayError("Mot de passe incorrect");
-                    return false;
-                }
+            ArrayList<String> resultatsMdp = connexion.remplirChampsRequete(
+                    "SELECT * FROM membre WHERE Email = '" + email + "' AND Mot_de_passe = '" + motDePasse + "'"
+            );
+            if (!resultatsMdp.isEmpty()) {
+                String[] infosMembre = resultatsMdp.get(0).split(",");
+                client = new Client(
+                        Integer.parseInt(infosMembre[0].trim()),
+                        Integer.parseInt(infosMembre[1].trim()),
+                        infosMembre[2].trim(),
+                        infosMembre[3].trim(),
+                        infosMembre[4].trim(),
+                        infosMembre[5].trim()
+                );
+                return true;
             } else {
-                //Email non trouvé dans la bdd
-                vueConnexion.displayError("Cet e-mail n'est associé à aucun compte");
+                vueConnexion.displayError("Mot de passe incorrect ou compte inexistant");
                 return false;
             }
         } catch (SQLException e) {
             e.printStackTrace();
-            System.out.println("Erreur lors de la connexion à la base de données : " + e);
+            vueConnexion.displayError("Erreur lors de la connexion à la base de données : " + e);
             return false;
         }
+    }
+
+    private void ouvrirAccueilEmploye() {
+        ControleurEmployeAccueil controleurEmployeAccueil = new ControleurEmployeAccueil(connexion);
+        GUIEmployeAccueil vueEmploye = new GUIEmployeAccueil(client, controleurEmployeAccueil);
+        controleurEmployeAccueil.setVue(vueEmploye);
+        controleurEmployeAccueil.setMembre(client);
+        vueEmploye.setVisible(true);
+    }
+
+    private void ouvrirAccueilClient() {
+        controleurAccueil = new ControleurAccueil(connexion);
+        controleurAccueil.setClient(client);
+        vueAccueil = new GUIaccueil(client, controleurAccueil);
+        controleurAccueil.setVue(vueAccueil);
+        controleurAccueil.openWindow();
+    }
+
+    public void openWindow() {
+        this.vueConnexion.setVisible(true);
     }
 }

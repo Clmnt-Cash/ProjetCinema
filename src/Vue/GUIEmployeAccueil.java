@@ -10,22 +10,19 @@ import java.awt.event.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
-
+//fenêtre principale pour les interactions des employés dans un système de cinéma.
 public class GUIEmployeAccueil extends JFrame {
     //Attributs
-    private Map<JButton, Film> boutonFilmMap;
-    private ArrayList<Film> films;
-    private Client membre;
-    private ControleurEmployeAccueil controleurEmployeAccueil;
-    private ArrayList<JButton> boutons;
-    private JButton btnFilms;
-    private JButton btnComptes;
-    private JButton btnReduc;
-    private JButton btnStat;
-    private JPanel scrollablePanel;
-    private JPanel panel;
-    private JButton boutonAjouterFilm;
-    private JLabel boutonDeconnexion;
+    private Map<JButton, Film> boutonFilmMap; // Associe les boutons aux films pour une recherche facile
+    private ArrayList<Film> films; // Liste de films
+    private Client membre; // Employé actuellement connecté
+    private ControleurEmployeAccueil controleurEmployeAccueil; // Contrôleur pour les actions des employés
+    private ArrayList<JButton> boutons; // Boutons pour les films
+    private JButton btnFilms, btnComptes, btnReduc, btnStat; // Boutons de navigation
+    private JPanel scrollablePanel; // Panneau pour contenir les boutons des films
+    private JPanel panel; // Panneau principal
+    private JButton boutonAjouterFilm; // Bouton pour ajouter un nouveau film
+    private JLabel boutonDeconnexion; // Étiquette pour la déconnexion
 
     //Constructeur
     public GUIEmployeAccueil(Client membre, ControleurEmployeAccueil controleurEmployeAccueil) {
